@@ -1,21 +1,20 @@
 CCC = g++
-CFLAGS = -std=c++17 
+CFLAGS = -std=c++17 -Wall -Wextra -Weffc++ -Wpedantic -Weffc++ -g -fno-elide-constructors
 
-all: game clearscreen run
-leak: game clearscreen leak_run
+NECESSARY = Powerup.cc
+BIN_NECESSARY := $(NECESSARY:.cc=.o)
 
+all: test clearscreen run
+leak: test clearscreen leak_run
 
-game: main.o
-	$(CCC) $(CFLAGS) main.o -lsfml-graphics -lsfml-window -lsfml-system
-
-g: 
-	$(CCC) $(CFLAGS) Powerup.cc -lsfml-graphics -lsfml-window -lsfml-system
+test: $(BIN_NECESSARY) test_main.o test_gameobj.o
+	$(CCC) $(CFLAGS)  $(BIN_NECESSARY) test_main.o test_gameobj.o -lsfml-graphics -lsfml-window -lsfml-system
 
 %.o: %.cc
 	$(CCC) $(CFLAGS) -c $<
 
 clean:
-	rm -r a.out a.out.dSYM/
+	rm -r $(BIN_NECESSARY) test_gameobj.o a.out a.out.dSYM/
 
 .PHONY:
 clearscreen:
