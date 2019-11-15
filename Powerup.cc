@@ -10,18 +10,30 @@ void Speed::apply(Player player)
     }
 }
 
+void Speed::update()
+{}
+
 void Bigger_blast::apply(Player player)
 {
-    player.blast_radius += 2;
+    player.fire_size += 1;
 }
+
+void Bigger_blast::update()
+{}
 
 void Extra_bomb::apply(Player player)
 {
     sf::Clock clock;
-    player.bomb_cds.append(clock);
+    player.bomb_cds.push_back(clock);
 }
+
+void Extra_bomb::update()
+{}
 
 void Push::apply(Player player)
 {
     player.push_powerup = true;
 }
+
+void Push::update()
+{}
