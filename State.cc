@@ -14,7 +14,21 @@ void Game_state::update(sf::Mouse mouse, sf::Keyboard keyboard)
         }
     }
 
+    wooden_boxes.remove_if(
+            [](Wooden_box wooden_box){return wooden_box.isdead()});
 
+    if (is_round_over())
+    {
+        new_round();
+        if (is_game_over())
+        {
+            end_game();
+        }
+    }
+}
+
+void Game_state::check_collisions()
+{
     for (Player& player : players)
     {
         for (Bomb& bomb : bombs)
@@ -45,12 +59,12 @@ void Game_state::update(sf::Mouse mouse, sf::Keyboard keyboard)
             }
         }
     }
-
     for (Bomb& bomb : bombs)
     {
         for (Bomb& bomb2 : bombs)
         {
             if (bomb.hitbox().intersects(bomb2.hitbox()))
+                //add check if bomb1 == bomb
             {
                 bomb.apply_on_hit_effect(bomb2);
                 bomb2.apply_on_hit_effect(bomb);
@@ -65,7 +79,6 @@ void Game_state::update(sf::Mouse mouse, sf::Keyboard keyboard)
             }
         }
     }
-
     for (Fire& fire : fires)
     {
         for (Box& box : boxes)
@@ -77,9 +90,6 @@ void Game_state::update(sf::Mouse mouse, sf::Keyboard keyboard)
             }
         }
     }
-
-    wooden_boxes.remove_if(
-            [](Wooden_box wooden_box){return wooden_box.isdead()})
 }
 
 

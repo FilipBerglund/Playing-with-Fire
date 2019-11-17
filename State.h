@@ -35,8 +35,10 @@ public:
     void new_game(int, int, int, int);
 
 private:
+    void check_collisions();
     void user_input_handler(sf::Mouse&, sf::Keyboard%) override;
     void new_round();
+
     std::list<Player> players;
     std::list<Bomb> bombs;
     std::list<Fire> fires;
