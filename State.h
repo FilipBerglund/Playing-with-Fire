@@ -62,6 +62,6 @@ public:
     void draw(sf::Window&) override;
 
 private:
-    void user_input_handler(sf::Mouse&, sf::Keyboard%) override;
+    void user_input_handler(sf::Mouse&, sf::Keyboard&) override;
 };
 #endif

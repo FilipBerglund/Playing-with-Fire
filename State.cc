@@ -1,6 +1,10 @@
 #include "State.h"
 #include <SFML/Graphics.hpp>
 
+#include "Player.h"
+#include "Powerup.h"
+#include "Box.h"
+
 
 /*
  * GAME_STATE
@@ -22,7 +26,7 @@ void Game_state::update(sf::Mouse mouse, sf::Keyboard keyboard)
     }
 
     wooden_boxes.remove_if(
-            [](Wooden_box wooden_box){return wooden_box.isdead()});
+            [](Wooden_box wooden_box){return wooden_box.is_dead()});
 
     if (is_round_over())
     {
@@ -103,7 +107,13 @@ void Game_state::check_collisions()
 void Game_state::draw(sf::Window& window)
 {
     for (Player& player : players)
-        window.draw(player.get_drawable());
+    {
+        if (!player.is_dead())
+        {
+            window.draw(player.get_drawable());
+        }
+    }
+
     for (Box& box : boxes)
         window.draw(box.get_drawable());
     for (Fire& fire : fires)
@@ -131,13 +141,13 @@ void Game_state::new_round()
 {
     for (Player& player : players)
     {
-        if (!player.isdead())
+        if (!player.is_dead())
         {
             player.give_points(100);
         }
         player.new_round();
     }
-    roundnr += 1;
+    current_round += 1;
     //remove powerups, wooden_boxes, bombs, fires
     //spawn Wooden_boxes
     //reset time
@@ -151,7 +161,7 @@ void Game_state::end_game()
     //Change current state to End_screen
 }
 
-bool Game_state::is_round_over() {}
+bool Game_state::is_round_over()
 {
     if (is_time_up())
     {
@@ -172,7 +182,7 @@ bool Game_state::is_game_over()
     return is_round_over() && current_round > 2;
 }
 
-bool Game_state::is_time_up() {}
+bool Game_state::is_time_up()
 {
     if (time.getElapsedTime().asSeconds() > 180)
     {
@@ -198,7 +208,7 @@ void Menu_state::user_input_handler(sf::Mouse& mouse, sf::Keyboard&)
     //runs the function that starts a game
 }
 
-void Menu_state::draw(sf::Window window)
+void Menu_state::draw(sf::Window& window)
 {
     for (Menu_button& menu_button : menu_buttons)
     {
