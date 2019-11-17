@@ -32,7 +32,7 @@ public:
     void update(sf::Mouse&, sf::Keyboard) override;
     void draw(sf::Window&) override;
 
-    void create_new_game(int, int, int, int);
+    void new_game(int, int, int, int);
 
 private:
     void user_input_handler(sf::Mouse&, sf::Keyboard%) override;
