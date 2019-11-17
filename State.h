@@ -25,7 +25,8 @@ private:
 class Game_state: public State
 {
 public:
-    Game_state(): State("Game_state")
+    Game_state(): State("Game_state"),
+    round_nr{0}, players{}, bombs{}, fires{}, wooden_boxes{}, solid_boxes{}
     {}
 
     void update(sf::Mouse&, sf::Keyboard) override;
@@ -34,8 +35,8 @@ public:
 private:
     void user_input_handler(sf::Mouse&, sf::Keyboard%) override;
     std::list<Player> players;
-//    std::list<Bomb> bombs;
-//    std::list<Fire> fires;
+    std::list<Bomb> bombs;
+    std::list<Fire> fires;
     std::list<Wooden_box> wooden_boxes;
     std::list<Solid_box> solid_boxes;
 
