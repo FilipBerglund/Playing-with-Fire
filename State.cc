@@ -101,4 +101,17 @@ void Game_state::draw(sf::Window& window)
 }
 
 
+void user_input_handler(sf::Mouse mouse, sf::Keyboard keyboard)
+{}
+
+void new_round()
+{
+    for (Player& player : players)
+    {
+        player.new_round();
+        if (!player.isdead())
+        {
+            player.give_points(100);
+        }
+    }
 }
