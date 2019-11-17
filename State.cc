@@ -78,5 +78,10 @@ void Game_state::update(sf::Mouse mouse, sf::Keyboard keyboard)
         }
     }
 
+    wooden_boxes.remove_if(
+            [](Wooden_box wooden_box){return wooden_box.isdead()})
+}
+
+
 
 }
