@@ -17,8 +17,8 @@ public:
 
     virtual void update(sf::Mouse&, sf::Keyboard&) = 0;
     virtual void draw(sf::Window&) = 0;
-private:
     std::string name;
+private:
     virtual user_input_handler(sf::Mouse&, sf::Keyboard&) = 0;
 };
 
@@ -31,7 +31,6 @@ public:
 
     void update(sf::Mouse&, sf::Keyboard) override;
     void draw(sf::Window&) override;
-
     void new_game(int, int, int, int);
 
 private:
@@ -49,7 +48,6 @@ private:
     std::list<Wooden_box> wooden_boxes;
     std::list<Solid_box> solid_boxes;
 
-
     int current_round;
 
 };
@@ -57,10 +55,10 @@ private:
 class Menu_state: public State
 {
 public:
-    Game_state(): State("Game_state")
+    Menu_state(): State("Menu_state")
     {}
 
-    void update(sf::Mouse&, sf::Keyboard) override;
+    void update(sf::Mouse&, sf::Keyboard&) override;
     void draw(sf::Window&) override;
 
 private:

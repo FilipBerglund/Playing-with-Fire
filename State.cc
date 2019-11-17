@@ -1,6 +1,13 @@
 #include "State.h"
 #include <SFML/Graphics.hpp>
 
+
+/*
+ * GAME_STATE
+ *
+*/
+
+
 void Game_state::update(sf::Mouse mouse, sf::Keyboard keyboard)
 {
     user_input_handler(mouse, keyboard);
@@ -112,7 +119,13 @@ void Game_state::draw(sf::Window& window)
 
 
 void Game_state::user_input_handler(sf::Mouse mouse, sf::Keyboard keyboard)
-{}
+{
+    for (Player& player : players)
+    {
+        player.update(keyboard);
+    }
+
+}
 
 void Game_state::new_round()
 {
@@ -165,4 +178,32 @@ bool Game_state::is_time_up() {}
     {
         return true;
     }
+}
+
+
+/*
+ * MENU_STATE
+ *
+*/
+
+
+void Menu_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard)
+{
+    user_input_handler(mouse, keyboard);
+}
+
+void Menu_state::user_input_handler(sf::Mouse& mouse, sf::Keyboard&)
+{
+    //check the collisions with menu_buttons
+    //runs the function that starts a game
+}
+
+void Menu_state::draw(sf::Window window)
+{
+    for (Menu_button& menu_button : menu_buttons)
+    {
+        window.draw(menu_button.get_drawable());
+    }
+    //we need to somewhere give the buttons a position. Maybe that can be done here based on the size of window. We might add a scaling too.
+    //And perhaps draw some fancy background
 }
