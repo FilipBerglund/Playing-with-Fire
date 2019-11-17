@@ -26,7 +26,7 @@ class Game_state: public State
 {
 public:
     Game_state(): State("Game_state"),
-    round_nr{0}, players{}, bombs{}, fires{}, wooden_boxes{}, solid_boxes{}
+    current_round{0}, players{}, bombs{}, fires{}, wooden_boxes{}, solid_boxes{}
     {}
 
     void update(sf::Mouse&, sf::Keyboard) override;
@@ -38,6 +38,10 @@ private:
     void check_collisions();
     void user_input_handler(sf::Mouse&, sf::Keyboard%) override;
     void new_round();
+    void end_game();
+    bool is_game_over();
+    bool is_round_over();
+    bool is_time_up();
 
     std::list<Player> players;
     std::list<Bomb> bombs;
@@ -46,7 +50,7 @@ private:
     std::list<Solid_box> solid_boxes;
 
 
-    int round_nr;
+    int current_round;
 
 };
 

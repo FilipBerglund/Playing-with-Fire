@@ -111,17 +111,58 @@ void Game_state::draw(sf::Window& window)
 }
 
 
-void user_input_handler(sf::Mouse mouse, sf::Keyboard keyboard)
+void Game_state::user_input_handler(sf::Mouse mouse, sf::Keyboard keyboard)
 {}
 
-void new_round()
+void Game_state::new_round()
 {
     for (Player& player : players)
     {
-        player.new_round();
         if (!player.isdead())
         {
             player.give_points(100);
         }
+        player.new_round();
+    }
+    roundnr += 1;
+    //remove powerups, wooden_boxes, bombs, fires
+    //spawn Wooden_boxes
+    //reset time
+
+}
+
+void Game_state::end_game()
+{
+    //delete relevant objects
+    //run the function that passes players to End_screen
+    //Change current state to End_screen
+}
+
+bool Game_state::is_round_over() {}
+{
+    if (is_time_up())
+    {
+        return true;
+    }
+    if (std::count_if(players.begin(), players.end(), [] (Player p) {return !p.is_dead()}) == 1)
+    {
+        if (players.length() != 1)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool Game_state::is_game_over()
+{
+    return is_round_over() && current_round > 2;
+}
+
+bool Game_state::is_time_up() {}
+{
+    if (time.getElapsedTime().asSeconds() > 180)
+    {
+        return true;
     }
 }
