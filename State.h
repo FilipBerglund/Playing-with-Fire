@@ -49,7 +49,7 @@ private:
     std::list<Solid_box> solid_boxes;
 
     int current_round;
-
+    sf::Clock round_timer;
 };
 
 class Menu_state: public State

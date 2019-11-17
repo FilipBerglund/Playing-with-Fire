@@ -1,5 +1,6 @@
 #include "State.h"
 #include <SFML/Graphics.hpp>
+#include <algorithm>
 
 #include "Player.h"
 #include "Powerup.h"
@@ -150,8 +151,14 @@ void Game_state::new_round()
     current_round += 1;
     //remove powerups, wooden_boxes, bombs, fires
     //spawn Wooden_boxes
-    //reset time
+    round_timer.restart();
 
+}
+
+void Game_state::new_game(int PC, int NPC1, int NPC2, int NPC3)
+{
+    //initialize everything
+    round_timer.restart();
 }
 
 void Game_state::end_game()
@@ -167,12 +174,15 @@ bool Game_state::is_round_over()
     {
         return true;
     }
-    if (std::count_if(players.begin(), players.end(), [] (Player p) {return !p.is_dead()}) == 1)
+
+    int alive_players_count = std::count_if(players.begin(), players.end(),
+            [] (Player p) {return !p.is_dead()});
+
+    //This works even if only one player is playing the game. In english,
+    //if someone is dead and no more than one player is alive return true.
+    if (players.length() > alive_players_count && alive_players_count <= 1)
     {
-        if (players.length() != 1)
-        {
-            return true;
-        }
+        return true;
     }
     return false;
 }
@@ -184,10 +194,11 @@ bool Game_state::is_game_over()
 
 bool Game_state::is_time_up()
 {
-    if (time.getElapsedTime().asSeconds() > 180)
+    if (round_timer.getElapsedTime().asSeconds() > 180)
     {
         return true;
     }
+    return false;
 }
 
 
