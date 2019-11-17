@@ -83,5 +83,22 @@ void Game_state::update(sf::Mouse mouse, sf::Keyboard keyboard)
 }
 
 
+void Game_state::draw(sf::Window& window)
+{
+    for (Player& player : players)
+        window.draw(player.get_drawable());
+    for (Box& box : boxes)
+        window.draw(box.get_drawable());
+    for (Fire& fire : fires)
+        window.draw(fire.get_drawable());
+    for (Bomb& bomb : bombs)
+        window.draw(bomb.get_drawable());
+    for (Powerup& powerup : powerups)
+        window.draw(powerup.get_drawable());
+
+    for (Menu_button& menu_botton : menu_buttons)
+        window.draw(menu_button.get_drawable());
+}
+
 
 }
