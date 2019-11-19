@@ -68,6 +68,7 @@ void Game_state::check_collisions()
             if (player.hitbox().intersects(powerup.hitbox()))
             {
                 powerup.apply_on_hit_effect(player);
+                powerups.remove(powerup);
             }
         }
     }
