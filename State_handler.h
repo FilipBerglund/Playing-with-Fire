@@ -19,6 +19,10 @@ public:
 
 private:
     State * current_state;
+    Menu_state menu_state;
+    Game_state game_state;
+    End_screen end_screen;
+
     std::string current_state_string:
     std::list<State> states;
 };
