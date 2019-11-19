@@ -1,6 +1,7 @@
 #include "State.h"
 #include <SFML/Graphics.hpp>
 #include <algorithm>
+#include <array>
 
 #include "Player.h"
 #include "Powerup.h"
@@ -12,6 +13,33 @@
  *
 */
 
+using namespace sf
+using namespace std
+
+void Game_state::load_textures()
+{
+    Texture fire;
+    Texture player1;
+    Texture player2;
+    Texture player3;
+    Texture player4;
+    Texture solid_box;
+    Texture wooden_box;
+    Texture bomb;
+    Texture push;
+    Texture extra_bomb;
+    Texture bigger_blast;
+    Texture speed;
+    array<pair<Texture, string>, 11> texutres{make_pair(fire, "fire"),
+        make_pair(player1,"player1"), make_pair(player1,"player2"),make_pair(player1,"player3"),make_pair(player1,"player4"),}
+    //array<Texture,11> textures{fire,player1,player2,player3,player4,solid_box,wooden_box,bomb,push,extra_bomb,speed};
+    for  (pair<Texture, string> texture_pair : array)
+        if (! texture.loadFromFile(""))
+        {
+            throw // Något
+        }
+
+}
 
 void Game_state::update(sf::Mouse mouse, sf::Keyboard keyboard)
 {
