@@ -2,9 +2,10 @@
 #define PLAYER
 
 #include <SFML/Graphics.hpp>
-#include "Game_object.h"
+#include "Bomb.h"
+#include "Powerup.h"
+
 #include <vector>
-#include <Bomb>
 #include <string>
 
 class Player: public Game_object
@@ -53,17 +54,63 @@ public:
 
     bool collision(Game_object* object) override
     {
-        return object->get_hitbox().intersects(get_hitbox();
+        return object->get_hitbox().intersects(get_hitbox());
     }
 
-    void apply(Game_object) override 
+    void apply(Game_object* object) override
+    {
+	Bomb* ptr1 = dynamic_cast<Bomb*>(object);
+	Bomb* ptr2 = dynamic_cast<Powerup*>(object);
+
+	if (ptr1 != nullptr)  
+	{
+	    if (push_powerup == true)  
+	    {
+                if (sprite.getPosition().x + sprite.getTextureRect().width/2 ==
+		    ptr1->sprite.getPosition().x - ptr1->sprite.getTextureRect().width/2 &&
+		    old_position.x + sprite.getTextureRect().width/2 <
+		    ptr1->old_position.x - ptr1->sprite.getTextureRect().width/2)
+		{
+		    ptr1->glide("right");
+		}
+                else if(sprite.getPosition().x - sprite.getTextureRect().width/2 ==
+		        ptr1->sprite.getPosition().x + ptr1->sprite.getTextureRect().width/2 &&
+		        old_position.x + sprite.getTextureRect().width/2 >
+		        ptr1->old_position.x - ptr1->sprite.getTextureRect().width/2)
+		{
+		    ptr1->glide("left");
+		}
+	        else if(sprite.getPosition().y - sprite.getTextureRect().height/2 ==
+		        ptr1->sprite.getPosition().y + ptr1->sprite.getTextureRect().height/2 &&
+		        old_position.y + sprite.getTextureRect().height/2 >
+		        ptr1->old_position.y - ptr1->sprite.getTextureRect().width/2)
+		{
+		    ptr1->glide("up");
+		}
+		else 
+		{
+		    ptr1->glide("down");
+		}	   
+	    }
+	    else if (ptr1->is_gliding == true)  //push_powerup == false.
+	    {
+		ptr1->sprite.setPosition(ptr1->old_position);
+		ptr1->is_gliding == false;
+	    }
+	}
+	else  //ptr2 != nullptr
+	{
+	    ptr2->remove_powerup == true;
+	    //I nästa uppdate kommer Game_state ta bort powerupen från spelplanen. 
+	}
+    }
 
     void give_points(int add_score)
     {
 	score += add_score;
     }
 
-    virtual void update(sf::Keyboard keyboard)
+    virtual void update(sf::Keyboard keyboard) = 0;
 
 
 private:
@@ -72,7 +119,6 @@ private:
     int bonus_speed;
     int fire_size;
     int score;
-    Sprite sprite;
     std::vector<sf::Clock> bomb_cds;
     friend class Speed;
     friend class Extra_bomb;
