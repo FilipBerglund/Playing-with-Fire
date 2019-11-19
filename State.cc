@@ -68,6 +68,7 @@ void Game_state::check_collisions()
             if (player.hitbox().intersects(powerup.hitbox()))
             {
                 powerup.apply_on_hit_effect(player);
+                powerups.remove(powerup);
             }
         }
     }
@@ -136,6 +137,11 @@ void Game_state::user_input_handler(sf::Mouse mouse, sf::Keyboard keyboard)
         player.update(keyboard);
     }
 
+    if (mouse.isButtonPressed(sf::Mouse::left)
+    {
+        //end_game() and go to menu if quit_button.click(mouse)
+        //if pause_button.click(mouse) is_playing = !is_playing
+    }
 }
 
 void Game_state::new_round()
@@ -216,7 +222,29 @@ void Menu_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard)
 void Menu_state::user_input_handler(sf::Mouse& mouse, sf::Keyboard&)
 {
     //check the collisions with menu_buttons
-    //runs the function that starts a game
+    if (mouse.isButtonPressed(sf::Mouse::left)
+    {
+        PC_button.click(mouse);
+        NPC1_button.click(mouse);
+        NPC2_button.click(mouse);
+        NPC3_button.click(mouse);
+
+        if (start_button.click(mouse))
+        {
+            nr_players = PC.get_value() + NPC1.get_value() + NPC2.get_value() + NPC3.get_value();
+            if (nr_players <= 4 && nr_players != 0)
+            {
+                game_state.create_game(PC.get_value(),
+                                    NPC1.get_value(),
+                                    NPC2.get_value(),
+                                    NPC3.get_value());
+            }
+            else
+            {
+                //not valid game message?
+            }
+        }
+    }
 }
 
 void Menu_state::draw(sf::Window& window)
