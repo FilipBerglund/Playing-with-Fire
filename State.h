@@ -18,7 +18,7 @@ public:
     {}
 
     virtual void update(sf::Mouse&, sf::Keyboard&) = 0;
-    virtual void draw(sf::Window&) = 0;
+    virtual void draw(sf::RenderWindow&) = 0;
     std::string name;
 private:
     virtual user_input_handler(sf::Mouse&, sf::Keyboard&) = 0;
@@ -31,7 +31,7 @@ public:
     Game_state();
 
     void update(sf::Mouse&, sf::Keyboard&) override;
-    void draw(sf::Window&) override;
+    void draw(sf::RenderWindow&) override;
     void new_game(int, int, int, int);
 
 private:
@@ -75,7 +75,7 @@ public:
     {}
 
     void update(sf::Mouse&, sf::Keyboard&) override;
-    void draw(sf::Window&) override;
+    void draw(sf::RenderWindow&) override;
 
 private:
     void user_input_handler(sf::Mouse&, sf::Keyboard&) override;
