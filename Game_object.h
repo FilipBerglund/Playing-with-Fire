@@ -25,7 +25,7 @@ public:
         return sprite.getTextureRect();
     }
 
-private:
+protected:
     sf::Sprite sprite;
     sf::Vector2f old_position;
 };
