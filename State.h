@@ -5,6 +5,8 @@
 #include "Player.h"
 #include "Powerup.h"
 #include "Box.h"
+#include "Bomb.h"
+#include "Fire.h"
 
 #include <string>
 #include <list>
@@ -45,6 +47,7 @@ private:
     std::list<Player> players;
     std::list<Bomb> bombs;
     std::list<Fire> fires;
+    std::list<Powerup> powerups;
     std::list<Wooden_box> wooden_boxes;
     std::list<Solid_box> solid_boxes;
 
@@ -70,7 +73,7 @@ class Menu_state: public State
 public:
     Menu_state(): State("Menu_state")
     {}
-    
+
     void update(sf::Mouse&, sf::Keyboard&) override;
     void draw(sf::Window&) override;
 

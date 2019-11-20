@@ -6,6 +6,8 @@
 #include "Player.h"
 #include "Powerup.h"
 #include "Box.h"
+#include "Bomb.h"
+#include "Fire.h"
 
 
 /*
@@ -13,8 +15,6 @@
  *
 */
 
-using namespace sf
-using namespace std
 
 Game_state::Game_state(): State("Game_state"),
     current_round{0}, players{}, bombs{}, fires{}, wooden_boxes{}, solid_boxes{}
@@ -85,11 +85,18 @@ void Game_state::check_collisions()
                 fire.apply_on_hit_effect(player);
             }
         }
-        for (Box& box : boxes)
+        for (Wooden_box& wooden_box : wooden_boxes)
         {
-            if (player.hitbox().intersects(box.hitbox()))
+            if (player.hitbox().intersects(wooden_box.hitbox()))
             {
-                box.apply_on_hit_effect(player);
+                wooden_box.apply_on_hit_effect(player);
+            }
+        }
+        for (Solid_box& solid_box : solid_boxes)
+        {
+            if (player.hitbox().intersects(solid_box.hitbox()))
+            {
+                solid_box.apply_on_hit_effect(player);
             }
         }
         for (Powerup& powerup : powerups)
@@ -112,23 +119,31 @@ void Game_state::check_collisions()
                 bomb2.apply_on_hit_effect(bomb);
             }
         }
-        for (Box& box : boxes)
+        for (Wooden_box& wooden_box : wooden_boxes)
         {
-            if (bomb.hitbox().intersects(box.hitbox()))
+            if (bomb.hitbox().intersects(wooden_box.hitbox()))
             {
-                bomb.apply_on_hit_effect(box);
-                box.apply_on_hit_effect(bomb);
+                bomb.apply_on_hit_effect(wooden_box);
+                wooden_box.apply_on_hit_effect(bomb);
+            }
+        }
+        for (Solid_box& solid_box : solid_boxes)
+        {
+            if (bomb.hitbox().intersects(solid_box.hitbox()))
+            {
+                bomb.apply_on_hit_effect(solid_box);
+                solid_box.apply_on_hit_effect(bomb);
             }
         }
     }
     for (Fire& fire : fires)
     {
-        for (Box& box : boxes)
+        for (Wooden_box& wooden_box : wooden_boxes)
         {
-            if (fire.hitbox().intersects(box.hitbox()))
+            if (fire.hitbox().intersects(wooden_box.hitbox()))
             {
-                fire.apply_on_hit_effect(box);
-                box.apply_on_hit_effect(fire);
+                fire.apply_on_hit_effect(wooden_box);
+                wooden_box.apply_on_hit_effect(fire);
             }
         }
     }
