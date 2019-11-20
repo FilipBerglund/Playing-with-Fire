@@ -241,7 +241,7 @@ void Menu_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard)
 void Menu_state::user_input_handler(sf::Mouse& mouse, sf::Keyboard&)
 {
     //check the collisions with menu_buttons
-    if (mouse.isButtonPressed(sf::Mouse::left)
+    if (mouse.isButtonPressed(sf::Mouse::Left)
     {
         PC_button.click(mouse);
         NPC1_button.click(mouse);
