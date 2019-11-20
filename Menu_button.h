@@ -13,7 +13,7 @@ public:
 
   
   bool contains(sf::Mouse&);
-  int click(sf::Mouse&);
+  bool click(sf::Mouse&);
 
   sf::Sprite get_drawable() const
     {
@@ -22,7 +22,6 @@ public:
   
  private:
   sf::Sprite sprite;
-  sf::FloatRect;
   sf::Texture; 
 
 };
@@ -43,9 +42,16 @@ class Int_button : public Menu_button
   Int_button(sf::Vector2f pos, sf::Sprite s0, sf::Sprite s1, sf::Sprite s2, sf::Sprite s3, sf::Sprite s4 , sf::Sprite sbg);
   
    bool contains(sf::Mouse&);
-   
+   bool click(sf::Mouse&);
+   int get_value(){return value;}
  private:
-  int npc;
+   int value{};
+  sf::Sprite sprite_background;
+  sf::Sprite sprite0;
+  sf::Sprite sprite1;
+  sf::Sprite sprite2;
+  sf::Sprite sprite3;
+  sf::Sprite sprite4;
   
 }
 
