@@ -1,7 +1,7 @@
 #include "State.h"
 #include <SFML/Graphics.hpp>
 #include <algorithm>
-#include <array>
+#include <list>
 
 #include "Player.h"
 #include "Powerup.h"
@@ -150,7 +150,7 @@ void Game_state::check_collisions()
 }
 
 
-void Game_state::draw(sf::Window& window)
+void Game_state::draw(sf::RenderWindow& window)
 {
     for (Player& player : players)
     {
