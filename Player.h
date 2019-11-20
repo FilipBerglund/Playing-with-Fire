@@ -188,7 +188,7 @@ public:
 
     Bomb* drop_bomb()  //Hjälpfunktion när bomber ska droppas.
     {
-        for (int i = 0; i < bomb_cds.size(), i++)  //Går igenom hela listan av klockor.
+        for (int i = 0; i < bomb_cds.size(); i++)  //Går igenom hela listan av klockor.
         {
             if (bomb_cds[i].getElapsedTime().asSeconds() >= cd) //När detta uppfylls har spelaren möjligheten att droppa en bomb.
             {
