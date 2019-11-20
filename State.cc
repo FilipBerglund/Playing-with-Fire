@@ -19,17 +19,17 @@ using namespace std
 Game_state::Game_state(): State("Game_state"),
     current_round{0}, players{}, bombs{}, fires{}, wooden_boxes{}, solid_boxes{}
     {
-        fire.loadFromFile("fire.png")
-        player1.loadFromFile("player1.png")
-        player2.loadFromFile("player2.png")
-        player3.loadFromFile("player3.png")
-        player4.loadFromFile("player4.png")
-        solid_box.loadFromFile("solid_box.png")
-        wooden_box.loadFromFile("wooden_box.png")
-        bomb.loadFromFile("bomb.png")
-        push.loadFromFile("push.png")
-        extra_bomb.loadFromFile("extra_bomb.png")
-        speed.loadFromFile("speed.png")
+        fire.loadFromFile("fire.png");
+        player1.loadFromFile("player1.png");
+        player2.loadFromFile("player2.png");
+        player3.loadFromFile("player3.png");
+        player4.loadFromFile("player4.png");
+        solid_box.loadFromFile("solid_box.png");
+        wooden_box.loadFromFile("wooden_box.png");
+        bomb.loadFromFile("bomb.png");
+        push.loadFromFile("push.png");
+        extra_bomb.loadFromFile("extra_bomb.png");
+        speed.loadFromFile("speed.png");
     }
 
 void Game_state::update(sf::Mouse mouse, sf::Keyboard keyboard)
