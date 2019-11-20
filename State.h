@@ -30,13 +30,13 @@ class Game_state: public State
 public:
     Game_state();
 
-    void update(sf::Mouse&, sf::Keyboard) override;
+    void update(sf::Mouse&, sf::Keyboard&) override;
     void draw(sf::Window&) override;
     void new_game(int, int, int, int);
 
 private:
     void check_collisions();
-    void user_input_handler(sf::Mouse&, sf::Keyboard%) override;
+    void user_input_handler(sf::Mouse&, sf::Keyboard&) override;
     virtual void load_textures() override;
     void new_round();
     void end_game();
