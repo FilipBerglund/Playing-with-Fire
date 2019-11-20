@@ -18,8 +18,9 @@ public:
     }
 
     void update() {};
-    bool collision(Game_object) {};
-    sf::IntRect& hit_box() const
+    virtual void apply_on_hit_effect(Game_object*) = 0;
+
+    sf::IntRect& hitbox() const
     {
         return sprite.getTextureRect();
     }

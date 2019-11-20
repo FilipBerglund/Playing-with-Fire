@@ -17,7 +17,7 @@
 
 
 Game_state::Game_state(): State("Game_state"),
-    current_round{0}, players{}, bombs{}, fires{}, wooden_boxes{}, solid_boxes{}
+    current_round{0}, players{}, bombs{}, fires{}, wooden_boxes{}, solid_boxes{}, is_playing{false}
     {
         fire.loadFromFile("fire.png");
         player1.loadFromFile("player1.png");
@@ -32,7 +32,7 @@ Game_state::Game_state(): State("Game_state"),
         speed.loadFromFile("speed.png");
     }
 
-void Game_state::update(sf::Mouse mouse, sf::Keyboard keyboard)
+void Game_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard)
 {
     user_input_handler(mouse, keyboard);
 
@@ -43,7 +43,7 @@ void Game_state::update(sf::Mouse mouse, sf::Keyboard keyboard)
         return;
     }
 
-    for (Player* player : Players)
+    for (Player* player : players)
     {
         player->update(keyboard);
 
@@ -174,14 +174,14 @@ void Game_state::draw(sf::RenderWindow& window)
 }
 
 
-void Game_state::user_input_handler(sf::Mouse mouse, sf::Keyboard keyboard)
+void Game_state::user_input_handler(sf::Mouse& mouse, sf::Keyboard& keyboard)
 {
     for (Player* player : players)
     {
         player->update(keyboard);
     }
 
-    if (mouse.isButtonPressed(sf::Mouse::left)
+    if (mouse.isButtonPressed(sf::Mouse::Left)
     {
         if (quit_button->click(mouse))
         {
@@ -216,6 +216,7 @@ void Game_state::new_game(int PC, int NPC1, int NPC2, int NPC3)
 {
     //initialize everything
     round_timer.restart();
+    is_playing = true;
 }
 
 void Game_state::end_game()
@@ -237,7 +238,7 @@ bool Game_state::is_round_over()
 
     //This works even if only one player is playing the game. In english,
     //if someone is dead and no more than one player is alive return true.
-    if (players.length() > alive_players_count && alive_players_count <= 1)
+    if (players.size() > alive_players_count && alive_players_count <= 1)
     {
         return true;
     }
@@ -282,7 +283,11 @@ void Menu_state::user_input_handler(sf::Mouse& mouse, sf::Keyboard&)
 
         if (start_button->click(mouse))
         {
-            nr_players = PC->get_value() + NPC1->get_value() + NPC2->get_value() + NPC3->get_value();
+            nr_players = PC->get_value() +
+                NPC1->get_value() +
+                NPC2->get_value() +
+                NPC3->get_value();
+
             if (nr_players <= 4 && nr_players != 0)
             {
                 game_state->create_game(PC->get_value(),
@@ -292,7 +297,7 @@ void Menu_state::user_input_handler(sf::Mouse& mouse, sf::Keyboard&)
             }
             else
             {
-                //not valid game message?
+                //not valid game message
             }
         }
     }

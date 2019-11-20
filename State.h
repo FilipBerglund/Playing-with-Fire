@@ -21,7 +21,7 @@ public:
     virtual void draw(sf::RenderWindow&) = 0;
     std::string name;
 private:
-    virtual user_input_handler(sf::Mouse&, sf::Keyboard&) = 0;
+    virtual void user_input_handler(sf::Mouse&, sf::Keyboard&) = 0;
     virtual void load_textures() = 0;
 };
 
@@ -43,6 +43,7 @@ private:
     bool is_game_over();
     bool is_round_over();
     bool is_time_up();
+    bool is_playing;
 
     std::list<Player*> players;
     std::list<Bomb*> bombs;
