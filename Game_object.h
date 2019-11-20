@@ -21,7 +21,7 @@ public:
     virtual void apply_on_hit_effect(Game_object*) = 0;
     void undo_last_move()
     {
-        sprite.setPosition(old_position)
+        sprite.setPosition(old_position);
     }
 
     sf::IntRect hitbox() const
