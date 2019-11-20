@@ -19,6 +19,10 @@ public:
 
     void update() {};
     bool collision(Game_object) {};
+    sf::IntRect& hit_box() const
+    {
+        return sprite.getTextureRect();
+    }
 
 private:
     sf::Sprite sprite;
