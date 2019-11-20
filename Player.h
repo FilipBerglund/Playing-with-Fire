@@ -8,8 +8,8 @@
 class Player: public Game_object
 {
 public:
-    Player(sf::Vector2f pos, sf::Sprite sprite):
-    Game_object(pos, sprite), push_powerup{false}, health{3},
+    Player(sf::Vector2f pos, sf::Texture texture):
+    Game_object(pos, texture), push_powerup{false}, health{3},
         bonus_speed{0}, fire_size{2}
     {
         sf::Clock cd;

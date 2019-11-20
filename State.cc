@@ -35,6 +35,14 @@ Game_state::Game_state(): State("Game_state"),
 void Game_state::update(sf::Mouse mouse, sf::Keyboard keyboard)
 {
     user_input_handler(mouse, keyboard);
+
+    if (!is_playing)
+    {
+        //All clocks still run (both here and in player) so pausing will
+        //have unintended consequenses - exidental features.
+        return;
+    }
+
     for (Player& player : Players)
     {
         player.update(keyboard);
@@ -45,8 +53,10 @@ void Game_state::update(sf::Mouse mouse, sf::Keyboard keyboard)
         }
     }
 
+    check_collisions();
     wooden_boxes.remove_if(
             [](Wooden_box wooden_box){return wooden_box.is_dead()});
+
 
     if (is_round_over())
     {
@@ -158,8 +168,15 @@ void Game_state::user_input_handler(sf::Mouse mouse, sf::Keyboard keyboard)
 
     if (mouse.isButtonPressed(sf::Mouse::left)
     {
-        //end_game() and go to menu if quit_button.click(mouse)
-        //if pause_button.click(mouse) is_playing = !is_playing
+        if (quit_button.click(mouse))
+        {
+            current_state_string = "menu_state";
+            end_game();
+        }
+        if (pause_button.click(mouse))
+        {
+            is_playing = !is_playing
+        }
     }
 }
 
