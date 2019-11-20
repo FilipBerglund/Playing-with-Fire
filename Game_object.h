@@ -7,7 +7,7 @@ class Game_object
 {
 public:
     Game_object(sf::Vector2f pos, sf::Texture texture):
-    sprite{texture}
+    sprite{texture}, old_position{pos}
     {
         sprite.setPosition(pos);
     }
@@ -26,5 +26,6 @@ public:
 
 private:
     sf::Sprite sprite;
+    sf::Vector2f old_position;
 };
 #endif
