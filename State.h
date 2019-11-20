@@ -44,12 +44,12 @@ private:
     bool is_round_over();
     bool is_time_up();
 
-    std::list<Player> players;
-    std::list<Bomb> bombs;
-    std::list<Fire> fires;
-    std::list<Powerup> powerups;
-    std::list<Wooden_box> wooden_boxes;
-    std::list<Solid_box> solid_boxes;
+    std::list<Player*> players;
+    std::list<Bomb*> bombs;
+    std::list<Fire*> fires;
+    std::list<Powerup*> powerups;
+    std::list<Wooden_box*> wooden_boxes;
+    std::list<Solid_box*> solid_boxes;
 
     int current_round;
     sf::Clock round_timer;
