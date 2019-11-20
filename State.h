@@ -26,9 +26,7 @@ private:
 class Game_state: public State
 {
 public:
-    Game_state(): State("Game_state"),
-    current_round{0}, players{}, bombs{}, fires{}, wooden_boxes{}, solid_boxes{}
-    {}
+    Game_state();
 
     void update(sf::Mouse&, sf::Keyboard) override;
     void draw(sf::Window&) override;
@@ -52,6 +50,19 @@ private:
 
     int current_round;
     sf::Clock round_timer;
+
+    sf::Texture fire;
+    sf::Texture player1;
+    sf::Texture player2;
+    sf::Texture player3;
+    sf::Texture player4;
+    sf::Texture solid_box;
+    sf::Texture wooden_box;
+    sf::Texture bomb;
+    sf::Texture push;
+    sf::Texture extra_bomb;
+    sf::Texture bigger_blast;
+    sf::Texture speed;
 };
 
 class Menu_state: public State

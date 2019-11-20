@@ -16,30 +16,21 @@
 using namespace sf
 using namespace std
 
-void Game_state::load_textures()
-{
-    Texture fire;
-    Texture player1;
-    Texture player2;
-    Texture player3;
-    Texture player4;
-    Texture solid_box;
-    Texture wooden_box;
-    Texture bomb;
-    Texture push;
-    Texture extra_bomb;
-    Texture bigger_blast;
-    Texture speed;
-    array<pair<Texture, string>, 11> texutres{make_pair(fire, "fire"),
-        make_pair(player1,"player1"), make_pair(player1,"player2"),make_pair(player1,"player3"),make_pair(player1,"player4"),}
-    //array<Texture,11> textures{fire,player1,player2,player3,player4,solid_box,wooden_box,bomb,push,extra_bomb,speed};
-    for  (pair<Texture, string> texture_pair : array)
-        if (! texture.loadFromFile(""))
-        {
-            throw // Något
-        }
-
-}
+Game_state::Game_state(): State("Game_state"),
+    current_round{0}, players{}, bombs{}, fires{}, wooden_boxes{}, solid_boxes{}
+    {
+        fire.loadFromFile("fire.png")
+        player1.loadFromFile("player1.png")
+        player2.loadFromFile("player2.png")
+        player3.loadFromFile("player3.png")
+        player4.loadFromFile("player4.png")
+        solid_box.loadFromFile("solid_box.png")
+        wooden_box.loadFromFile("wooden_box.png")
+        bomb.loadFromFile("bomb.png")
+        push.loadFromFile("push.png")
+        extra_bomb.loadFromFile("extra_bomb.png")
+        speed.loadFromFile("speed.png")
+    }
 
 void Game_state::update(sf::Mouse mouse, sf::Keyboard keyboard)
 {
