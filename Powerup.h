@@ -13,8 +13,6 @@ public:
     Game_object(pos, texture)
     {}
 
-    virtual void apply(Player) = 0;
-    virtual void update() = 0;
 };
 
 class Speed: public Powerup
@@ -24,7 +22,7 @@ public:
     Powerup(pos, texture)
     {}
 
-    void apply(Player) override;
+    void apply_on_hit_effect(Game_object*) override;
     void update() override;
 };
 
@@ -35,7 +33,7 @@ public:
     Powerup(pos, texture)
     {}
 
-    void apply(Player) override;
+    void apply_on_hit_effect(Game_object*) override;
     void update() override;
 };
 
@@ -46,7 +44,7 @@ public:
     Powerup(pos, texture)
     {}
 
-    void apply(Player) override;
+    void apply_on_hit_effect(Game_object*) override;
     void update() override;
 };
 
@@ -57,7 +55,7 @@ public:
     Powerup(pos, texture)
     {}
 
-    void apply(Player) override;
+    void apply_on_hit_effect(Game_object*) override;
     void update() override;
 };
 #endif

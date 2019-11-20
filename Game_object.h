@@ -17,10 +17,10 @@ public:
         return sprite;
     }
 
-    void update() {};
+    virtual void update() {};
     virtual void apply_on_hit_effect(Game_object*) = 0;
 
-    sf::IntRect& hitbox() const
+    sf::IntRect hitbox() const
     {
         return sprite.getTextureRect();
     }
