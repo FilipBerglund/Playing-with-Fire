@@ -5,7 +5,7 @@
 void Speed::apply_on_hit_effect(Game_object* player)
 {
     Player* p = dynamic_cast<Player*>(player);
-    if (p->get_speed < 10)
+    if (p->get_speed() < 10)
     {
         p->increase_speed(2);
     }
