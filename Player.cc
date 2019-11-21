@@ -1,5 +1,6 @@
 #include "Player.h"
 #include "Bomb.h"
+#include <vector>
 #include <SFML/Graphics.hpp>
 
 Player::Player(sf::Vector2f pos, sf::Texture texture, int cooldown,

@@ -3,10 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 #include "Bomb.h"
-#include "Powerup.h"
 #include <vector>
-#include <string>
-#include <iostream>
 
 class Player: public Game_object
 {
