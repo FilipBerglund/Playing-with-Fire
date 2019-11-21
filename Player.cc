@@ -1,9 +1,9 @@
 include "Player.h"
 
 
-Player::Player(sf::Vector2f pos, sf::Sprite sprite, int cooldown, int in_push,
+Player::Player(sf::Vector2f pos, sf::Texture texture, int cooldown, int in_push,
                int in_health, int in_speed, int in_fire, int in_cd):
-       Game_object(pos, sprite), push_powerup{in_push}, health{in_health}, speed{in_speed}, fire_size{in_fire},
+       Game_object(pos, texture), push_powerup{in_push}, health{in_health}, speed{in_speed}, fire_size{in_fire},
        score{0}, cd{in_cd}, immune_clock{}, bomb_cds{}, spawn_point{pos},
        initial_push_powerup{in_push}, initial_health{in_health}, initial_speed{in_speed},
        initial_fire_size{in_fire}, initial_cd{in_cd}
