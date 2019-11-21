@@ -36,7 +36,7 @@ public:
     bool is_immune() const;
     void make_immune();
     bool request_to_drop_bomb();
-    Bomb* create_bomb(sf::Texture) const;
+    Bomb* create_bomb(sf::Texture);
 
 
 protected:

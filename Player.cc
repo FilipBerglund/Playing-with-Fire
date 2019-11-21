@@ -4,7 +4,7 @@
 #include <SFML/Graphics.hpp>
 
 Player::Player(sf::Vector2f pos, sf::Texture texture, int cooldown,
-	       int in_push, int in_health, int in_speed, int in_fire, int in_cd):
+	       bool in_push, int in_health, int in_speed, int in_fire, int in_cd):
         Game_object(pos, texture),
         push_powerup{in_push},
         health{in_health},
@@ -60,24 +60,24 @@ void Player::apply_on_hit_effect(Game_object* object)
         /*I de stora if-satsern nedanför kollar vi först  kollision i ett visst led
           och sedan kollar vi spelarens and bombens ursprungliga positioner
           för att bestämma i vilken riktning bomben ska skjutas iväg.*/
-        if (hitbox().x + hitbox().width/2 >=
+        if (sprite.getPosition.x + hitbox().width/2 >=
             ptr->get_position().x - ptr->hitbox().width/2 &&
             old_position.x + hitbox().width/2 <
             ptr->get_position().x - hitbox().width/2)
         {
             ptr->glide("right");
         }
-        else if(hitbox().x - hitbox().width/2 <=
+        else if(sprite.get_position().x - hitbox().width/2 <=
 		ptr->get_position().x + ptr->hitbox().width/2 &&
                 old_position.x + hitbox().width/2 >
                 ptr->get_position().x - ptr->hitbox().width/2)
         {
             ptr->glide("left");
         }
-        else if(hitbox().y - hitbox().height/2 <=
+        else if(sprite.get_position().y - hitbox().height/2 <=
 		ptr->get_position().y + ptr->hitbox().height/2 &&
                 old_position.y + hitbox().height/2 >
-                ptr->.get_position().y - ptr->hitbox().width/2)
+                ptr->get_position().y - ptr->hitbox().width/2)
         {
             ptr->glide("up");
         }
