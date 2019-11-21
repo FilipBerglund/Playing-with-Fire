@@ -47,7 +47,7 @@ void Game_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard)
     {
         player->update(keyboard);
 
-        if (player->dropbomb())
+        if (player->want_to_drop_bomb())
         {
             bombs->push_back(player->create_bomb());
         }
@@ -55,7 +55,7 @@ void Game_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard)
 
     check_collisions();
     wooden_boxes.remove_if(
-            [](Wooden_box wooden_box){return wooden_box->is_dead()});
+            [](Wooden_box wooden_box){return wooden_box->is_dead();});
 
 
     if (is_round_over())
@@ -201,7 +201,7 @@ void Game_state::new_round()
     {
         if (!player->is_dead())
         {
-            player->give_points(100);
+            player->increase_score(100);
         }
         player->new_round();
     }
@@ -234,7 +234,7 @@ bool Game_state::is_round_over()
     }
 
     int alive_players_count = std::count_if(players.begin(), players.end(),
-            [] (Player* p) {return !p->is_dead()});
+            [] (Player* p) {return !p->is_dead();});
 
     //This works even if only one player is playing the game. In english,
     //if someone is dead and no more than one player is alive return true.
