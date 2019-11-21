@@ -4,7 +4,7 @@
 #include <SFML/Graphics.hpp>
 
 Player::Player(sf::Vector2f pos, sf::Texture texture, int cooldown,
-	       int in_push, int in_health, int in_speed, int in_fire, int in_cd, bool want_to_drop_bomb):
+	       int in_push, int in_health, int in_speed, int in_fire, int in_cd):
         Game_object(pos, texture),
         push_powerup{in_push},
         health{in_health},
@@ -61,23 +61,23 @@ void Player::apply_on_hit_effect(Game_object* object)
           och sedan kollar vi spelarens and bombens ursprungliga positioner
           för att bestämma i vilken riktning bomben ska skjutas iväg.*/
         if (hitbox().x + hitbox().width/2 >=
-            ptr->hitbox().x - ptr->hitbox().width/2 &&
+            ptr->hitbox().getPosition().x - ptr->hitbox().width/2 &&
             old_position.x + hitbox().width/2 <
-            ptr->hitbox().x - hitbox().width/2)
+            ptr->hitbox().getPosition().x - hitbox().width/2)
         {
             ptr->glide("right");
         }
         else if(hitbox().x - hitbox().width/2 <=
-		ptr->hitbox().x + ptr->hitbox().width/2 &&
+		ptr->hitbox().getPosition().x + ptr->hitbox().width/2 &&
                 old_position.x + hitbox().width/2 >
-                ptr->hitbox().x - ptr->hitbox().width/2)
+                ptr->hitbox().getPosition().x - ptr->hitbox().width/2)
         {
             ptr->glide("left");
         }
         else if(hitbox().y - hitbox().height/2 <=
-		ptr->hitbox().y + ptr->hitbox().height/2 &&
+		ptr->hitbox().getPosition().y + ptr->hitbox().height/2 &&
                 old_position.y + hitbox().height/2 >
-                ptr->hitbox().y - ptr->hitbox().width/2)
+                ptr->hitbox().getPosition().y - ptr->hitbox().width/2)
         {
             ptr->glide("up");
         }
@@ -200,7 +200,7 @@ bool Player::request_to_drop_bomb()  //Hjälpfunktion när bomber ska droppas.
     return false;
 }
 
-Bomb* create_bomb(sf::Texture bomb_texture) const
+Bomb* Player::create_bomb(sf::Texture bomb_texture) const
 {
     return new Bomb(sprite.getPosition(), bomb_texture, this);
 }
