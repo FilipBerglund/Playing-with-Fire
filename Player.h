@@ -8,8 +8,8 @@
 class Player: public Game_object
 {
 public:
-    Player(sf::Vector2f pos, sf::Sprite sprite, int cooldown, int in_push,
-        int in_health, int in_speed, int in_fire, int in_cd);
+    Player(sf::Vector2f pos, sf::Texture texture, int cooldown, int in_push,
+	   int in_health, int in_speed, int in_fire, int in_cd, int want_to_drop_bomb);
 
     ~Player() = default;
 
@@ -35,7 +35,9 @@ public:
     void give_bomb();
     bool is_immune() const;
     void make_immune();
-    Bomb* drop_bomb();
+    bool request_to_drop_bomb();
+    Bomb* create_bomb(sf::Texture) const;
+
 
 protected:
     bool initial_push_powerup;
@@ -50,6 +52,7 @@ protected:
     int fire_size;
     int score;
     int cd;
+    bool want_to_drop_bomb;
 
     sf::Clock immune_clock;
     std::vector<sf::Clock> bomb_cds;
