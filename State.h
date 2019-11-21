@@ -55,18 +55,18 @@ private:
     int current_round;
     sf::Clock round_timer;
 
-    sf::Texture fire;
-    sf::Texture player1;
-    sf::Texture player2;
-    sf::Texture player3;
-    sf::Texture player4;
-    sf::Texture solid_box;
-    sf::Texture wooden_box;
-    sf::Texture bomb;
-    sf::Texture push;
-    sf::Texture extra_bomb;
-    sf::Texture bigger_blast;
-    sf::Texture speed;
+    sf::Texture fire_texture;
+    sf::Texture player1_texture;
+    sf::Texture player2_texture;
+    sf::Texture player3_texture;
+    sf::Texture player4_texture;
+    sf::Texture solid_box_texture;
+    sf::Texture wooden_box_texture;
+    sf::Texture bomb_texture;
+    sf::Texture push_texture;
+    sf::Texture extra_bomb_texture;
+    sf::Texture bigger_blast_texture;
+    sf::Texture speed_texture;
 };
 
 class Menu_state: public State
