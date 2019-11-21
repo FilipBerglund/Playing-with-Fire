@@ -55,7 +55,7 @@ void Game_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard)
 
     check_collisions();
     wooden_boxes.remove_if(
-            [](Wooden_box wooden_box){return wooden_box->is_dead();});
+            [](Wooden_box* wooden_box){return wooden_box->is_dead();});
 
 
     if (is_round_over())
@@ -160,8 +160,10 @@ void Game_state::draw(sf::RenderWindow& window)
         }
     }
 
-    for (Box* box : boxes)
-        window.draw(box->get_drawable());
+    for (Wooden_box* wooden_box : wooden_boxes)
+        window.draw(wooden_box->get_drawable());
+    for (Solid_box* solid_box : solid_boxes)
+        window.draw(solid_box->get_drawable());
     for (Fire* fire : fires)
         window.draw(fire->get_drawable());
     for (Bomb* bomb : bombs)
@@ -169,8 +171,8 @@ void Game_state::draw(sf::RenderWindow& window)
     for (Powerup* powerup : powerups)
         window.draw(powerup->get_drawable());
 
-    for (Menu_button* menu_botton : menu_buttons)
-        window.draw(menu_button->get_drawable());
+    //for (Menu_button* menu_botton : menu_buttons)
+    //    window.draw(menu_button->get_drawable());
 }
 
 
@@ -181,6 +183,7 @@ void Game_state::user_input_handler(sf::Mouse& mouse, sf::Keyboard& keyboard)
         player->update(keyboard);
     }
 
+    /*
     if (mouse.isButtonPressed(sf::Mouse::Left)
     {
         if (quit_button->click(mouse))
@@ -193,6 +196,7 @@ void Game_state::user_input_handler(sf::Mouse& mouse, sf::Keyboard& keyboard)
             is_playing = !is_playing
         }
     }
+    */
 }
 
 void Game_state::new_round()
@@ -274,6 +278,7 @@ void Menu_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard)
 void Menu_state::user_input_handler(sf::Mouse& mouse, sf::Keyboard&)
 {
     //check the collisions with menu_buttons
+    /*
     if (mouse.isButtonPressed(sf::Mouse::Left)
     {
         PC_button->click(mouse);
@@ -301,14 +306,17 @@ void Menu_state::user_input_handler(sf::Mouse& mouse, sf::Keyboard&)
             }
         }
     }
+    */
 }
 
 void Menu_state::draw(sf::RenderWindow& window)
 {
+    /*
     for (Menu_button* menu_button : menu_buttons)
     {
         window.draw(menu_button->get_drawable());
     }
+    */
     //we need to somewhere give the buttons a position. Maybe that can be done here based on the size of window. We might add a scaling too.
     //And perhaps draw some fancy background
 }
