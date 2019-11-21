@@ -17,6 +17,11 @@ public:
         return sprite;
     }
 
+    sf::Vector2f get_position()
+    {
+        return sprite.getPosition();
+    }
+
     virtual void update(sf::Keyboard) {};
     virtual void apply_on_hit_effect(Game_object*) = 0;
     void undo_last_move()

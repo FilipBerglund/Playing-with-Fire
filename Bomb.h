@@ -11,7 +11,8 @@ class Bomb: public Game_object
 public:
     Bomb(sf::Vector2f, sf::Texture, Player*);
     void apply_on_hit_effect(Game_object*) {}
-    void glide(std::String) {};
+    void glide(std::string) {};
+    bool is_gliding() {return false;}
 private:
     Player* owner;
 };
