@@ -4,7 +4,7 @@
 #include <SFML/Graphics.hpp>
 
 Player::Player(sf::Vector2f pos, sf::Texture texture, int cooldown,
-        int in_push, int in_health, int in_speed, int in_fire, int in_cd):
+	       int in_push, int in_health, int in_speed, int in_fire, int in_cd, bool want_to_drop_bomb):
         Game_object(pos, texture),
         push_powerup{in_push},
         health{in_health},
@@ -19,7 +19,8 @@ Player::Player(sf::Vector2f pos, sf::Texture texture, int cooldown,
         initial_health{in_health},
         initial_speed{in_speed},
         initial_fire_size{in_fire},
-        initial_cd{in_cd}
+        initial_cd{in_cd},
+	want_to_drop_bomb{false}
 {
     sf::Clock new_clock;
     bomb_cds.push_back(new_clock);  //Listan får storlek 1.
@@ -34,6 +35,7 @@ void Player::new_round()  //Variabler återställs vid ny runda.
     speed = initial_speed;
     fire_size = initial_fire_size;
     cd = initial_cd;
+    want_to_drop_bomb = false;
     sprite.setPosition(spawn_point);
     bomb_cds.resize(1);
     bomb_cds[0].restart();
@@ -58,24 +60,24 @@ void Player::apply_on_hit_effect(Game_object* object)
         /*I de stora if-satsern nedanför kollar vi först  kollision i ett visst led
           och sedan kollar vi spelarens and bombens ursprungliga positioner
           för att bestämma i vilken riktning bomben ska skjutas iväg.*/
-        if (sprite.getPosition().x + hitbox().width/2 >=
-            ptr->sprite.getPosition().x - ptr->hitbox().width/2 &&
+        if (hitbox().x + hitbox().width/2 >=
+            ptr->hitbox().x - ptr->hitbox().width/2 &&
             old_position.x + hitbox().width/2 <
-            ptr->old_position.x - hitbox().width/2)
+            ptr->hitbox().x - hitbox().width/2)
         {
             ptr->glide("right");
         }
-        else if(sprite.getPosition().x - hitbox().width/2 <=
-            ptr->sprite.getPosition().x + ptr->hitbox().width/2 &&
-            old_position.x + hitbox().width/2 >
-            ptr->old_position.x - ptr->hitbox().width/2)
+        else if(hitbox().x - hitbox().width/2 <=
+		ptr->hitbox().x + ptr->hitbox().width/2 &&
+                old_position.x + hitbox().width/2 >
+                ptr->hitbox().x - ptr->hitbox().width/2)
         {
             ptr->glide("left");
         }
-        else if(sprite.getPosition().y - hitbox().height/2 <=
-            ptr->sprite.getPosition().y + ptr->hitbox().height/2 &&
-            old_position.y + hitbox().height/2 >
-            ptr->old_position.y - ptr->hitbox().width/2)
+        else if(hitbox().y - hitbox().height/2 <=
+		ptr->hitbox().y + ptr->hitbox().height/2 &&
+                old_position.y + hitbox().height/2 >
+                ptr->hitbox().y - ptr->hitbox().width/2)
         {
             ptr->glide("up");
         }
@@ -86,8 +88,7 @@ void Player::apply_on_hit_effect(Game_object* object)
     }
     else if (ptr->is_gliding() == true)  //push_powerup == false så bomben ska stanna.
     {
-        ptr->sprite.setPosition(ptr->old_position);
-        ptr->set_is_gliding(false);
+        ptr->undo_last_move();
     }
 }
 
@@ -182,17 +183,25 @@ void Player::make_immune()
 }
 
 
-Bomb* Player::drop_bomb()  //Hjälpfunktion när bomber ska droppas.
+bool Player::request_to_drop_bomb()  //Hjälpfunktion när bomber ska droppas.
 {
-    for (int i = 0; i < bomb_cds.size(), i++)  //Går igenom hela listan av klockor.
+    if (want_to_drop_bomb)
     {
-        if (bomb_cds[i].getElapsedTime().asSeconds() >= cd) //När detta uppfylls har spelaren möjligheten att droppa en bomb.
+	want_to_drop_bomb = false;
+        for (int i = 0; i < bomb_cds.size(), i++)  //Går igenom hela listan av klockor.
         {
-            bomb_cds[i].restart();
-            Bomb* ptr = new Bomb(this);
-            return ptr;
-        }
+            if (bomb_cds[i].getElapsedTime().asSeconds() >= cd) //När detta uppfylls har spelaren möjligheten att droppa en bomb.
+            {
+                bomb_cds[i].restart();
+	        return true;
+            }
+	}
     }
-    return nullptr;  // Player kan inte droppa en bomb.
+    return false;
+}
+
+Bomb* create_bomb(sf::Texture bomb_texture) const
+{
+    return new Bomb(sprite.getPosition(), bomb_texture, this);
 }
 
