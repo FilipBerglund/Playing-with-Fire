@@ -1,5 +1,5 @@
-#ifndef PC
-#define PC
+#ifndef PC_H
+#define PC_H
 #include "Player.h"
 
 class PC: public Player
