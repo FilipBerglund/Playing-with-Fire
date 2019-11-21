@@ -60,21 +60,21 @@ void Player::apply_on_hit_effect(Game_object* object)
         /*I de stora if-satsern nedanför kollar vi först  kollision i ett visst led
           och sedan kollar vi spelarens and bombens ursprungliga positioner
           för att bestämma i vilken riktning bomben ska skjutas iväg.*/
-        if (sprite.getPosition.x + hitbox().width/2 >=
+        if (sprite.getPosition().x + hitbox().width/2 >=
             ptr->get_position().x - ptr->hitbox().width/2 &&
             old_position.x + hitbox().width/2 <
             ptr->get_position().x - hitbox().width/2)
         {
             ptr->glide("right");
         }
-        else if(sprite.get_position().x - hitbox().width/2 <=
+        else if(sprite.getPosition().x - hitbox().width/2 <=
 		ptr->get_position().x + ptr->hitbox().width/2 &&
                 old_position.x + hitbox().width/2 >
                 ptr->get_position().x - ptr->hitbox().width/2)
         {
             ptr->glide("left");
         }
-        else if(sprite.get_position().y - hitbox().height/2 <=
+        else if(sprite.getPosition().y - hitbox().height/2 <=
 		ptr->get_position().y + ptr->hitbox().height/2 &&
                 old_position.y + hitbox().height/2 >
                 ptr->get_position().y - ptr->hitbox().width/2)
@@ -188,7 +188,7 @@ bool Player::request_to_drop_bomb()  //Hjälpfunktion när bomber ska droppas.
     if (want_to_drop_bomb)
     {
 	want_to_drop_bomb = false;
-        for (int i = 0; i < bomb_cds.size(); i++)  //Går igenom hela listan av klockor.
+        for (unsigned int i = 0; i < bomb_cds.size(); i++)  //Går igenom hela listan av klockor.
         {
             if (bomb_cds[i].getElapsedTime().asSeconds() >= cd) //När detta uppfylls har spelaren möjligheten att droppa en bomb.
             {
