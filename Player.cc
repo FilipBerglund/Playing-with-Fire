@@ -60,24 +60,24 @@ void Player::apply_on_hit_effect(Game_object* object)
         /*I de stora if-satsern nedanför kollar vi först  kollision i ett visst led
           och sedan kollar vi spelarens and bombens ursprungliga positioner
           för att bestämma i vilken riktning bomben ska skjutas iväg.*/
-        if (sprite.getPosition().x + hitbox().width/2 >=
-            ptr->sprite.getPosition().x - ptr->hitbox().width/2 &&
+        if (hitbox().x + hitbox().width/2 >=
+            ptr->hitbox().x - ptr->hitbox().width/2 &&
             old_position.x + hitbox().width/2 <
-            ptr->old_position.x - hitbox().width/2)
+            ptr->hitbox().x - hitbox().width/2)
         {
             ptr->glide("right");
         }
-        else if(sprite.getPosition().x - hitbox().width/2 <=
-            ptr->sprite.getPosition().x + ptr->hitbox().width/2 &&
-            old_position.x + hitbox().width/2 >
-            ptr->old_position.x - ptr->hitbox().width/2)
+        else if(hitbox().x - hitbox().width/2 <=
+		ptr->hitbox().x + ptr->hitbox().width/2 &&
+                old_position.x + hitbox().width/2 >
+                ptr->hitbox().x - ptr->hitbox().width/2)
         {
             ptr->glide("left");
         }
-        else if(sprite.getPosition().y - hitbox().height/2 <=
-            ptr->sprite.getPosition().y + ptr->hitbox().height/2 &&
-            old_position.y + hitbox().height/2 >
-            ptr->old_position.y - ptr->hitbox().width/2)
+        else if(hitbox().y - hitbox().height/2 <=
+		ptr->hitbox().y + ptr->hitbox().height/2 &&
+                old_position.y + hitbox().height/2 >
+                ptr->hitbox().y - ptr->hitbox().width/2)
         {
             ptr->glide("up");
         }
@@ -88,8 +88,7 @@ void Player::apply_on_hit_effect(Game_object* object)
     }
     else if (ptr->is_gliding() == true)  //push_powerup == false så bomben ska stanna.
     {
-        ptr->sprite.setPosition(ptr->old_position);
-        ptr->set_is_gliding(false);
+        ptr->undo_last_move();
     }
 }
 
