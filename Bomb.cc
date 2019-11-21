@@ -8,11 +8,11 @@
 #include <iostream>
 using namespace std;
 
-Bomb::Bomb (sf::Vector2f pos, sf::Sprite sprite, Player* player):     
+Bomb::Bomb (sf::Vector2f pos, sf::Sprite sprite, Player* owner):     
     Game_objects(pos, sprite), owner{player}
 {}
 
-void Bomb::spawn_fire(Player owner, int timer, Fire fire)
+void Bomb::spawn_fire(Player* owner, int timer, Fire fire)
 {
     //adding owner condition
     if (timer==0)
@@ -78,7 +78,7 @@ bool Bomb::is_gliding() const
     }
     else
     {
-        old.position;
+        sprite.setpostion(old.position);
     }
     
 }
