@@ -19,17 +19,17 @@
 Game_state::Game_state(): State("Game_state"),
     current_round{0}, players{}, bombs{}, fires{}, wooden_boxes{}, solid_boxes{}, is_playing{false}
     {
-        fire.loadFromFile("fire.png");
-        player1.loadFromFile("player1.png");
-        player2.loadFromFile("player2.png");
-        player3.loadFromFile("player3.png");
-        player4.loadFromFile("player4.png");
-        solid_box.loadFromFile("solid_box.png");
-        wooden_box.loadFromFile("wooden_box.png");
-        bomb.loadFromFile("bomb.png");
-        push.loadFromFile("push.png");
-        extra_bomb.loadFromFile("extra_bomb.png");
-        speed.loadFromFile("speed.png");
+        fire_texture.loadFromFile("fire.png");
+        player1_texture.loadFromFile("player1.png");
+        player2_texture.loadFromFile("player2.png");
+        player3_texture.loadFromFile("player3.png");
+        player4_texture.loadFromFile("player4.png");
+        solid_box_texture.loadFromFile("solid_texture.png");
+        wooden_box_texture.loadFromFile("wooden_texture.png");
+        bomb_texture.loadFromFile("bomb.png");
+        push_texture.loadFromFile("push.png");
+        extra_bomb_texture.loadFromFile("extra_bomb.png");
+        speed_texture.loadFromFile("speed.png");
     }
 
 void Game_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard)
