@@ -11,14 +11,11 @@
 class Bomb: public Game_object
 {
  public:
-    Bomb (sf::Vector2f pos, sf::Sprite sprite):     
-    Game_objects(pos, sprite)
-    {}
-    Bomb();
-    void spawn_fire(Player owner, int timer, Fire fire);
+    Bomb (sf::Vector2f pos, sf::Sprite sprite, Player*);
+    void spawn_fire(Player* owner, int timer, Fire fire);
     void update() override;
 
-    void collision (Game_object object);
+    void collision (Game_object* object);
 
     void glide(std::string direction);
     bool is_gliding() const;
@@ -26,7 +23,7 @@ class Bomb: public Game_object
 
  private:
     std::string direction();
-    Player owner();
+    Player* owner();
     int timer();
 
     sf::Clock ticking_bomb; 
