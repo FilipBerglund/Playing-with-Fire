@@ -11,11 +11,7 @@
 class Fire: public Game_object
 {
  public:
-    Fire (sf::Vector2f pos, sf::Sprite sprite):     
-    Game_objects(pos, sprite)
-    {}
-
-    fire();
+    Fire (sf::Vector2f pos, sf::Sprite sprite, int timer, int fire_size, Player*);
 
     bool is_boosted();
     void fire_boost(int fire_size);
@@ -27,7 +23,7 @@ class Fire: public Game_object
     Player owner();
     int timer();
     int fire_size();
-    
+
     sf::Clock fire_rate;
 
 };
