@@ -61,23 +61,23 @@ void Player::apply_on_hit_effect(Game_object* object)
           och sedan kollar vi spelarens and bombens ursprungliga positioner
           för att bestämma i vilken riktning bomben ska skjutas iväg.*/
         if (hitbox().x + hitbox().width/2 >=
-            ptr->hitbox().getPosition().x - ptr->hitbox().width/2 &&
+            ptr->get_position().x - ptr->hitbox().width/2 &&
             old_position.x + hitbox().width/2 <
-            ptr->hitbox().getPosition().x - hitbox().width/2)
+            ptr->get_position().x - hitbox().width/2)
         {
             ptr->glide("right");
         }
         else if(hitbox().x - hitbox().width/2 <=
-		ptr->hitbox().getPosition().x + ptr->hitbox().width/2 &&
+		ptr->get_position().x + ptr->hitbox().width/2 &&
                 old_position.x + hitbox().width/2 >
-                ptr->hitbox().getPosition().x - ptr->hitbox().width/2)
+                ptr->get_position().x - ptr->hitbox().width/2)
         {
             ptr->glide("left");
         }
         else if(hitbox().y - hitbox().height/2 <=
-		ptr->hitbox().getPosition().y + ptr->hitbox().height/2 &&
+		ptr->get_position().y + ptr->hitbox().height/2 &&
                 old_position.y + hitbox().height/2 >
-                ptr->hitbox().getPosition().y - ptr->hitbox().width/2)
+                ptr->.get_position().y - ptr->hitbox().width/2)
         {
             ptr->glide("up");
         }
@@ -188,7 +188,7 @@ bool Player::request_to_drop_bomb()  //Hjälpfunktion när bomber ska droppas.
     if (want_to_drop_bomb)
     {
 	want_to_drop_bomb = false;
-        for (int i = 0; i < bomb_cds.size(), i++)  //Går igenom hela listan av klockor.
+        for (int i = 0; i < bomb_cds.size(); i++)  //Går igenom hela listan av klockor.
         {
             if (bomb_cds[i].getElapsedTime().asSeconds() >= cd) //När detta uppfylls har spelaren möjligheten att droppa en bomb.
             {
@@ -200,7 +200,7 @@ bool Player::request_to_drop_bomb()  //Hjälpfunktion när bomber ska droppas.
     return false;
 }
 
-Bomb* Player::create_bomb(sf::Texture bomb_texture) const
+Bomb* Player::create_bomb(sf::Texture bomb_texture)
 {
     return new Bomb(sprite.getPosition(), bomb_texture, this);
 }
