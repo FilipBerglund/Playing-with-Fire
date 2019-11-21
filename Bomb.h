@@ -1,6 +1,7 @@
 #ifndef BOMB_H
 #define BOMB_H
 
+#include <SFML/Graphics.hpp>
 #include "Game_object.h"
 #include "Player.h"
 #include <string>

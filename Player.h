@@ -5,6 +5,7 @@
 #include "Bomb.h"
 #include <vector>
 
+class Bomb;
 class Player: public Game_object
 {
 public:
