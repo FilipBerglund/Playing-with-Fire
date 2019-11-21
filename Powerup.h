@@ -23,7 +23,6 @@ public:
     {}
 
     void apply_on_hit_effect(Game_object*) override;
-    void update() override;
 };
 
 class Bigger_blast: public Powerup
@@ -34,7 +33,6 @@ public:
     {}
 
     void apply_on_hit_effect(Game_object*) override;
-    void update() override;
 };
 
 class Extra_bomb: public Powerup
@@ -45,7 +43,6 @@ public:
     {}
 
     void apply_on_hit_effect(Game_object*) override;
-    void update() override;
 };
 
 class Push: public Powerup
@@ -56,6 +53,5 @@ public:
     {}
 
     void apply_on_hit_effect(Game_object*) override;
-    void update() override;
 };
 #endif

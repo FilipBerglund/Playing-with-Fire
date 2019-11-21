@@ -17,7 +17,7 @@ public:
         return sprite;
     }
 
-    virtual void update() {};
+    virtual void update(sf::Keyboard) {};
     virtual void apply_on_hit_effect(Game_object*) = 0;
     void undo_last_move()
     {

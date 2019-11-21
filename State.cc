@@ -49,7 +49,7 @@ void Game_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard)
 
         if (player->request_to_drop_bomb())
         {
-            bombs->push_back(player->create_bomb(bomb_texture));
+            bombs.push_back(player->create_bomb(bomb_texture));
         }
     }
 
