@@ -10,6 +10,7 @@
 #include "Fire.h"
 
 
+#include <iostream>
 /*
  * GAME_STATE
  *
@@ -35,6 +36,7 @@ Game_state::Game_state(): State("Game_state"),
 void Game_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard)
 {
     user_input_handler(mouse, keyboard);
+    check_collisions();
 
 
     if (!is_playing)
@@ -54,7 +56,6 @@ void Game_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard)
         }
     }
 
-    check_collisions();
     wooden_boxes.remove_if(
             [](Wooden_box* wooden_box){return wooden_box->is_dead();});
 
@@ -91,6 +92,7 @@ void Game_state::check_collisions()
             if (player->hitbox().intersects(wooden_box->hitbox()))
             {
                 wooden_box->apply_on_hit_effect(player);
+                std::cout << "collision" << std::endl;
             }
         }
         for (Solid_box* solid_box : solid_boxes)
@@ -222,6 +224,8 @@ void Game_state::new_game(int PC, int NPC1, int NPC2, int NPC3)
     //initialize everything
     Player* player = new Player(sf::Vector2f(300,300), player1_texture, 3, false, 3, 5, 2, 5);
     players.push_back(player);
+    
+    wooden_boxes.push_back(new Wooden_box(sf::Vector2f(800, 300), wooden_box_texture));
 
     round_timer.restart();
     is_playing = true;

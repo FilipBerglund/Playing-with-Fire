@@ -38,6 +38,18 @@ public:
     void make_immune();
     bool request_to_drop_bomb();
     Bomb* create_bomb(sf::Texture);
+    
+
+    //testing!! remove later.
+    void update(sf::Keyboard keyboard) override
+    {
+        if (keyboard.isKeyPressed(sf::Keyboard::Key::D))
+        {
+            old_position = sprite.getPosition() - sf::Vector2f(1,0);
+            sprite.move(sf::Vector2f(1,0));
+        }
+
+    }
 
 
 protected:

@@ -27,9 +27,12 @@ class Wooden_box: public Box
 {
 public:
     Wooden_box(sf::Vector2f pos, sf::Texture texture):
-    Box(pos, texture), health{0} {}
+    Box(pos, texture), health{1} {}
 
-    void collision() {}
+    void apply_on_hit_effect(Game_object* object) override
+    {
+        object->undo_last_move();
+    }
     bool is_dead() const
     {
         return health == 0 ? true : false;
