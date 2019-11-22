@@ -17,24 +17,25 @@
 
 
 Game_state::Game_state(): State("Game_state"),
-    current_round{0}, players{}, bombs{}, fires{}, wooden_boxes{}, solid_boxes{}, is_playing{false}
+    current_round{0}, players{}, bombs{}, fires{}, wooden_boxes{}, solid_boxes{}, is_playing{true}
     {
-        fire_texture.loadFromFile("fire.png");
-        player1_texture.loadFromFile("player1.png");
-        player2_texture.loadFromFile("player2.png");
-        player3_texture.loadFromFile("player3.png");
-        player4_texture.loadFromFile("player4.png");
-        solid_box_texture.loadFromFile("solid_texture.png");
-        wooden_box_texture.loadFromFile("wooden_texture.png");
-        bomb_texture.loadFromFile("bomb.png");
-        push_texture.loadFromFile("push.png");
-        extra_bomb_texture.loadFromFile("extra_bomb.png");
-        speed_texture.loadFromFile("speed.png");
+        fire_texture.loadFromFile("textures/fire_texture.png");
+        player1_texture.loadFromFile("textures/player1_texture.png");
+        player2_texture.loadFromFile("textures/player2_texture.png");
+        player3_texture.loadFromFile("textures/player3_texture.png");
+        player4_texture.loadFromFile("textures/player4_texture.png");
+        solid_box_texture.loadFromFile("textures/solid_texture.png");
+        wooden_box_texture.loadFromFile("textures/wooden_texture.png");
+        bomb_texture.loadFromFile("textures/bomb_texture.png");
+        push_texture.loadFromFile("textures/push_texture.png");
+        extra_bomb_texture.loadFromFile("textures/extra_bomb_texture.png");
+        speed_texture.loadFromFile("textures/speed_texture.png");
     }
 
 void Game_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard)
 {
     user_input_handler(mouse, keyboard);
+
 
     if (!is_playing)
     {
@@ -219,6 +220,9 @@ void Game_state::new_round()
 void Game_state::new_game(int PC, int NPC1, int NPC2, int NPC3)
 {
     //initialize everything
+    Player* player = new Player(sf::Vector2f(300,300), player1_texture, 3, false, 3, 5, 2, 5);
+    players.push_back(player);
+
     round_timer.restart();
     is_playing = true;
 }

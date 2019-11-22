@@ -8,8 +8,8 @@ BIN_NECESSARY := $(NECESSARY:.cc=.o)
 all: test clearscreen run
 leak: test clearscreen leak_run
 
-main: main.o
-	$(CCC) $(CFLAGS) main.o $(SFMLFLAGS)
+main: $(BIN_NECESSARY) main.o
+	$(CCC) $(CFLAGS) $(BIN_NECESSARY) main.o $(SFMLFLAGS)
 
 test: $(BIN_NECESSARY) test_main.o test_gameobj.o
 	$(CCC) $(CFLAGS)  $(BIN_NECESSARY) test_main.o test_gameobj.o -lsfml-graphics -lsfml-window -lsfml-system

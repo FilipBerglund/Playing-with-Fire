@@ -3,7 +3,7 @@
 
 PC::PC(sf::Vector2f pos, sf::Texture texture, int cooldown, int in_push,
        int in_health, int in_speed, int in_fire, int in_cd,
-       sf::Key left_arg, sf::Key right_arg, sf::Key down_arg, sf::Key up_arg, sf::key bomb_arg):
+       sf::Keyboard::Key left_arg, sf::Keyboard::Key right_arg, sf::Keyboard::Key down_arg, sf::Keyboard::Key up_arg, sf::Keyboard::key bomb_arg):
     Player(pos, texture, cooldown, in_push, in_health, in_speed, in_fire, in_cd),
     left{left_arg},
     right{right_arg},
@@ -12,7 +12,7 @@ PC::PC(sf::Vector2f pos, sf::Texture texture, int cooldown, int in_push,
     bomb_button{bomb_arg}
 {}
 
-void update(sf::Keyboard keyboard)
+void PC::update(sf::Keyboard keyboard)
 {
     if (keyboard.isKeyPressed(bomb_button) == true)
     {
