@@ -264,11 +264,7 @@ bool Game_state::is_game_over()
 
 bool Game_state::is_time_up()
 {
-    if (round_timer.getElapsedTime().asSeconds() > 180)
-    {
-        return true;
-    }
-    return false;
+    return round_timer.getElapsedTime().asSeconds() > 180;
 }
 
 
