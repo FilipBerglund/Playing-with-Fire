@@ -40,7 +40,7 @@ public:
     Bomb* create_bomb(sf::Texture);
     
 
-    //testing!! remove later.
+    /*testing!! remove later.
     void update(sf::Keyboard keyboard) override
     {
         if (keyboard.isKeyPressed(sf::Keyboard::Key::D))
@@ -50,6 +50,7 @@ public:
         }
 
     }
+    */
 
 
 protected:

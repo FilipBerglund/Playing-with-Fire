@@ -3,7 +3,6 @@
 
 #include <SFML/Graphics.hpp>
 #include "Game_object.h"
-#include "Player.h"
 #include <string>
 
 class Player;
