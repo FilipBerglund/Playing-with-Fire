@@ -20,7 +20,7 @@ Pc::Pc(sf::Vector2f pos, sf::Texture texture, int cooldown, bool in_push,
 
 void Pc::update(sf::Keyboard keyboard)
 {
-    std::cout << old_position.x << std::endl;
+    //std::cout << old_position.x << std::endl;
     if (keyboard.isKeyPressed(bomb_button))
     {
         want_to_drop_bomb == true;
@@ -30,7 +30,7 @@ void Pc::update(sf::Keyboard keyboard)
         old_position = sprite.getPosition() - sf::Vector2f(-speed, 0);
         sprite.setRotation(-90);
         sprite.move(-speed, 0);
-        std::cout << old_position.x << std::endl;
+        //std::cout << old_position.x << std::endl;
     }
     else if (keyboard.isKeyPressed(right))
     {

@@ -12,6 +12,7 @@
 
 
 #include <iostream>
+#include <string>
 /*
  * GAME_STATE
  *
@@ -156,24 +157,27 @@ void Game_state::check_collisions()
 
 void Game_state::draw(sf::RenderWindow& window)
 {
-    for (Player* player : players)
-    {
-        if (!player->is_dead())
-        {
-            window.draw(player->get_drawable());
-        }
-    }
+    //for (Player* player : players)
+    //{
+    //    if (!player->is_dead())
+    //    {
+    //        window.draw(player->get_drawable());
+    //    }
+    //}
 
     for (Wooden_box* wooden_box : wooden_boxes)
+    {
+        //std::cout << "Wooden boxes texture: " << wooden_box->get_drawable().getTexture() << std::endl;
         window.draw(wooden_box->get_drawable());
-    for (Solid_box* solid_box : solid_boxes)
-        window.draw(solid_box->get_drawable());
-    for (Fire* fire : fires)
-        window.draw(fire->get_drawable());
-    for (Bomb* bomb : bombs)
-        window.draw(bomb->get_drawable());
-    for (Powerup* powerup : powerups)
-        window.draw(powerup->get_drawable());
+    }
+    //for (Solid_box* solid_box : solid_boxes)
+    //    window.draw(solid_box->get_drawable());
+    //for (Fire* fire : fires)
+    //    window.draw(fire->get_drawable());
+    //for (Bomb* bomb : bombs)
+    //    window.draw(bomb->get_drawable());
+    //for (Powerup* powerup : powerups)
+    //    window.draw(powerup->get_drawable());
 
     //for (Menu_button* menu_botton : menu_buttons)
     //    window.draw(menu_button->get_drawable());

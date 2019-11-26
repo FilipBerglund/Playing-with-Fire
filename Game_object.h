@@ -3,6 +3,9 @@
 
 #include <SFML/Graphics.hpp>
 
+#include <iostream> //For debugging
+#include <string>
+
 class Game_object
 {
 public:
@@ -14,6 +17,7 @@ public:
 
     sf::Sprite get_drawable() const
     {
+        std::cout << "Getting drawable, texture is: " << sprite.getTexture() << std::endl;
         return sprite;
     }
 
