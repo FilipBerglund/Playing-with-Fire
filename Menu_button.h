@@ -9,34 +9,30 @@ class Menu_button
 {
 public:
    Menu_button();
-   Menu_button(sf::Vector2f pos, sf::Sprite s);
 
   
    // bool contains(sf::Mouse&);
  virtual bool click(sf::Mouse&)=0;
-
-  sf::Sprite get_drawable() const
-    {
-      return sprite;
-    }
-  
+ virtual void draw(sf::RenderWindow&)=0; 
  private:
-  sf::Sprite sprite;
-
 
 };
 
 class Bool_button : public Menu_button
 {
- Public:
+ public:
   
-    _button();
-   Menu_button(sf::Vector2f pos, sf::Sprite s);
+   Bool_button();
+   Bool_button(sf::Vector2f pos, sf::Texture s);
+   bool click(sf::Mouse&) override;
+   
+   void draw(sf::RenderWindow&) override;
+
    
  private:
    sf::Sprite sprite;
   
-}
+};
 
 class Int_button: public Menu_button
 {
@@ -47,6 +43,7 @@ class Int_button: public Menu_button
   //bool contains(sf::Mouse&);
    bool click(sf::Mouse&) override;
    int get_value(){return value;}
+   void draw(sf::RenderWindow&) override;
    
  private:
    

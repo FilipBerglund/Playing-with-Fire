@@ -7,17 +7,36 @@ Menu_button::Menu_button()
 {
 }
 
-
-Menu_button::Menu_button(sf::Vector2f pos, sf::Sprite s):
-  sprite{s}
+Bool_button::Bool_button()
 {
-  sprite.setPosition(pos);
-  sf::RectangleShape shape;
-  shape.setSize(sf::Vector2f(100, 100));
-  shape.setPosition(pos);
 }
 
 
+Bool_button::Bool_button(sf::Vector2f pos, sf::Texture s):
+  sprite{s}
+{
+  sprite.setPosition(pos);
+}
+
+//Kollar om musen är på bool button
+bool Bool_button::click(sf::Mouse& mouse)
+{
+  if (sprite.getGlobalBounds().contains(mouse.getPosition().x , mouse.getPosition().y))
+    {
+      return true;
+    }
+  else
+    {
+      return false;
+    }
+
+}
+//ritar bool button
+void Bool_button::draw(sf::RenderWindow& window)
+{
+  window.draw(sprite);
+
+}
 
 
 Int_button::Int_button(sf::Vector2f pos, sf::Texture s0, sf::Texture s1, sf::Texture s2, sf::Texture s3, sf::Texture s4 , sf::Texture sbg )
@@ -29,62 +48,44 @@ Int_button::Int_button(sf::Vector2f pos, sf::Texture s0, sf::Texture s1, sf::Tex
   corrdy = pos.y;
   
   //back grunds lådan
-  //fixa corrdinter senare
   sprite_background.setPosition(pos);
-  //sf::RectangleShape shape_sprite_background;
-  //shape_sprite_background.setSize(sf::Vector2f(sprite_background.getSize()));
-  //shape_sprite_background.setPosition(pos);
+ 
 
   //sprite0 lådan
-  sprite0.setPosition(sf::Vector2f(corrdx+50,corrdy+100));
-  //sf::RectangleShape shape_sprite0;
-  //shape_sprite0.setSize(sf::Vector2f(sprite0.getSize()));
-  //shape_sprite0.setPosition(corrdx+50,corrdy+100);
-  
+  sprite0.setPosition(sf::Vector2f(corrdx+50, corrdy+100));
+
   //sprite1  lådan
-  //fixa corrdinter senare 
-  sprite1.setPosition(sf::Vector2f(corrdx+50,corrdy+100));
-  //sf::RectangleShape shape_sprite1;
-  //shape_sprite1.setSize(sf::Vector2f(sprite2.getSize()));
-  //shape_sprite1.setPosition(corrdx+50,corrdy+100);
+  sprite1.setPosition(sf::Vector2f(corrdx+100, corrdy+100));
+ 
   
   //sprite2  lådan
-  //fixa corrdinter senare 
-  sprite2.setPosition(sf::Vector2f(corrdx+50,corrdy+100));
-  //sf::RectangleShape shape_sprite2;
-  //shape_sprite2.setSize(sf::Vector2f(sprite3.getSize()));
-  //shape_sprite2.setPosition(corrdx+50,corrdy+100);
+  sprite2.setPosition(sf::Vector2f(corrdx+150, corrdy+100));
+
   
   //sprite3  lådan
-  //fixa corrdinter senare
-   sprite3.setPosition(sf::Vector2f(corrdx+50,corrdy+100));
-  //sf::RectangleShape shape_sprite3;
-  // shape_sprite3.setSize(sf::Vector2f((sprite3.getSize()));
-  // shape_sprite3.setPosition(corrdx+50,corrdy+100);
+   sprite3.setPosition(sf::Vector2f(corrdx+200, corrdy+100));
 
   //sprite4  lådan 
-  sprite4.setPosition(sf::Vector2f(corrdx+50,corrdy+100));
-  //sf::RectangleShape shape_sprite4;
-  //shape_sprite4.setSize(sf::Vector2f(sprite4.getSize()));
-  // shape_sprite4.setPosition(corrdx+50,corrdy+100);
+  sprite4.setPosition(sf::Vector2f(corrdx+250, corrdy+100));
+ 
   
   
  }
 
-				     
+// KOllar vilken låda musen är över och anger rätt value				     
 bool Int_button::click(sf::Mouse& mouse)
 {
-  if (sprite0.getGlobalBounds().contains(mouse.getPosition().x , mouse.getPosition().y))
+  if (sprite0.getGlobalBounds().contains(mouse.getPosition().x, mouse.getPosition().y))
     {
       value = 0;
       return true;
     }
-  else if(sprite1.getGlobalBounds().contains(mouse.getPosition().x , mouse.getPosition().y))
+  else if(sprite1.getGlobalBounds().contains(mouse.getPosition().x, mouse.getPosition().y))
     {
       value = 1;
       return true;
     }
-  else if(sprite2.getGlobalBounds().contains(mouse.getPosition().x , mouse.getPosition().y))
+  else if(sprite2.getGlobalBounds().contains(mouse.getPosition().x, mouse.getPosition().y))
       {
 	value = 2;
 	return true;
@@ -103,8 +104,17 @@ bool Int_button::click(sf::Mouse& mouse)
 	    {
 	      return false;
 	    }
+}
 
-
+//Ritar Int_button
+void Int_button::draw(sf::RenderWindow& window)
+{
+  window.draw(sprite_background);
+  window.draw(sprite0);
+  window.draw(sprite1);
+  window.draw(sprite2);
+  window.draw(sprite3);
+  window.draw(sprite4);
 }
 
 	
