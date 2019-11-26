@@ -25,7 +25,7 @@ public:
   sf::Texture; 
 
 };
-
+/*
 class bool_button : public Menu_button
 {
  Public:
@@ -34,7 +34,7 @@ class bool_button : public Menu_button
   
   
 }
-
+*/
 class Int_button : public Menu_button
 {
  Public:
@@ -44,14 +44,16 @@ class Int_button : public Menu_button
    bool contains(sf::Mouse&);
    bool click(sf::Mouse&);
    int get_value(){return value;}
+   
  private:
+   
    int value{};
-  sf::Sprite sprite_background;
-  sf::Sprite sprite0;
-  sf::Sprite sprite1;
-  sf::Sprite sprite2;
-  sf::Sprite sprite3;
-  sf::Sprite sprite4;
+  sf::Texture sprite_background;
+  sf::Texture sprite0;
+  sf::Texture sprite1;
+  sf::Texture sprite2;
+  sf::Texture sprite3;
+  sf::Texture sprite4;
   
 }
 
