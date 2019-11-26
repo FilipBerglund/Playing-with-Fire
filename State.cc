@@ -182,11 +182,6 @@ void Game_state::draw(sf::RenderWindow& window)
 
 void Game_state::user_input_handler(sf::Mouse& mouse, sf::Keyboard& keyboard)
 {
-    for (Player* player : players)
-    {
-        player->update(keyboard);
-    }
-
     /*
     if (mouse.isButtonPressed(sf::Mouse::Left)
     {

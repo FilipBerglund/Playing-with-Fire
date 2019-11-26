@@ -20,33 +20,28 @@ Pc::Pc(sf::Vector2f pos, sf::Texture texture, int cooldown, bool in_push,
 
 void Pc::update(sf::Keyboard keyboard)
 {
-    std::cout << old_position.x << std::endl;
+    old_position = sprite.getPosition();
     if (keyboard.isKeyPressed(bomb_button))
     {
         want_to_drop_bomb == true;
     }
     else if (keyboard.isKeyPressed(left))
     {
-        old_position = sprite.getPosition() - sf::Vector2f(-speed, 0);
         sprite.setRotation(-90);
         sprite.move(-speed, 0);
-        std::cout << old_position.x << std::endl;
     }
     else if (keyboard.isKeyPressed(right))
     {
-        old_position = sprite.getPosition() - sf::Vector2f(speed, 0);
         sprite.setRotation(90);
         sprite.move(speed, 0);
     }
     else if (keyboard.isKeyPressed(down))
     {
-        old_position = sprite.getPosition() - sf::Vector2f(0,speed);
         sprite.setRotation(180);
         sprite.move(0, speed);
     }
     else if(keyboard.isKeyPressed(up))
     {
-        old_position = sprite.getPosition() - sf::Vector2f(0, -speed);
         sprite.setRotation(0);
         sprite.move(0, -speed);
     }
