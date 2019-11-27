@@ -6,16 +6,30 @@
 #include "Bomb.h"
 
 #include <iostream>
+#include <vector>
 using namespace std;
 
-Bomb::Bomb (sf::Vector2f pos, sf::Sprite sprite, Player* owner):     
-    Game_objects(pos, sprite), owner{player}
-{}
+Bomb::Bomb (sf::Vector2f pos,/*sf::FileStream stream,*/
+ sf::Texture texture, Player* player):     
+    Game_objects(pos, texture), owner{player}
+{
+    float x;
+    float y;
+    sprite.setPostion(x,y)
+    sprite.setOrigin(hitbox().width/1, hitbox().height/1);
+    //sprite.setPosition (x, y);
+    //sprite.setOrigin (sprite_size.x / 2, sprite_size.y / 2);
+    //stream.open("Bomb.png");
+    //texture.loadFromStream(stream);
+}
 
-void Bomb::spawn_fire(Player* owner, int timer, Fire fire)
+void Bomb::spawn_fire(Player* owner, float timer, Fire fire)
 {
     //adding owner condition
-    if (timer==0)
+
+    sf::Time time= sf::Time seconds (float 3);
+    float timer= ticking_bomb.getElapsedTime().asSeconds();
+    for (timer <= 0)
     {
         return fire;
     }
@@ -23,52 +37,88 @@ void Bomb::spawn_fire(Player* owner, int timer, Fire fire)
 }
 
 
-void Bomb::update()
+void Bomb::update() override
 {
-
+    //update
 }
 
 
-void Bomb::collision(Game_object* object)
+/*void Bomb::collision(Game_object* object)
 {
     for (object == Box || object == Bomb || object == Player)
     {
        sprite.setPosition(old_postion);
     }
     
+}*/
+
+void Bomb::apply_on_hit_effect(Game_object* object)
+{
+    object->undo_last_move();
 }
 
+//float offsetX();
+//float offsetY();
 
 void Bomb::glide(string direction)
 {
-    Bomb* popo;
-      if (direction == "right")
+    sf::Vector current = sprite.getPosition();
+    //Movement = sprite.setPosition(pos.x + offsetX, pos.y + offsetY);
+    if (direction == "right")
         {
-            /*bomb moves right till collision*/
-            
+            sprite.setPosition(sprite.getPosition().getRotation() + offset + angle(radius()) );
         }
         else if (direction == "left")
         {
-            /* bomb moves left till collision */
+            sprite.setPosition(sprite.getPosition().getRotation() + offset + angle(radius()) );   
         }
         else if (direction == "up")
         {
-            /* bomb moves up till collision */
+            sprite.setPosition(sprite.getPosition().getRotation() + offset + angle(radius()) );
         }
         else if (direction == "down")
         {
-            /* bomb moves down till collision */
+            sprite.setPosition(sprite.getPosition().getRotation() + offset + angle(radius()) );
         }
         else
         {
-            popo->sprite.setposition(popo->old_position)
+            ptr->undo_last_move();
+        }
+}
+/*float Speed{length{idk}};
+float coordinate{angle (rd)};
+velocity = sf::Vector2f {Speed * cos(coordinate), Speed * sin(coordinate)};
+
+void Bomb::glide(string direction)
+{
+    Bomb* ptr = 
+    Bomb.move (velocity)
+      if (direction == "right")
+        {
+            rd==360;
+        }
+        else if (direction == "left")
+        {
+            rd==180;
+        }
+        else if (direction == "up")
+        {
+            rd==90;
+        }
+        else if (direction == "down")
+        {
+            rd==270;
+        }
+        else
+        {
+            ptr->undo_last_move();
         }
         
         
         
     
     
-}
+}*/
 
 bool Bomb::is_gliding() const
 {
@@ -78,7 +128,7 @@ bool Bomb::is_gliding() const
     }
     else
     {
-        sprite.setpostion(old.position);
+        sprite.setpostion(old_position);
     }
     
 }
