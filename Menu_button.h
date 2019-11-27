@@ -18,17 +18,16 @@ public:
 
 };
 
-class Bool_button : public Menu_button
+class Start_button : public Menu_button
 {
  public:
   
-   Bool_button();
-   Bool_button(sf::Vector2f pos, sf::Texture s);
-   bool click(sf::Mouse&) override;
+   Start_button();
+   Start_button(sf::Vector2f pos, sf::Texture s);
    
+   bool click(sf::Mouse&) override;   
    void draw(sf::RenderWindow&) override;
-
-   
+ 
  private:
    sf::Sprite sprite;
   
@@ -38,7 +37,9 @@ class Int_button: public Menu_button
 {
  public:
   Int_button();
-  Int_button(sf::Vector2f pos, sf::Texture s0, sf::Texture s1, sf::Texture s2, sf::Texture s3, sf::Texture s4 , sf::Texture sbg);
+  Int_button(sf::Vector2f pos, sf::Texture s0, sf::Texture s1,
+	     sf::Texture   s2, sf::Texture s3, sf::Texture s4,
+	     sf::Texture  sbg);
   
   //bool contains(sf::Mouse&);
    bool click(sf::Mouse&) override;
@@ -46,17 +47,14 @@ class Int_button: public Menu_button
    void draw(sf::RenderWindow&) override;
    
  private:
-   
-   int value{};
+ 
+  int value{};
   sf::Sprite sprite_background;
   sf::Sprite sprite0;
   sf::Sprite sprite1;
   sf::Sprite sprite2;
   sf::Sprite sprite3;
-  sf::Sprite sprite4;
-
-
-  
+  sf::Sprite sprite4; 
 };
 
 
