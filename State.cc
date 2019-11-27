@@ -9,7 +9,8 @@
 #include "Fire.h"
 #include "Player.h"
 #include "PC.h"
-
+#include <stdlib.h>     
+#include <time.h>       
 
 #include <iostream>
 /*
@@ -58,7 +59,35 @@ void Game_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard)
     }
 
     wooden_boxes.remove_if(
-            [](Wooden_box* wooden_box){return wooden_box->is_dead();});
+	[this](Wooden_box* wooden_box)
+        {
+	    if (!wooden_box->is_dead())
+	    {
+	        return false;
+	    }
+	    srand (time(NULL));
+	    if (rand() % 2 + 1 == 2)
+	    {
+		int rand_int = rand() % 4 + 1; 
+	        if (rand_int == 1)
+	        {
+		    powerups.push_back(new Speed(wooden_box->get_position(), speed_texture));
+		}
+	        else if (rand_int == 2)
+	        {
+		    powerups.push_back(new Bigger_blast(wooden_box->get_position(), bigger_blast_texture));
+		}
+	        else if (rand_int == 3)
+	        {
+		    powerups.push_back(new Extra_bomb(wooden_box->get_position(), extra_bomb_texture));
+		}
+	        else  //rand_int == 4.
+	        {
+		    powerups.push_back(new Push(wooden_box->get_position(), push_texture));
+		}
+	    }
+	    return true;
+	});
 
 
     if (is_round_over())
@@ -147,7 +176,7 @@ void Game_state::check_collisions()
             if (fire->hitbox().intersects(wooden_box->hitbox()))
             {
                 fire->apply_on_hit_effect(wooden_box);
-                wooden_box->apply_on_hit_effect(fire);
+                wooden_box->apply_on_hit_effect(fire);	
             }
         }
     }
