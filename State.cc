@@ -228,3 +228,26 @@ void Menu_state::draw(sf::Window& window)
     //we need to somewhere give the buttons a position. Maybe that can be done here based on the size of window. We might add a scaling too.
     //And perhaps draw some fancy background
 }
+
+struct PlayerComparator
+{
+	// Compare 2 Player objects using name
+  bool operator ()(Player & player1, Player & player2)
+	{
+		if(player1.get_score == player2.get_score)
+			return player1 < player2;
+		return player1.get_score < player2.get_score;
+ 
+	}
+};
+
+
+End_screen::End_screen(sf::Texture s, std::list<player> list)
+  :sprite{s}, list_of_player{list}
+{
+  sf::Vector2f pos;
+  Start_button{pos, sprite};
+  list_of_player.sort(PlayerComparator());
+  
+}
+

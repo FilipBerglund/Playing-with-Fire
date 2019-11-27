@@ -64,4 +64,20 @@ public:
 private:
     void user_input_handler(sf::Mouse&, sf::Keyboard&) override;
 };
+
+class End_screen: public State
+{
+ public:
+  End_screen(sf::Texture sprite, std::list<player> list_of_player);
+
+  void Sort();
+  void Draw(list<player> );
+  
+ private:
+  sf::Sprite sprite;
+  std::list<player> list_of_player;
+
+};
+
+
 #endif
