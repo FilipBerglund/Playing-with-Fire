@@ -14,17 +14,10 @@ public:
     {
         sprite.setPosition(pos);
         sprite.setTexture(texture);
-        std::cout << "Constructing Game_object" << std::endl;
-        std::cout << "Texture ptr is: " << sprite.getTexture() << std::endl;
-        std::cout << "Size is: " << sprite.getTexture()->getSize().x 
-                  << " by " << sprite.getTexture()->getSize().y << std::endl;
     }
 
     sf::Sprite get_drawable() const
     {
-        std::cout << "Getting drawable, texture is: " << sprite.getTexture() << std::endl;
-        std::cout << "Size is: " << sprite.getTexture()->getSize().x 
-                  << " by " << sprite.getTexture()->getSize().y << std::endl;
         return sprite;
     }
 

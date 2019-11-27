@@ -9,7 +9,7 @@
 class Powerup: public Game_object
 {
 public:
-    Powerup(sf::Vector2f pos, sf::Texture texture):
+    Powerup(sf::Vector2f pos, sf::Texture & texture):
     Game_object(pos, texture)
     {}
 

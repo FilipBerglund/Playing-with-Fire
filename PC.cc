@@ -3,7 +3,7 @@
 #include <iostream>
 
 
-Pc::Pc(sf::Vector2f pos, sf::Texture texture, int cooldown, bool in_push,
+Pc::Pc(sf::Vector2f pos, sf::Texture & texture, int cooldown, bool in_push,
        int in_health, int in_speed, int in_fire, int in_cd,
        sf::Keyboard::Key left_arg,
        sf::Keyboard::Key right_arg,

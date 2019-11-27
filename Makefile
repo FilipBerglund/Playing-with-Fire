@@ -11,9 +11,6 @@ leak: test clearscreen leak_run
 main: $(BIN_NECESSARY) main.o
 	$(CCC) $(CFLAGS) $(BIN_NECESSARY) main.o $(SFMLFLAGS)
 
-testmain: $(BIN_NECESSARY) test_main.o
-	$(CCC) $(CFLAGS) $(BIN_NECESSARY) test_main.o $(SFMLFLAGS)
-
 test: $(BIN_NECESSARY) test_main.o test_gameobj.o
 	$(CCC) $(CFLAGS)  $(BIN_NECESSARY) test_main.o test_gameobj.o -lsfml-graphics -lsfml-window -lsfml-system
 

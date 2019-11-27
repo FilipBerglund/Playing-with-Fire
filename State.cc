@@ -33,11 +33,6 @@ Game_state::Game_state(): State("Game_state"),
         push_texture.loadFromFile("textures/push_texture.png");
         extra_bomb_texture.loadFromFile("textures/extra_bomb_texture.png");
         speed_texture.loadFromFile("textures/speed_texture.png");
-        
-        std::cout << "loaded wooden texture" << std::endl;
-        std::cout << "Size is: " << wooden_box_texture.getSize().x  
-                  << " by " << wooden_box_texture.getSize().y << std::endl; 
-        //Correct size here
     }
 
 void Game_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard)
@@ -162,36 +157,25 @@ void Game_state::check_collisions()
 
 void Game_state::draw(sf::RenderWindow& window)
 {
-    //for (Player* player : players)
-    //{
-    //    if (!player->is_dead())
-    //    {
-    //        window.draw(player->get_drawable());
-    //    }
-    //}
-    sf::Sprite sp{wooden_box_texture};
-    sp.setPosition(400,400);
-    window.draw(sp);
-    std::cout << "Game_state::draw" << std::endl;
-    std::cout << "sp texture ptr: " << sp.getTexture() << std::endl;
-    std::cout << "Size is: " << sp.getTexture()->getSize().x
-               << " by " << sp.getTexture()->getSize().y << std::endl;
-
-    for (Wooden_box* wooden_box : wooden_boxes)
+    for (Player* player : players)
     {
-        //std::cout << "Wooden boxes texture: " << wooden_box->get_drawable().getTexture() << std::endl;
-        window.draw(wooden_box->get_drawable());
+        if (!player->is_dead())
+        {
+            window.draw(player->get_drawable());
+        }
     }
-    //for (Solid_box* solid_box : solid_boxes)
-    //    window.draw(solid_box->get_drawable());
-    //for (Fire* fire : fires)
-    //    window.draw(fire->get_drawable());
-    //for (Bomb* bomb : bombs)
-    //    window.draw(bomb->get_drawable());
-    //for (Powerup* powerup : powerups)
-    //    window.draw(powerup->get_drawable());
+    for (Wooden_box* wooden_box : wooden_boxes)
+        window.draw(wooden_box->get_drawable());
+    for (Solid_box* solid_box : solid_boxes)
+        window.draw(solid_box->get_drawable());
+    for (Fire* fire : fires)
+        window.draw(fire->get_drawable());
+    for (Bomb* bomb : bombs)
+        window.draw(bomb->get_drawable());
+    for (Powerup* powerup : powerups)
+        window.draw(powerup->get_drawable());
 
-    //for (Menu_button* menu_botton : menu_buttons)
+    //for (Menu_button* menu_button : menu_buttons)
     //    window.draw(menu_button->get_drawable());
 }
 
@@ -245,9 +229,6 @@ void Game_state::new_game(int PC, int NPC1, int NPC2, int NPC3)
     players.push_back(pc);
     
     wooden_boxes.push_back(new Wooden_box(sf::Vector2f(800, 300), wooden_box_texture));
-        std::cout << "New Game" << std::endl;
-        std::cout << "Size is: " << wooden_box_texture.getSize().x  
-                  << " by " << wooden_box_texture.getSize().y << std::endl; 
 
     round_timer.restart();
     is_playing = true;
