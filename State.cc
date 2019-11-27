@@ -33,6 +33,11 @@ Game_state::Game_state(): State("Game_state"),
         push_texture.loadFromFile("textures/push_texture.png");
         extra_bomb_texture.loadFromFile("textures/extra_bomb_texture.png");
         speed_texture.loadFromFile("textures/speed_texture.png");
+        
+        std::cout << "loaded wooden texture" << std::endl;
+        std::cout << "Size is: " << wooden_box_texture.getSize().x  
+                  << " by " << wooden_box_texture.getSize().y << std::endl; 
+        //Correct size here
     }
 
 void Game_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard)
@@ -233,6 +238,9 @@ void Game_state::new_game(int PC, int NPC1, int NPC2, int NPC3)
     players.push_back(pc);
     
     wooden_boxes.push_back(new Wooden_box(sf::Vector2f(800, 300), wooden_box_texture));
+        std::cout << "New Game" << std::endl;
+        std::cout << "Size is: " << wooden_box_texture.getSize().x  
+                  << " by " << wooden_box_texture.getSize().y << std::endl; 
 
     round_timer.restart();
     is_playing = true;

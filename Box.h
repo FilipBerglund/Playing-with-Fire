@@ -9,7 +9,12 @@ class Box: public Game_object
 {
 public:
     Box(sf::Vector2f pos, sf::Texture & texture):
-    Game_object(pos, texture) {}
+    Game_object(pos, texture) 
+    {
+        std::cout << "Constructing box" << std::endl;
+        std::cout << "Size is: " << sprite.getTexture()->getSize().x  
+                   << " by " << sprite.getTexture()->getSize().y << std::endl; 
+    }
 };
 
 
