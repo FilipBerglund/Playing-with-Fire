@@ -12,6 +12,7 @@
 
 
 #include <iostream>
+#include <string>
 /*
  * GAME_STATE
  *
@@ -163,7 +164,6 @@ void Game_state::draw(sf::RenderWindow& window)
             window.draw(player->get_drawable());
         }
     }
-
     for (Wooden_box* wooden_box : wooden_boxes)
         window.draw(wooden_box->get_drawable());
     for (Solid_box* solid_box : solid_boxes)
@@ -175,7 +175,7 @@ void Game_state::draw(sf::RenderWindow& window)
     for (Powerup* powerup : powerups)
         window.draw(powerup->get_drawable());
 
-    //for (Menu_button* menu_botton : menu_buttons)
+    //for (Menu_button* menu_button : menu_buttons)
     //    window.draw(menu_button->get_drawable());
 }
 
