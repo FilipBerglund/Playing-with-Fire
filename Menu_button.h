@@ -8,7 +8,7 @@
 class Menu_button
 {
 public:
-   Menu_button();
+//   Menu_button();
 
   
    // bool contains(sf::Mouse&);
@@ -22,7 +22,7 @@ class Start_button : public Menu_button
 {
  public:
   
-   Start_button();
+ //  Start_button();
    Start_button(sf::Vector2f pos, sf::Texture s);
    
    bool click(sf::Mouse&) override;   
@@ -36,7 +36,7 @@ class Start_button : public Menu_button
 class Int_button: public Menu_button
 {
  public:
-  Int_button();
+  //Int_button();
   Int_button(sf::Vector2f pos, sf::Texture s0, sf::Texture s1,
 	     sf::Texture   s2, sf::Texture s3, sf::Texture s4,
 	     sf::Texture  sbg);

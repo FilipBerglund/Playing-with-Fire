@@ -3,13 +3,13 @@
 #include <SFML/Graphics.hpp>
 #include "Menu_button.h"
 
-Menu_button::Menu_button()
-{
-}
+//Menu_button::Menu_button()
+//{
+//}
 
-Start_button::Start_button()
-{
-}
+//Start_button::Start_button()
+//{
+//}
 
 
 Start_button::Start_button(sf::Vector2f pos, sf::Texture s):
