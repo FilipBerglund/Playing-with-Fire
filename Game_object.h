@@ -9,10 +9,11 @@
 class Game_object
 {
 public:
-    Game_object(sf::Vector2f pos, sf::Texture texture):
-    sprite{texture}, old_position{pos}
+    Game_object(sf::Vector2f pos, sf::Texture & texture):
+    sprite{}, old_position{pos}
     {
         sprite.setPosition(pos);
+        sprite.setTexture(texture);
         std::cout << "Constructing Game_object" << std::endl;
         std::cout << "Texture ptr is: " << sprite.getTexture() << std::endl;
         std::cout << "Size is: " << sprite.getTexture()->getSize().x 

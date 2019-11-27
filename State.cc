@@ -169,6 +169,13 @@ void Game_state::draw(sf::RenderWindow& window)
     //        window.draw(player->get_drawable());
     //    }
     //}
+    sf::Sprite sp{wooden_box_texture};
+    sp.setPosition(400,400);
+    window.draw(sp);
+    std::cout << "Game_state::draw" << std::endl;
+    std::cout << "sp texture ptr: " << sp.getTexture() << std::endl;
+    std::cout << "Size is: " << sp.getTexture()->getSize().x
+               << " by " << sp.getTexture()->getSize().y << std::endl;
 
     for (Wooden_box* wooden_box : wooden_boxes)
     {

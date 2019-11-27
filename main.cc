@@ -28,7 +28,7 @@ int main()
                 }
         }
         window.clear();
-        game_state.update(mouse, keyboard);
+        //game_state.update(mouse, keyboard);
         game_state.draw(window);
         window.display();
     }
