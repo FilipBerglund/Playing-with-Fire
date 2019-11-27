@@ -6,7 +6,7 @@
 class Pc: public Player
 {
 public:
-    Pc(sf::Vector2f, sf::Texture, int, bool,
+    Pc(sf::Vector2f, sf::Texture &, int, bool,
        int, int, int, int,
        sf::Keyboard::Key,
        sf::Keyboard::Key,
