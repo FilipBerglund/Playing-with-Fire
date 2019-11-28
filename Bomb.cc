@@ -92,6 +92,7 @@ void Bomb::apply_on_hit_effect(Game_object* object)
  */
 void Bomb::glide(string direction)
 {
+    float offset();
     sf::Vector current = sprite.getPosition();
     //Movement = sprite.setPosition(pos.x + offsetX, pos.y + offsetY);
     if (direction == "right") {
