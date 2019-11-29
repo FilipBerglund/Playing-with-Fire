@@ -6,6 +6,7 @@
 #include "Powerup.h"
 #include "Box.h"
 
+#include <list>
 
 /*
  * GAME_STATE
@@ -234,20 +235,46 @@ struct PlayerComparator
 	// Compare 2 Player objects using name
   bool operator ()(Player & player1, Player & player2)
 	{
-		if(player1.get_score == player2.get_score)
-			return player1 < player2;
+	  if(player1.get_score() == player2.get_score())
+	    return player1.get_score() < player2.get_score();
 		return player1.get_score < player2.get_score;
  
 	}
 };
 
 
-End_screen::End_screen(sf::Texture s, std::list<player> list)
-  :sprite{s}, list_of_player{list}
+End_screen::End_screen(sf::Texture s, std::list<Player> list)
+  :sprite{s}, list_of_Player{list}
 {
   sf::Vector2f pos;
   Start_button{pos, sprite};
-  list_of_player.sort(PlayerComparator());
+  list_of_Player.sort(PlayerComparator());
   
+}
+
+void End_screen::Draw(sf::Window& window) const
+{
+  
+    int ycorrd{70};
+  
+    sf::Font font;
+    
+    if (!font.loadFromFile("arial.ttf"));
+
+    
+ for (Player player : list_of_Player)
+    {
+      
+    sf::Text text(player.get_name, font, 50);
+
+    text.setOrigin(70,ycorrd);
+
+    text.setColor(sf::Color::Red);
+    
+    window.draw(text);
+    
+    ycorrd=ycorrd+70;
+
+    }
 }
 
