@@ -2,9 +2,10 @@
 #include "Player.h"
 #include <vector>
 #include <SFML/Graphics.hpp>
+#include <string>
 
 Player::Player(sf::Vector2f pos, sf::Texture & texture, int cooldown,
-	       bool in_push, int in_health, int in_speed, int in_fire, int in_cd):
+	       bool in_push, int in_health, int in_speed, int in_fire, int in_cd, std::string in_name):
         Game_object(pos, texture),
         push_powerup{in_push},
         health{in_health},
@@ -20,7 +21,8 @@ Player::Player(sf::Vector2f pos, sf::Texture & texture, int cooldown,
         initial_speed{in_speed},
         initial_fire_size{in_fire},
         initial_cd{in_cd},
-	want_to_drop_bomb{false}
+	want_to_drop_bomb{false},
+	name{in_name}
 {
     sf::Clock new_clock;
     bomb_cds.push_back(new_clock);  //Listan får storlek 1.
@@ -205,3 +207,12 @@ Bomb* Player::create_bomb(sf::Texture bomb_texture)
     return new Bomb(sprite.getPosition(), bomb_texture, this);
 }
 
+void Player::set_name(std::string new_name)
+{
+    name = new_name;
+}
+
+std::string Player::get_name() const
+{
+    return name;
+}

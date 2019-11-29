@@ -2,12 +2,13 @@
 #define PC_H
 #include <SFML/Graphics.hpp>
 #include "Player.h"
+#include <string>
 
 class Pc: public Player
 {
 public:
     Pc(sf::Vector2f, sf::Texture &, int, bool,
-       int, int, int, int,
+       int, int, int, int, std::string,
        sf::Keyboard::Key,
        sf::Keyboard::Key,
        sf::Keyboard::Key,
