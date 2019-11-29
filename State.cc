@@ -51,8 +51,18 @@ void Game_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard)
 
     for (Player* player : players)
     {
-        player->update(keyboard);
-
+	Pc* ptr1 = dynamic_cast<Pc*>(player);
+	//ptr2 = dynamic_cast<NPC*>(player);
+	if (ptr1 != nullptr)
+	{
+	    ptr1->update(keyboard);
+	}
+	/*
+	else
+	{
+	    ptr2->update();
+	}
+	*/
         if (player->request_to_drop_bomb())
         {
             bombs.push_back(player->create_bomb(bomb_texture));
@@ -249,7 +259,7 @@ void Game_state::new_game(int PC, int NPC1, int NPC2, int NPC3)
     //initialize everything
    // Player* player = new Player(sf::Vector2f(300,300), player1_texture, 3, false, 3, 5, 2, 5);
     //players.push_back(player);
-    Pc* pc = new Pc(sf::Vector2f(300,300), player1_texture, 3, false, 3, 1, 2, 5, sf::Keyboard::A,sf::Keyboard::D,sf::Keyboard::S,sf::Keyboard::W,sf::Keyboard::J);
+    Pc* pc = new Pc(sf::Vector2f(300,300), player1_texture, 3, false, 3, 1, 2, 5, "Pelle svanslös", sf::Keyboard::A,sf::Keyboard::D,sf::Keyboard::S,sf::Keyboard::W,sf::Keyboard::J);
     players.push_back(pc);
     
     wooden_boxes.push_back(new Wooden_box(sf::Vector2f(800, 300), wooden_box_texture));
