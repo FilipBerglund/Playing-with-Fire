@@ -69,13 +69,13 @@ class End_screen: public State
 {
  public:
   
-  End_screen(sf::Texture sprite, std::list<Player> list_of_Player);
+  End_screen(sf::Texture sprite, std::list<Player*> list_of_Player);
 
-  void Draw(sf::Window&) const;
+  void Draw(sf::RenderWindow&) const;
   
  private:
   sf::Sprite sprite;
-  std::list<Player> list_of_Player;
+  std::list<Player*> list_of_Player;
 
 };
 

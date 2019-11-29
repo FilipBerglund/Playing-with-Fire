@@ -233,17 +233,17 @@ void Menu_state::draw(sf::Window& window)
 struct PlayerComparator
 {
 	// Compare 2 Player objects using name
-  bool operator ()(Player & player1, Player & player2)
+  bool operator ()(Player* & player1, Player* & player2)
 	{
-	  if(player1.get_score() == player2.get_score())
-	    return player1.get_score() < player2.get_score();
-		return player1.get_score < player2.get_score;
+	  if(player1->get_score() == player2->get_score())
+	    return player1->get_score() < player2->get_score();
+		return player1->get_score < player2->get_score;
  
 	}
 };
 
 
-End_screen::End_screen(sf::Texture s, std::list<Player> list)
+End_screen::End_screen(sf::Texture s, std::list<Player*> list)
   :sprite{s}, list_of_Player{list}
 {
   sf::Vector2f pos;
@@ -252,8 +252,10 @@ End_screen::End_screen(sf::Texture s, std::list<Player> list)
   
 }
 
-void End_screen::Draw(sf::Window& window) const
+void End_screen::Draw(sf::RenderWindow& window) const
 {
+    ostringstream info{};
+    int number{1};
   
     int ycorrd{70};
   
@@ -262,18 +264,22 @@ void End_screen::Draw(sf::Window& window) const
     if (!font.loadFromFile("arial.ttf"));
 
     
- for (Player player : list_of_Player)
+ for (Player* player : list_of_Player)
     {
-      
-    sf::Text text(player.get_name, font, 50);
 
-    text.setOrigin(70,ycorrd);
+    info << number << ".  " << player->get_name << "  Points: " << player->get_score;
+      
+    sf::Text text(info.str(), font, 50);
+
+    text.setPosition(70,ycorrd);
 
     text.setColor(sf::Color::Red);
     
     window.draw(text);
     
-    ycorrd=ycorrd+70;
+    ycorrd= ycorrd + 70;
+    
+    number= number + 1;
 
     }
 }
