@@ -9,8 +9,8 @@
 #include "Fire.h"
 #include "Player.h"
 #include "PC.h"
-#include <stdlib.h>     
-#include <time.h>       
+#include <stdlib.h>
+#include <time.h>
 
 #include <iostream>
 #include <string>
@@ -20,6 +20,7 @@
 */
 
 
+//TODO: is_playing should be initialised as false when state_handler is implemented fully.
 Game_state::Game_state(): State("Game_state"),
     current_round{0}, players{}, bombs{}, fires{}, wooden_boxes{}, solid_boxes{}, is_playing{true}
     {
@@ -44,8 +45,9 @@ void Game_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard)
 
     if (!is_playing)
     {
-        //All clocks still run (both here and in player) so pausing will
-        //have unintended consequenses - exidental features.
+        // TODO: All clocks still run (both here and in player) so pausing will
+        // have unintended consequenses - exidental features. This problem has
+        // no trivaial solutions since sf::Clock has no pause function.
         return;
     }
 
@@ -99,6 +101,9 @@ void Game_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard)
 	    }
 	    return true;
 	});
+
+    //TODO: Add remove_if for bombs and fires. The remove_if of bombs should also spawn fire.
+    //Note that powerups are removed in check_collisions().
 
 
     if (is_round_over())
@@ -187,7 +192,7 @@ void Game_state::check_collisions()
             if (fire->hitbox().intersects(wooden_box->hitbox()))
             {
                 fire->apply_on_hit_effect(wooden_box);
-                wooden_box->apply_on_hit_effect(fire);	
+                wooden_box->apply_on_hit_effect(fire);
             }
         }
     }
@@ -248,8 +253,8 @@ void Game_state::new_round()
         player->new_round();
     }
     current_round += 1;
-    //remove powerups, wooden_boxes, bombs, fires
-    //spawn Wooden_boxes
+    //TODO: Add removal of powerups, wooden_boxes, bombs, fires
+    //TODO: spawn Wooden_boxes
     round_timer.restart();
 
 }
@@ -270,9 +275,12 @@ void Game_state::new_game(int PC, int NPC1, int NPC2, int NPC3)
 
 void Game_state::end_game()
 {
-    //delete relevant objects
-    //run the function that passes players to End_screen
-    //Change current state to End_screen
+    /*
+     * TODO: delete relevant objects
+     * run the function that passes players to End_screen
+     * Change current state to End_screen
+     * set is_playing to false.
+    */
 }
 
 bool Game_state::is_round_over()
