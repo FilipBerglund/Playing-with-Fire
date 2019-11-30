@@ -1,53 +1,26 @@
 #include <SFML/Graphics.hpp>
-#include "Bomb.h"
 #include "Player.h"
 #include "Game_state"
-
 #include "Fire.h"
 
-
-int fire_size=5;
-
-Fire::Fire(sf::Vector2f pos, sf::Sprite sprite, int timer, int fire_size, Player* player ) 
+Fire::Fire(sf::Vector2f pos, sf::Texture& sprite, Player* player) 
 : Game_objects(pos, sprite), owner{player}
 {
+  //init timer
+  std::initializer
 }
 
-
-bool Fire::is_boosted()
+bool is_dead() const
 {
-    if (/*player boosted is applied*/)
-    {
-        return fire_boost;
-    }
-    else
-    {
-        /* code */
-    }
-    
-
+  return;
 }
 
-void Fire::fire_boost(int fire_size)
+void Fire::give_points(Player* owner)
 {
-    return fire_size + 2;
-}
-
-void Fire::give_points(Player owner)
-{
-    if (/*fire pointer to owner*/)
-    {
-        return /*Player.point*/ + 1;
-    }
-    else
-    {
-        /* code */
-    }
-    
-    
+      return owner->increase_point(1);
 }
 
 void update() override
 {
-
+  //Uppdaterar eldens tillstånd
 }
