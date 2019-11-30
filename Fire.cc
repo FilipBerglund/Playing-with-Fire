@@ -13,7 +13,7 @@ Fire::Fire(sf::Vector2f pos, sf::Sprite sprite, int timer, int fire_size, Player
 {
 }
 
-
+//TODO: Denna behövs inte.
 bool Fire::is_boosted()
 {
     if (/*player boosted is applied*/)
@@ -27,12 +27,12 @@ bool Fire::is_boosted()
     
 
 }
-
+//TODO: Denna behövs inte.
 void Fire::fire_boost(int fire_size)
 {
     return fire_size + 2;
 }
-
+//TODO: Denna behövs inte.
 void Fire::give_points(Player owner)
 {
     if (/*fire pointer to owner*/)

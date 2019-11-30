@@ -1,3 +1,6 @@
+//TODO: Se över vilka includes som behöver finnas.
+//Game_state finns inte. iostream och vector
+//används inte här så de ska bort.
 #include <SFML/Graphics.hpp>
 #include "Player.h"
 #include "Fire.h"
@@ -9,8 +12,8 @@
 #include <vector>
 
 /*
- *  Använd inte namespace.
-*   Skriv ut std:: då du använder det istället.
+ * TODO: Använd inte namespace.
+ * Skriv ut std:: då du använder det istället.
 */
 using namespace std;
 
@@ -33,9 +36,7 @@ Bomb::Bomb (sf::Vector2f pos,/*sf::FileStream stream,*/
 }
 
 /*
- * Jag tror det är bäst om game_state spawnar fire istället.
- * Då behöver du lägga till en funktion för att returnera owner.
- * Och en boolsk funktion som säger om bomben ska "sprängas".
+ * TODO: Anders implementerar denna funktion.
  */
 void Bomb::spawn_fire(Player* owner, float timer, Fire fire)
 {
@@ -52,7 +53,7 @@ void Bomb::spawn_fire(Player* owner, float timer, Fire fire)
 
 
 /*
- * Lägg till rörelse om is_gliding är true.
+ * TODO: Lägg till rörelse om is_gliding är true.
  * Läs kommentaren vid Bomb::glide.
  */
 void Bomb::update() override
@@ -61,6 +62,9 @@ void Bomb::update() override
 }
 
 
+/*
+ * TODO: collision funktionen finns inte längre.
+ */
 /*void Bomb::collision(Game_object* object)
 {
     for (object == Box || object == Bomb || object == Player)
@@ -71,8 +75,10 @@ void Bomb::update() override
 }*/
 
 /*
- * Vi hade tänkt att Bomb skulle sluta glida då denna
- * funktion körs. Lägg till det.
+ * TODO: Vi hade tänkt att Bomb skulle sluta glida då denna
+ * funktion körs. Lägg till det. Den ska inte stoppa
+ * objectet som colliderar med den, dvs det ska gå att
+ * gå igenom bomber.
  */
 void Bomb::apply_on_hit_effect(Game_object* object)
 {
@@ -83,9 +89,11 @@ void Bomb::apply_on_hit_effect(Game_object* object)
 //float offsetY();
 
 /*
- * Så som denna funktion används i player ska den bara
- * sätta is_gliding til true och sedan ändra sin
- * direction efter inparameter.
+ * TODO: Så som denna funktion används i player ska den bara
+ * sätta is_gliding till true och sedan ändra sin
+ * direction efter inparameter. Så se till att det
+ * finns medlämmar i Bomb.h för direction och is_gliding.
+ * (std::string respektive bool)
  *
  * Funktionaliteten för rörelse kan flyttas till update.
  * Där den glider bara om is_gliding är true.
@@ -155,16 +163,12 @@ void Bomb::glide(string direction)
 }*/
 
 /*
- * Tror inte att vi behöver denna funktion.
+ * TODO: Tror inte att vi behöver denna funktion.
  * David har använt sig av den men jag ska säga
  * till honom att han ska ta bort det.
  */
 bool Bomb::is_gliding() const
 {
-    /*
-     * glide är inte en medläm, det ska den inte vara heller.
-     * Denna funktion ska bara returnera om den glider eller inte.
-     */
     if (is_gliding == false)
     {
         return glide;
@@ -177,9 +181,9 @@ bool Bomb::is_gliding() const
 }
 
 /*
- * Tror inte vi behöver denna funktion.
+ * TODO: Tror inte vi behöver denna funktion.
  * Det är bara bomben som ändrar i is_gliding
- * så vi behöve ha en funktion för det.
+ * så vi behöver inte ha en funktion för det.
  */
 void Bomb::set_is_gliding(bool sam)
 {
