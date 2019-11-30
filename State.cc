@@ -9,9 +9,11 @@
 #include "Fire.h"
 #include "Player.h"
 #include "PC.h"
-
+#include <stdlib.h>     
+#include <time.h>       
 
 #include <iostream>
+#include <string>
 /*
  * GAME_STATE
  *
@@ -49,8 +51,18 @@ void Game_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard)
 
     for (Player* player : players)
     {
-        player->update(keyboard);
-
+	Pc* ptr1 = dynamic_cast<Pc*>(player);
+	//ptr2 = dynamic_cast<NPC*>(player);
+	if (ptr1 != nullptr)
+	{
+	    ptr1->update(keyboard);
+	}
+	/*
+	else
+	{
+	    ptr2->update();
+	}
+	*/
         if (player->request_to_drop_bomb())
         {
             bombs.push_back(player->create_bomb(bomb_texture));
@@ -58,7 +70,35 @@ void Game_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard)
     }
 
     wooden_boxes.remove_if(
-            [](Wooden_box* wooden_box){return wooden_box->is_dead();});
+	[this](Wooden_box* wooden_box)
+        {
+	    if (!wooden_box->is_dead())
+	    {
+	        return false;
+	    }
+	    srand (time(NULL));
+	    if (rand() % 2 + 1 == 2)
+	    {
+		int rand_int = rand() % 4 + 1; 
+	        if (rand_int == 1)
+	        {
+		    powerups.push_back(new Speed(wooden_box->get_position(), speed_texture));
+		}
+	        else if (rand_int == 2)
+	        {
+		    powerups.push_back(new Bigger_blast(wooden_box->get_position(), bigger_blast_texture));
+		}
+	        else if (rand_int == 3)
+	        {
+		    powerups.push_back(new Extra_bomb(wooden_box->get_position(), extra_bomb_texture));
+		}
+	        else  //rand_int == 4.
+	        {
+		    powerups.push_back(new Push(wooden_box->get_position(), push_texture));
+		}
+	    }
+	    return true;
+	});
 
 
     if (is_round_over())
@@ -147,7 +187,7 @@ void Game_state::check_collisions()
             if (fire->hitbox().intersects(wooden_box->hitbox()))
             {
                 fire->apply_on_hit_effect(wooden_box);
-                wooden_box->apply_on_hit_effect(fire);
+                wooden_box->apply_on_hit_effect(fire);	
             }
         }
     }
@@ -163,7 +203,6 @@ void Game_state::draw(sf::RenderWindow& window)
             window.draw(player->get_drawable());
         }
     }
-
     for (Wooden_box* wooden_box : wooden_boxes)
         window.draw(wooden_box->get_drawable());
     for (Solid_box* solid_box : solid_boxes)
@@ -175,18 +214,13 @@ void Game_state::draw(sf::RenderWindow& window)
     for (Powerup* powerup : powerups)
         window.draw(powerup->get_drawable());
 
-    //for (Menu_button* menu_botton : menu_buttons)
+    //for (Menu_button* menu_button : menu_buttons)
     //    window.draw(menu_button->get_drawable());
 }
 
 
 void Game_state::user_input_handler(sf::Mouse& mouse, sf::Keyboard& keyboard)
 {
-    for (Player* player : players)
-    {
-        player->update(keyboard);
-    }
-
     /*
     if (mouse.isButtonPressed(sf::Mouse::Left)
     {
@@ -225,7 +259,7 @@ void Game_state::new_game(int PC, int NPC1, int NPC2, int NPC3)
     //initialize everything
    // Player* player = new Player(sf::Vector2f(300,300), player1_texture, 3, false, 3, 5, 2, 5);
     //players.push_back(player);
-    Pc* pc = new Pc(sf::Vector2f(300,300), player1_texture, 3, false, 3, 1, 2, 5, sf::Keyboard::A,sf::Keyboard::D,sf::Keyboard::S,sf::Keyboard::W,sf::Keyboard::J);
+    Pc* pc = new Pc(sf::Vector2f(300,300), player1_texture, 3, false, 3, 1, 2, 5, "Pelle svanslös", sf::Keyboard::A,sf::Keyboard::D,sf::Keyboard::S,sf::Keyboard::W,sf::Keyboard::J);
     players.push_back(pc);
     
     wooden_boxes.push_back(new Wooden_box(sf::Vector2f(800, 300), wooden_box_texture));
