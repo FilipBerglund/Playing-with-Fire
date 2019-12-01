@@ -1,8 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include <string>
 #include "Player.h"
-#include "Fire.h"
-#include "Game_state.h"
+//#include "Fire.h"
 #include "Bomb.h"
 
 Bomb::Bomb (sf::Vector2f pos,
@@ -11,21 +10,18 @@ Bomb::Bomb (sf::Vector2f pos,
 {}
 
 /*
- * Jag tror det är bäst om game_state spawnar fire istället.
- * Då behöver du lägga till en funktion för att returnera owner.
- * Och en boolsk funktion som säger om bomben ska "sprängas".
- */
 void Bomb::set_owner(Player* owner, Fire fire)
 {
   if(is_blasted == true)
     {
-      return owner->fire;
+       Player* owner = &fire;
+       return owner;
     }
 }
-
+*/
 bool is_blasted() const
 {
-  if(ticking_bomb.getElapsedTime().asSeconds()>=timer)
+  if(fuse_timer.getElapsedTime().asSeconds()>3)
     {
       return true;
     }
@@ -34,12 +30,6 @@ bool is_blasted() const
       return false;
     }
 }
-    
-
-/*
- * Lägg till rörelse om is_gliding är true.
- * Läs kommentaren vid Bomb::glide.
- */
 
 void Bomb::update() override
 {
@@ -47,45 +37,32 @@ void Bomb::update() override
     {
         if (std::string direction == "right")
         {
-	  sprite.move(2,0);
+	  sprite.move(speed,0);
         }
         else if (std::string direction == "left")
         {
-	  sprite.move(-2,0);
+	  sprite.move(-speed,0);
         }
         else if (std::string direction == "up")
         {
-          sprite.move(0,2);
+          sprite.move(0,speed);
         }
         else if (std::string direction == "down")
         {
-          sprite.move(0,-2);
+          sprite.move(0,-speed);
         }
     }  
 }
 
-
-/*
- * Vi hade tänkt att Bomb skulle sluta glida då denna
- * funktion körs. Lägg till det.
- */
 void Bomb::apply_on_hit_effect(Game_object* object)
 {
   if(is_gliding = false)
     {
-      object->undo_last_move();
+      sprite.setPostion(sprite.getPosition());
     }
 }
 
-/*
- * Så som denna funktion används i player ska den bara
- * sätta is_gliding til true och sedan ändra sin
- * direction efter inparameter.
- *
- * Funktionaliteten för rörelse kan flyttas till update.
- * Där den glider bara om is_gliding är true.
- */
 void Bomb::glide()
 {
-  is_gliding = true; 
+  is_gliding = true;
 }
