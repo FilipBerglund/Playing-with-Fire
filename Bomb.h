@@ -26,7 +26,7 @@ class Bomb: public Game_object
  private:
     
     bool is_gliding;
-    / Player* owner;
+    //Player* owner;
     float speed;
     std::string direction;
     sf::Clock fuse_timer;
