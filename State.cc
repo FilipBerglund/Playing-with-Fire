@@ -9,6 +9,7 @@
 #include "Fire.h"
 #include "Player.h"
 #include "PC.h"
+#include "Menu_button.h"
 #include <stdlib.h>
 #include <time.h>
 
@@ -386,19 +387,19 @@ struct PlayerComparator
 
 
 End_screen::End_screen(sf::Texture s, std::list<Player*> list)
-  :sprite{s}, list_of_Player{list}
+  :State("end_screen"), sprite{s}, list_of_Player{list},
+   pos{50,50}, end_button{pos, sprite}
 {
-  sf::Vector2f pos;
-  Start_button{pos, sprite};
+
   list_of_Player.sort(PlayerComparator());
   
 }
 
-void End_screen::Draw(sf::RenderWindow& window) const
+void End_screen::Draw(sf::RenderWindow& window)
 {
     int number{1};  
     int ycorrd{70};
-    
+        
     sf::Font font;    
     if (!font.loadFromFile("arial.ttf"));
 
@@ -418,5 +419,8 @@ void End_screen::Draw(sf::RenderWindow& window) const
     number= number + 1;
 
     }
+
+
+ end_button.draw(window);
 }
 

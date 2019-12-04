@@ -8,6 +8,8 @@
 #include "Bomb.h"
 #include "Fire.h"
 
+#include "Menu_button.h"
+
 #include <string>
 #include <list>
 
@@ -89,12 +91,13 @@ class End_screen: public State
   
   End_screen(sf::Texture sprite, std::list<Player*> list_of_Player);
 
-  void Draw(sf::RenderWindow&) const;
-  
+  void Draw(sf::RenderWindow&);
+ 
  private:
-  sf::Sprite sprite;
+  sf::Vector2f pos{50,50};
+  sf::Texture sprite;
   std::list<Player*> list_of_Player;
-
+  Start_button end_button;
 };
 
 
