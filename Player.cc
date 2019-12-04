@@ -55,6 +55,14 @@ void Player::apply_on_hit_effect(Game_object* object)
       är lika med nullptr.*/
     Bomb* ptr = dynamic_cast<Bomb*>(object);
 
+    //TODO: Tips! Om du skriver
+    //
+    //if (!push_powerup)
+    //  return
+    //
+    // ovanför denna kod skulle du kunna ta bort den första if satsen.
+    // Då skulle den vara minder nästlad vilket skulle göra det
+    // blir lite snyggare.
     if (push_powerup == true)
     {
         /*I de stora if-satsern nedanför kollar vi först  kollision i ett visst led
@@ -86,6 +94,10 @@ void Player::apply_on_hit_effect(Game_object* object)
             ptr->glide("down");
         }
     }
+    //TODO: Denna ska inte vara här. Bomben stannar själv då den kolliderar med
+    //något. Om den inte skulle sköta det själv skulle vi behöva lägga till denna funktionalitet
+    //i alla object som bomb kan kollidera med. Det skulle leda till dynamic_cast:s osv.
+    //Därför blir det lättast och snyggast att bara låta bomb sköta det själv.
     else if (ptr->is_gliding() == true)  //push_powerup == false så bomben ska stanna.
     {
         ptr->undo_last_move();
