@@ -12,10 +12,13 @@ public:
 
     ~NPC() = default;
 
-    void update();
+    void update(list<Game_object*>&, list<Game_object*>&, list<Game_object*>&,
+	        list<Game_object*>&, list<Game_object*>&, list<Game_object*>&);
     
 private:
-    int local_score() const;
+    int local_score(std::string) const;
+    void score_assigner(list<Game_object*>& ,int&, int&, int&, int&, int&,
+			sf::Vector2f, sf::Vector2f, std::string) const;
 };
 
 #endif
