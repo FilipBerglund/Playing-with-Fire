@@ -14,7 +14,8 @@ public:
 
     void update();
     
-protected:
+private:
+    int local_score() const;
 };
 
 #endif
