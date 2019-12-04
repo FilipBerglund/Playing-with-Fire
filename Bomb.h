@@ -21,17 +21,15 @@ class Bomb: public Game_object
     
     void apply_on_hit_effect(Game_object*);
     
-    void glide();
+    void glide(std::string direction);
     
  private:
     
     bool is_gliding;
-<<<<<<< HEAD
+    
     // Player* owner;
-=======
-    //Player* owner;
->>>>>>> bd635c11a85d8f78a01ec13f6db69359cc0d60db
     float speed;
+    std::string move_direction;
     std::string direction;
     sf::Clock fuse_timer;
 };

@@ -35,19 +35,19 @@ void Bomb::update() override
 {
   if(is_glidding = true)
     {
-        if (std::string direction == "right")
+        if (move_direction == "right")
         {
 	  sprite.move(speed,0);
         }
-        else if (std::string direction == "left")
+        else if (move_direction == "left")
         {
 	  sprite.move(-speed,0);
         }
-        else if (std::string direction == "up")
+        else if (move_direction == "up")
         {
           sprite.move(0,speed);
         }
-        else if (std::string direction == "down")
+        else if (move_direction == "down")
         {
           sprite.move(0,-speed);
         }
@@ -56,13 +56,11 @@ void Bomb::update() override
 
 void Bomb::apply_on_hit_effect(Game_object* object)
 {
-  if(is_gliding = false)
-    {
-      sprite.setPostion(sprite.getPosition());
-    }
+  is_gliding = false;
 }
 
-void Bomb::glide()
+void Bomb::glide(std::string direction )
 {
+  direction == move_direction;
   is_gliding = true;
 }
