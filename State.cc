@@ -24,7 +24,7 @@ Game_state::Game_state(): State("Game_state"),
     current_round{0}, players{}, bombs{}, fires{}, wooden_boxes{}, solid_boxes{}, is_playing{true}
     {
         fire_texture.loadFromFile("textures/fire_texture.png");
-        player1_texture.loadFromFile("textures/player1_texture.png");
+        player1_texture.loadFromFile("textures/Player1_left.png");
         player2_texture.loadFromFile("textures/player2_texture.png");
         player3_texture.loadFromFile("textures/player3_texture.png");
         player4_texture.loadFromFile("textures/player4_texture.png");
@@ -263,7 +263,7 @@ void Game_state::new_game(int PC, int NPC1, int NPC2, int NPC3)
     players.push_back(pc);
     
     wooden_boxes.push_back(new Wooden_box(sf::Vector2f(800, 300), wooden_box_texture));
-
+    solid_boxes.push_back(new Solid_box(sf::Vector2f(500, 300), solid_box_texture));
     round_timer.restart();
     is_playing = true;
 }
