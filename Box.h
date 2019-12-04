@@ -8,16 +8,16 @@
 class Box: public Game_object
 {
 public:
-    Box(sf::Vector2f pos, sf::Sprite sprite):
-    Game_object(pos, sprite) {}
+    Box(sf::Vector2f pos, sf::Texture & texture):
+    Game_object(pos, texture) {}
 };
 
 
 class Solid_box: public Box
 {
 public:
-    Solid_box(sf::Vector2f pos, sf::Sprite sprite):
-    Box(pos, sprite) {}
+    Solid_box(sf::Vector2f pos, sf::Texture & texture):
+    Box(pos, texture) {}
 
     void collision() {}
 };
@@ -26,10 +26,13 @@ public:
 class Wooden_box: public Box
 {
 public:
-    Wooden_box(sf::Vector2f pos, sf::Sprite sprite):
-    Box(pos, sprite), health{0} {}
+    Wooden_box(sf::Vector2f pos, sf::Texture & texture):
+    Box(pos, texture), health{1} {}
 
-    void collision() {}
+    void apply_on_hit_effect(Game_object* object) override
+    {
+        object->undo_last_move();
+    }
     bool is_dead() const
     {
         return health == 0 ? true : false;

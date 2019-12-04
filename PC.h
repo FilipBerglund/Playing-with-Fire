@@ -1,24 +1,30 @@
 #ifndef PC_H
 #define PC_H
+#include <SFML/Graphics.hpp>
 #include "Player.h"
+#include <string>
 
-class PC: public Player
+class Pc: public Player
 {
 public:
-    PC(sf::Vector2f pos, sf::Texture texture, int cooldown, int in_push,
-       int in_health, int in_speed, int in_fire, int in_cd,
-       sf::Key left_arg, sf::Key right_arg, sf::Key down_arg, sf::Key up_arg, sf::key bomb_arg);
+    Pc(sf::Vector2f, sf::Texture &, int, bool,
+       int, int, int, int, std::string,
+       sf::Keyboard::Key,
+       sf::Keyboard::Key,
+       sf::Keyboard::Key,
+       sf::Keyboard::Key,
+       sf::Keyboard::Key);
 
-   ~PC() = default;
+    ~Pc() = default;
 
-    void update(sf::Keyboard keyboard);
-    
+    void update(sf::Keyboard);
+
 protected:
-    sf::Key left;
-    sf::Key right:
-    sf::Key down;
-    sf::Key up;
-    sf::Key bomb_button;
+    sf::Keyboard::Key left;
+    sf::Keyboard::Key right;
+    sf::Keyboard::Key down;
+    sf::Keyboard::Key up;
+    sf::Keyboard::Key bomb_button;
 };
 
 #endif

@@ -1,11 +1,15 @@
 CCC = g++
 CFLAGS = -std=c++17 -Wall -Wextra -Weffc++ -Wpedantic -Weffc++ -g -fno-elide-constructors
+SFMLFLAGS = -lsfml-graphics -lsfml-window -lsfml-system
 
-NECESSARY = Powerup.cc
+NECESSARY = Powerup.cc State.cc Player.cc Bomb.cc PC.cc
 BIN_NECESSARY := $(NECESSARY:.cc=.o)
 
 all: test clearscreen run
 leak: test clearscreen leak_run
+
+main: $(BIN_NECESSARY) main.o
+	$(CCC) $(CFLAGS) $(BIN_NECESSARY) main.o $(SFMLFLAGS)
 
 test: $(BIN_NECESSARY) test_main.o test_gameobj.o
 	$(CCC) $(CFLAGS)  $(BIN_NECESSARY) test_main.o test_gameobj.o -lsfml-graphics -lsfml-window -lsfml-system
@@ -14,7 +18,7 @@ test: $(BIN_NECESSARY) test_main.o test_gameobj.o
 	$(CCC) $(CFLAGS) -c $<
 
 clean:
-	rm -r $(BIN_NECESSARY) test_gameobj.o a.out a.out.dSYM/
+	rm -r $(BIN_NECESSARY) main.o test_gameobj.o a.out a.out.dSYM/
 
 .PHONY:
 clearscreen:
@@ -27,3 +31,4 @@ run:
 .PHONY:
 leak_run:
 	valgrind --tool=memcheck --leak-check=yes ./a.out
+

@@ -4,12 +4,14 @@
 #include <SFML/Graphics.hpp>
 #include "Bomb.h"
 #include <vector>
+#include <string>
 
+class Bomb;
 class Player: public Game_object
 {
 public:
-    Player(sf::Vector2f pos, sf::Texture texture, int cooldown, bool in_push,
-	   int in_health, int in_speed, int in_fire, int in_cd);
+    Player(sf::Vector2f pos, sf::Texture & texture, int cooldown, bool in_push,
+	   int in_health, int in_speed, int in_fire, int in_cd, std::string in_name);
 
     ~Player() = default;
 
@@ -37,6 +39,23 @@ public:
     void make_immune();
     bool request_to_drop_bomb();
     Bomb* create_bomb(sf::Texture);
+    
+    void set_name(std::string);
+    std::string get_name() const;
+
+    
+
+    /*testing!! remove later.
+    void update(sf::Keyboard keyboard) override
+    {
+        if (keyboard.isKeyPressed(sf::Keyboard::Key::D))
+        {
+            old_position = sprite.getPosition() - sf::Vector2f(1,0);
+            sprite.move(sf::Vector2f(1,0));
+        }
+
+    }
+    */
 
 
 protected:
@@ -53,6 +72,8 @@ protected:
     int score;
     int cd;
     bool want_to_drop_bomb;
+
+    std::string name;
 
     sf::Clock immune_clock;
     std::vector<sf::Clock> bomb_cds;

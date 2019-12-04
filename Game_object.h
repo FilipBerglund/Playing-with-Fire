@@ -3,13 +3,17 @@
 
 #include <SFML/Graphics.hpp>
 
+#include <iostream> //For debugging
+#include <string>
+
 class Game_object
 {
 public:
-    Game_object(sf::Vector2f pos, sf::Sprite s):
-    sprite{s}
+    Game_object(sf::Vector2f pos, sf::Texture & texture):
+    sprite{}, old_position{pos}
     {
         sprite.setPosition(pos);
+        sprite.setTexture(texture);
     }
 
     sf::Sprite get_drawable() const
@@ -17,10 +21,24 @@ public:
         return sprite;
     }
 
-    void update() {};
-    bool collision(Game_object) {};
+    sf::Vector2f get_position()
+    {
+        return sprite.getPosition();
+    }
 
-private:
+    virtual void apply_on_hit_effect(Game_object*) {};
+    void undo_last_move()
+    {
+        sprite.setPosition(old_position);
+    }
+
+    sf::Rect<float> hitbox() const
+    {
+        return sprite.getGlobalBounds();
+    }
+
+protected:
     sf::Sprite sprite;
+    sf::Vector2f old_position;
 };
 #endif
