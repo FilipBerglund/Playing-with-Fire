@@ -13,8 +13,6 @@ class Fire: public Game_object
     Fire (sf::Vector2f, sf::Texture, Player*);
     
     void apply_on_hit_effect(Game_object* object) override;
-    
-    void update() override;
 
     bool is_extinguished() const;
     

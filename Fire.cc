@@ -23,12 +23,3 @@ bool Fire:: is_extinguished() const
   
   return false;
 }
-
-void Fire::update() override
-{
-  //Uppdaterar eldens tillstånd
-    if(is_extinguished()==true)
-      {
-	//fire.remove
-      }
-}
