@@ -13,7 +13,10 @@
 #include <time.h>
 
 #include <iostream>
+#include <sstream>
 #include <string>
+#include <list>
+
 /*
  * GAME_STATE
  *
@@ -369,3 +372,52 @@ void Menu_state::draw(sf::RenderWindow& window)
     //we need to somewhere give the buttons a position. Maybe that can be done here based on the size of window. We might add a scaling too.
     //And perhaps draw some fancy background
 }
+
+struct PlayerComparator
+{
+	// Compare 2 Player objects using points
+  bool operator ()(Player* & player1, Player* & player2)
+	{
+	  if(player1->get_score() == player2->get_score())
+	    return player1->get_score() < player2->get_score();
+	  return player1->get_score() < player2->get_score();
+ 
+	}
+};
+
+
+End_screen::End_screen(sf::Texture s, std::list<Player*> list)
+  :sprite{s}, list_of_Player{list}
+{
+  sf::Vector2f pos;
+  Start_button{pos, sprite};
+  list_of_Player.sort(PlayerComparator());
+  
+}
+
+void End_screen::Draw(sf::RenderWindow& window) const
+{
+    int number{1};  
+    int ycorrd{70};
+    
+    sf::Font font;    
+    if (!font.loadFromFile("arial.ttf"));
+
+ for (Player* player : list_of_Player)
+    {
+      
+      std::ostringstream info;
+      info << number << ".  " << player->get_name() << "  Points: " << player->get_score();
+    
+    sf::Text text(info.str(), font, 50);
+    text.setPosition(70,ycorrd);
+    text.setColor(sf::Color::Red);
+    
+    window.draw(text);
+    
+    ycorrd= ycorrd + 70;    
+    number= number + 1;
+
+    }
+}
+
