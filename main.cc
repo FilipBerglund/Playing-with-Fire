@@ -16,6 +16,7 @@ int main()
 
     Game_state game_state;
     game_state.new_game(1,0,0,0);
+    
     while (window.isOpen())
     {
         sf::Event event;

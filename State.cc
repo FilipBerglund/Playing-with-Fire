@@ -108,7 +108,6 @@ void Game_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard)
     //TODO: Add remove_if for bombs and fires. The remove_if of bombs should also spawn fire.
     //Note that powerups are removed in check_collisions().
 
-
     if (is_round_over())
     {
         new_round();
@@ -195,7 +194,7 @@ void Game_state::check_collisions()
             if (fire->hitbox().intersects(wooden_box->hitbox()))
             {
                 fire->apply_on_hit_effect(wooden_box);
-                wooden_box->apply_on_hit_effect(fire);
+                wooden_box->apply_on_hit_effect(fire);	
             }
         }
     }
