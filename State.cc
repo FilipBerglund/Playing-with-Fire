@@ -6,6 +6,9 @@
 #include "Powerup.h"
 #include "Box.h"
 
+
+#include <sstream>
+#include <string>
 #include <list>
 
 /*
@@ -232,12 +235,12 @@ void Menu_state::draw(sf::Window& window)
 
 struct PlayerComparator
 {
-	// Compare 2 Player objects using name
+	// Compare 2 Player objects using points
   bool operator ()(Player* & player1, Player* & player2)
 	{
 	  if(player1->get_score() == player2->get_score())
 	    return player1->get_score() < player2->get_score();
-		return player1->get_score < player2->get_score;
+	  return player1->get_score() < player2->get_score();
  
 	}
 };
@@ -254,31 +257,25 @@ End_screen::End_screen(sf::Texture s, std::list<Player*> list)
 
 void End_screen::Draw(sf::RenderWindow& window) const
 {
-    ostringstream info{};
-    int number{1};
-  
+    int number{1};  
     int ycorrd{70};
-  
-    sf::Font font;
     
+    sf::Font font;    
     if (!font.loadFromFile("arial.ttf"));
 
-    
  for (Player* player : list_of_Player)
     {
-
-    info << number << ".  " << player->get_name << "  Points: " << player->get_score;
       
+      std::ostringstream info;
+      info << number << ".  " << player->get_name() << "  Points: " << player->get_score();
+    
     sf::Text text(info.str(), font, 50);
-
     text.setPosition(70,ycorrd);
-
     text.setColor(sf::Color::Red);
     
     window.draw(text);
     
-    ycorrd= ycorrd + 70;
-    
+    ycorrd= ycorrd + 70;    
     number= number + 1;
 
     }
