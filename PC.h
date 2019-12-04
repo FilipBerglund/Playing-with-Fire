@@ -15,7 +15,9 @@ public:
        sf::Keyboard::Key,
        sf::Keyboard::Key);
 
-    void update(sf::Keyboard) override;
+    ~Pc() = default;
+
+    void update(sf::Keyboard);
 
 protected:
     sf::Keyboard::Key left;
