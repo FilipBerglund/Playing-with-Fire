@@ -9,6 +9,7 @@
 #include "Fire.h"
 #include "Player.h"
 #include "PC.h"
+#include "NPC.h"
 #include <stdlib.h>     
 #include <time.h>       
 
@@ -51,22 +52,20 @@ void Game_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard)
 
     for (Player* player : players)
     {
-	Pc* ptr1 = dynamic_cast<Pc*>(player);
-	//ptr2 = dynamic_cast<NPC*>(player);
-	if (ptr1 != nullptr)
-	{
-	    ptr1->update(keyboard);
-	}
-	/*
-	else
-	{
-	    ptr2->update();
-	}
-	*/
         if (player->request_to_drop_bomb())
         {
             bombs.push_back(player->create_bomb(bomb_texture));
         }
+	Pc* ptr1 = dynamic_cast<Pc*>(player);
+	Npc* ptr2 = dynamic_cast<Npc*>(player);
+	if (ptr1 != nullptr)
+	{
+	    ptr1->update(keyboard);
+	}
+	else
+	{
+	    ptr2->update(players, bombs, fires, powerups, wooden_boxes, solid_boxes);
+	}
     }
 
     wooden_boxes.remove_if(
@@ -259,10 +258,28 @@ void Game_state::new_game(int PC, int NPC1, int NPC2, int NPC3)
     //initialize everything
    // Player* player = new Player(sf::Vector2f(300,300), player1_texture, 3, false, 3, 5, 2, 5);
     //players.push_back(player);
-    Pc* pc = new Pc(sf::Vector2f(300,300), player1_texture, 3, false, 3, 1, 2, 5, "Pelle svanslös", sf::Keyboard::A,sf::Keyboard::D,sf::Keyboard::S,sf::Keyboard::W,sf::Keyboard::J);
+    Pc* pc = new Pc(sf::Vector2f(150,150), player1_texture, 3, false, 3, 1, 2, 5, "Pelle svanslös", sf::Keyboard::A,sf::Keyboard::D,sf::Keyboard::S,sf::Keyboard::W,sf::Keyboard::Q);
     players.push_back(pc);
+    Npc* npc = new Npc(sf::Vector2f(150,250), player1_texture, 3, false, 3, 1, 2, 5, "Pelle svanslös");
+    players.push_back(npc);
     
-    wooden_boxes.push_back(new Wooden_box(sf::Vector2f(800, 300), wooden_box_texture));
+   for (int i = 2; i < 19; i++)
+   { 
+    	wooden_boxes.push_back(new Wooden_box(sf::Vector2f(i*50, 100), wooden_box_texture));
+    	wooden_boxes.push_back(new Wooden_box(sf::Vector2f(i*50, 700), wooden_box_texture));
+   }
+   for (int i = 2; i < 19; i++)
+   { 
+    	wooden_boxes.push_back(new Wooden_box(sf::Vector2f(100, i*50), wooden_box_texture));
+    	wooden_boxes.push_back(new Wooden_box(sf::Vector2f(900, i*50), wooden_box_texture));
+   }
+   for (int i = 2; i < 10; i++)
+   { 
+   	for (int j = 2; j < 10; j++)
+	{ 
+		wooden_boxes.push_back(new Wooden_box(sf::Vector2f(i*100, j*100), wooden_box_texture));
+	}
+   }
 
     round_timer.restart();
     is_playing = true;

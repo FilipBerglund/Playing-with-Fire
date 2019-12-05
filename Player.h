@@ -38,7 +38,7 @@ public:
     bool is_immune() const;
     void make_immune();
     bool request_to_drop_bomb();
-    Bomb* create_bomb(sf::Texture);
+    Bomb* create_bomb(sf::Texture&);
     
     void set_name(std::string);
     std::string get_name() const;
@@ -72,6 +72,8 @@ protected:
     int score;
     int cd;
     bool want_to_drop_bomb;
+
+    bool first_bomb{true};
 
     std::string name;
 

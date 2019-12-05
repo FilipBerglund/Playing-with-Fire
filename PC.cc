@@ -23,9 +23,9 @@ void Pc::update(sf::Keyboard keyboard)
     old_position = sprite.getPosition();
     if (keyboard.isKeyPressed(bomb_button))
     {
-        want_to_drop_bomb == true;
+        want_to_drop_bomb = true;
     }
-    else if (keyboard.isKeyPressed(left))
+    if (keyboard.isKeyPressed(left))
     {
         sprite.setRotation(-90);
         sprite.move(-speed, 0);

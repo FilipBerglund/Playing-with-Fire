@@ -1,26 +1,40 @@
 #ifndef NPC_H
-#define NPC_h
-#include <Player.h>
+#define NPC_H
+#include "Player.h"
 #include <SFML/Graphics.hpp>
 #include <string>
+#include <list>
+#include "Bomb.h"
+#include "Fire.h"
+#include "Powerup.h"
+#include "Box.h"
 
-class NPC: public Player
+
+class Npc: public Player
 {
 public:
-    NPC(sf::Vector2f, sf::Texture &, int, bool,
+    Npc(sf::Vector2f, sf::Texture &, int, bool,
 	int, int, int, int, std::string);
 
-    ~NPC() = default;
+    ~Npc() = default;
 
-    void update(list<Game_object*>&, list<Game_object*>&, list<Game_object*>&,
-	        list<Game_object*>&, list<Game_object*>&, list<Game_object*>&);
+    void update(std::list<Player*>&, std::list<Bomb*>&, std::list<Fire*>&,
+	        std::list<Powerup*>&, std::list<Wooden_box*>&, std::list<Solid_box*>&);
     
 protected:
     int local_score(std::string) const;
-    void score_assigner(list<Game_object*>& ,int&, int&, int&, int&, int&,
+    void score_assigner(std::list<Bomb*>& ,int&, int&, int&, int&, int&,
 			sf::Vector2f, sf::Vector2f, std::string) const;
-    void score_assigner(list<Player*>& ,int&, int&, int&, int&, int&,
-			sf::Vector2f, sf::Vector2f) const;
+    void score_assigner(std::list<Fire*>& ,int&, int&, int&, int&, int&,
+			sf::Vector2f, sf::Vector2f, std::string) const;
+    void score_assigner(std::list<Powerup*>& ,int&, int&, int&, int&, int&,
+			sf::Vector2f, sf::Vector2f, std::string) const;
+    void score_assigner(std::list<Wooden_box*>& ,int&, int&, int&, int&, int&,
+			sf::Vector2f, sf::Vector2f, std::string) const;
+    void score_assigner(std::list<Solid_box*>& ,int&, int&, int&, int&, int&,
+			sf::Vector2f, sf::Vector2f, std::string) const;
+    void score_assigner(std::list<Player*>& ,int&, int&, int&, int&, int&,
+			sf::Vector2f, sf::Vector2f);
 };
 
 #endif

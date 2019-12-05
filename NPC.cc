@@ -1,22 +1,22 @@
-#include <Player.h>
+#include "NPC.h"
 #include "Bomb.h"
 #include "Fire.h"
-#include "Solid_box.h"
-#include "Wooden_box.h"
+#include "Box.h"
 #include <SFML/Graphics.hpp>
 #include <string>
 #include <vector>
 #include <algorithm> 
 #include <functional>
 #include <stdlib.h>     
-#include <time.h>  
+#include <time.h>
+#include <list>
 
-NPC::NPC(sf::Vector2f pos, sf::Texture & texture, int cooldown, bool in_push,
+Npc::Npc(sf::Vector2f pos, sf::Texture & texture, int cooldown, bool in_push,
          int in_health, int in_speed, int in_fire, int in_cd, std::string in_name):
     Player(pos, texture, cooldown, in_push, in_health, in_speed, in_fire, in_cd, in_name)
 {}
 
-int NPC::local_score(std::string object) const
+int Npc::local_score(std::string object) const
 {
     if (object == "box")
     {
@@ -41,44 +41,156 @@ int NPC::local_score(std::string object) const
     return 0;
 }
 
-void NPC::score_assigner(list<Game_object*>& objects, int& up_score, int& down_score, int& right_score,
+void Npc::score_assigner(std::list<Bomb*>& objects, int& up_score, int& down_score, int& right_score,
 			 int& left_score, int& pos_score, sf::Vector2f up, sf::Vector2f right, std::string type) const
 {
     for (Game_object * object : objects)
     {
-	if (object->hitbox().contains(position + up))
+	if (object->hitbox().contains(sprite.getPosition() + up))
 	{
 	    up_score += local_score(type);
 	}
-	if (object->hitbox().contains(position - up))
+	if (object->hitbox().contains(sprite.getPosition() - up))
 	{
 	    down_score += local_score(type);
 	}
-	if (object->hitbox().contains(position + right))
+	if (object->hitbox().contains(sprite.getPosition() + right))
 	{
 	    right_score += local_score(type);
 	}
-	if (object->hitbox().contains(position - right))
+	if (object->hitbox().contains(sprite.getPosition() - right))
 	{
 	    left_score += local_score(type);
 	}
-	if (object->hitbox().contains(position))
+	if (object->hitbox().contains(sprite.getPosition()))
 	{
 	    pos_score += local_score(type);
 	}
     }
 }
 
-void NPC::score_assigner(list<Player*>& players, int& up_score, int& down_score, int& right_score,
-			 int& left_score, int& pos_score, sf::Vector2f up, sf::Vector2f right) const
+void Npc::score_assigner(std::list<Fire*>& objects, int& up_score, int& down_score, int& right_score,
+			 int& left_score, int& pos_score, sf::Vector2f up, sf::Vector2f right, std::string type) const
+{
+    for (Game_object * object : objects)
+    {
+	if (object->hitbox().contains(sprite.getPosition() + up))
+	{
+	    up_score += local_score(type);
+	}
+	if (object->hitbox().contains(sprite.getPosition() - up))
+	{
+	    down_score += local_score(type);
+	}
+	if (object->hitbox().contains(sprite.getPosition() + right))
+	{
+	    right_score += local_score(type);
+	}
+	if (object->hitbox().contains(sprite.getPosition() - right))
+	{
+	    left_score += local_score(type);
+	}
+	if (object->hitbox().contains(sprite.getPosition()))
+	{
+	    pos_score += local_score(type);
+	}
+    }
+}
+
+void Npc::score_assigner(std::list<Powerup*>& objects, int& up_score, int& down_score, int& right_score,
+			 int& left_score, int& pos_score, sf::Vector2f up, sf::Vector2f right, std::string type) const
+{
+    for (Game_object * object : objects)
+    {
+	if (object->hitbox().contains(sprite.getPosition() + up))
+	{
+	    up_score += local_score(type);
+	}
+	if (object->hitbox().contains(sprite.getPosition() - up))
+	{
+	    down_score += local_score(type);
+	}
+	if (object->hitbox().contains(sprite.getPosition() + right))
+	{
+	    right_score += local_score(type);
+	}
+	if (object->hitbox().contains(sprite.getPosition() - right))
+	{
+	    left_score += local_score(type);
+	}
+	if (object->hitbox().contains(sprite.getPosition()))
+	{
+	    pos_score += local_score(type);
+	}
+    }
+}
+
+void Npc::score_assigner(std::list<Wooden_box*>& objects, int& up_score, int& down_score, int& right_score,
+			 int& left_score, int& pos_score, sf::Vector2f up, sf::Vector2f right, std::string type) const
+{
+    for (Game_object * object : objects)
+    {
+	if (object->hitbox().contains(sprite.getPosition() + up))
+	{
+	    up_score += local_score(type);
+	}
+	if (object->hitbox().contains(sprite.getPosition() - up))
+	{
+	    down_score += local_score(type);
+	}
+	if (object->hitbox().contains(sprite.getPosition() + right))
+	{
+	    right_score += local_score(type);
+	}
+	if (object->hitbox().contains(sprite.getPosition() - right))
+	{
+	    left_score += local_score(type);
+	}
+	if (object->hitbox().contains(sprite.getPosition()))
+	{
+	    pos_score += local_score(type);
+	}
+    }
+}
+
+void Npc::score_assigner(std::list<Solid_box*>& objects, int& up_score, int& down_score, int& right_score,
+			 int& left_score, int& pos_score, sf::Vector2f up, sf::Vector2f right, std::string type) const
+{
+    for (Game_object * object : objects)
+    {
+	if (object->hitbox().contains(sprite.getPosition() + up))
+	{
+	    up_score += local_score(type);
+	}
+	if (object->hitbox().contains(sprite.getPosition() - up))
+	{
+	    down_score += local_score(type);
+	}
+	if (object->hitbox().contains(sprite.getPosition() + right))
+	{
+	    right_score += local_score(type);
+	}
+	if (object->hitbox().contains(sprite.getPosition() - right))
+	{
+	    left_score += local_score(type);
+	}
+	if (object->hitbox().contains(sprite.getPosition()))
+	{
+	    pos_score += local_score(type);
+	}
+    }
+}
+
+void Npc::score_assigner(std::list<Player*>& players, int& up_score, int& down_score, int& right_score,
+			 int& left_score, int& pos_score, sf::Vector2f up, sf::Vector2f right) 
 {
     for (Player * player : players)
     {
-	cond1 == object->hitbox().contains(position + up);
-	cond2 == object->hitbox().contains(position - up);
-	cond3 == object->hitbox().contains(position + right);
-	cond4 == object->hitbox().contains(position - right);
-	cond5 == object->hitbox().contains(position);
+	bool cond1 = player->hitbox().contains(sprite.getPosition() + up);
+	bool cond2 = player->hitbox().contains(sprite.getPosition() - up);
+	bool cond3 = player->hitbox().contains(sprite.getPosition() + right);
+	bool cond4 = player->hitbox().contains(sprite.getPosition() - right);
+	bool cond5 = player->hitbox().contains(sprite.getPosition());
 	if (cond1 || cond2 || cond3 || cond4 || cond5)
 	{
 	    if (player != this)
@@ -114,7 +226,7 @@ void NPC::score_assigner(list<Player*>& players, int& up_score, int& down_score,
     }
 }
 
-void NPC::update(std::list<Players*>& players, std::list<Bomb*>& bombs, list<Fire*>& fires
+void Npc::update(std::list<Player*>& players, std::list<Bomb*>& bombs, std::list<Fire*>& fires,
 		 std::list<Powerup*>& powerups, std::list<Wooden_box*>& wooden_boxes, std::list<Solid_box*>& solid_boxes)
 {
     int up_score{0};
@@ -125,26 +237,27 @@ void NPC::update(std::list<Players*>& players, std::list<Bomb*>& bombs, list<Fir
     sf::Vector2f right{hitbox().width, 0};
     sf::Vector2f up{0, -hitbox().height};
 
-    score_assigner(players, up_score, down_score, right_score, left_score, up, down);
-    score_assigner(bombs, up_score, down_score, right_score, left_score, up, down, "bomb");
-    score_assigner(fires, up_score, down_score, right_score, left_score, up, down, "fire");
-    score_assigner(powerups, up_score, down_score, right_score, left_score, up, down, "powerup");
-    score_assigner(wooden_boxes, up_score, down_score, right_score, left_score, 0.51*up, 0.51*down, "box");
-    score_assigner(solid_boxes, up_score, down_score, right_score, left_score, 0.51*up, 0.51*down, "box");
+    score_assigner(players,      up_score, down_score, right_score, left_score, pos_score, up, right);
+    score_assigner(bombs,        up_score, down_score, right_score, left_score, pos_score, up, right, "bomb");
+    score_assigner(fires,        up_score, down_score, right_score, left_score, pos_score, up, right, "fire");
+    score_assigner(powerups,     up_score, down_score, right_score, left_score, pos_score, up, right, "powerup");
+    score_assigner(wooden_boxes, up_score, down_score, right_score, left_score, pos_score, up, right, "box");
+    score_assigner(solid_boxes,  up_score, down_score, right_score, left_score, pos_score, up, right, "box");
 
+    pos_score -= 10;
     std::vector<std::reference_wrapper<int>> score_vec{up_score, down_score, right_score, left_score, pos_score};
     int max_score{*std::max_element(score_vec.begin(), score_vec.end())};
-    int num_max = std::count(vec.begin(), vec.end(), max_score);
+    int num_max = std::count(score_vec.begin(), score_vec.end(), max_score);
 
     srand (time(NULL));
     int rand_int = rand() % num_max + 1;
     int counter{1};
     
-    for (i = 0; i < 5; i++)
+    for (int i = 0; i < 5; i++)
     {
-	if (score_vec[i] == rand_int)
+	if (score_vec[i] == max_score)
 	{
-	    if (count != rand_int)
+	    if (counter != rand_int)
 	    {
 		counter += 1;
 	    }

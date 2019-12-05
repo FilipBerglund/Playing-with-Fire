@@ -26,7 +26,7 @@ Player::Player(sf::Vector2f pos, sf::Texture & texture, int cooldown,
 {
     sf::Clock new_clock;
     bomb_cds.push_back(new_clock);  //Listan får storlek 1.
-    sprite.setOrigin(hitbox().width/2, hitbox().height/2); //Origin blir i mitten.
+    // sprite.setOrigin(hitbox().width/2, hitbox().height/2); //Origin blir i mitten.
 }
 
 
@@ -96,14 +96,7 @@ void Player::apply_on_hit_effect(Game_object* object)
             ptr->glide("down");
         }
     }
-    //TODO: Denna ska inte vara här. Bomben stannar själv då den kolliderar med
-    //något. Om den inte skulle sköta det själv skulle vi behöva lägga till denna funktionalitet
-    //i alla object som bomb kan kollidera med. Det skulle leda till dynamic_cast:s osv.
-    //Därför blir det lättast och snyggast att bara låta bomb sköta det själv.
-    else if (ptr->is_gliding() == true)  //push_powerup == false så bomben ska stanna.
-    {
-        ptr->undo_last_move();
-    }
+    // ptr->undo_last_move(); 
 }
 
 
@@ -204,8 +197,9 @@ bool Player::request_to_drop_bomb()  //Hjälpfunktion när bomber ska droppas.
 	want_to_drop_bomb = false;
         for (unsigned int i = 0; i < bomb_cds.size(); i++)  //Går igenom hela listan av klockor.
         {
-            if (bomb_cds[i].getElapsedTime().asSeconds() >= cd) //När detta uppfylls har spelaren möjligheten att droppa en bomb.
+            if (bomb_cds[i].getElapsedTime().asSeconds() >= cd || first_bomb) //När detta uppfylls har spelaren möjligheten att droppa en bomb.
             {
+		first_bomb = false;
                 bomb_cds[i].restart();
 	        return true;
             }
@@ -214,7 +208,7 @@ bool Player::request_to_drop_bomb()  //Hjälpfunktion när bomber ska droppas.
     return false;
 }
 
-Bomb* Player::create_bomb(sf::Texture bomb_texture)
+Bomb* Player::create_bomb(sf::Texture& bomb_texture)
 {
     return new Bomb(sprite.getPosition(), bomb_texture, this);
 }
