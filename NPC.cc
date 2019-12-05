@@ -6,7 +6,10 @@
 #include <SFML/Graphics.hpp>
 #include <string>
 #include <vector>
+#include <algorithm> 
 #include <functional>
+#include <stdlib.h>     
+#include <time.h>  
 
 NPC::NPC(sf::Vector2f pos, sf::Texture & texture, int cooldown, bool in_push,
          int in_health, int in_speed, int in_fire, int in_cd, std::string in_name):
@@ -33,35 +36,35 @@ int NPC::local_score(std::string object) const
     }
     else if (object == "player")
     {
-	return 1;
+	return 2;
     }
-    return 0;
+    return 1;
 }
 
-void NPC::score_assigner(list<Game_object*>& objects, int& up, int& down, int& right, int& left, int& pos
-			 sf::Vector2f up, sf::Vector2f right, std::string type) const
+void NPC::score_assigner(list<Game_object*>& objects, int& up_score, int& down_score, int& right_score,
+			 int& left_score, int& pos_score, sf::Vector2f up, sf::Vector2f right, std::string type) const
 {
     for (Game_object * object : objects)
     {
 	if (object->hitbox().contains(position + up))
 	{
-	    up += local_score(type)
+	    up_score += local_score(type)
 	}
 	if (object->hitbox().contains(position - up))
 	{
-	    down += local_score(type);
+	    down_score += local_score(type);
 	}
 	if (object->hitbox().contains(position + right))
 	{
-	    right += local_score(type);
+	    right_score += local_score(type);
 	}
 	if (object->hitbox().contains(position - right))
 	{
-	    left += local_score(type);
+	    left_score += local_score(type);
 	}
 	if (object->hitbox().contains(position))
 	{
-	    pos += local_score(type);
+	    pos_score += local_score(type);
 	}
     }
 }
@@ -84,6 +87,38 @@ void NPC::update(std::list<Players*>& players, std::list<Bomb*>& bombs, list<Fir
     score_assigner(wooden_boxes, up_score, down_score, right_score, left_score, 0.51*up, 0.51*down, "box");
     score_assigner(solid_boxes, up_score, down_score, right_score, left_score, 0.51*up, 0.51*down, "box");
 
-    std::vector<std::reference_wrapper<int>> vec{up_score, down_score, right_score, left_score};
-    int max_score{*std::max_element(v.begin(), v.end())};
+    std::vector<std::reference_wrapper<int>> score_vec{up_score, down_score, right_score, left_score, pos_score};
+    int max_score{*std::max_element(score_vec.begin(), score_vec.end())};
+    int num_max = std::count(vec.begin(), vec.end(), max_score);
+
+    srand (time(NULL));
+    int rand_int = rand() % num_max + 1;
+    int counter{1}
+    
+    for (i = 0; i < 5; i++)
+    {
+	if (score_vec[i] == rand_int)
+	{
+	    if (count != rand_int)
+	    {
+		counter += 1;
+	    }
+	    else if (i == 0 && counter == rand_int)
+	    {
+		sprite.move(0, -speed);
+	    }
+	    else if (i == 1 && counter == rand_int)
+	    {
+		sprite.move(0, speed);
+	    }
+	    else if (i == 2 && counter == rand_int)
+	    {
+                sprite.move(speed, 0);
+	    }
+	    else if (i == 3 && counter == rand_int)
+	    {
+                sprite.move(-speed, 0);
+	    }
+	}
+    }
 }
