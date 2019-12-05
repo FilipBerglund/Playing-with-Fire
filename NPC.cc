@@ -38,7 +38,7 @@ int NPC::local_score(std::string object) const
     {
 	return 2;
     }
-    return 1;
+    return 0;
 }
 
 void NPC::score_assigner(list<Game_object*>& objects, int& up_score, int& down_score, int& right_score,
@@ -48,7 +48,7 @@ void NPC::score_assigner(list<Game_object*>& objects, int& up_score, int& down_s
     {
 	if (object->hitbox().contains(position + up))
 	{
-	    up_score += local_score(type)
+	    up_score += local_score(type);
 	}
 	if (object->hitbox().contains(position - up))
 	{
@@ -69,6 +69,51 @@ void NPC::score_assigner(list<Game_object*>& objects, int& up_score, int& down_s
     }
 }
 
+void NPC::score_assigner(list<Player*>& players, int& up_score, int& down_score, int& right_score,
+			 int& left_score, int& pos_score, sf::Vector2f up, sf::Vector2f right) const
+{
+    for (Player * player : players)
+    {
+	cond1 == object->hitbox().contains(position + up);
+	cond2 == object->hitbox().contains(position - up);
+	cond3 == object->hitbox().contains(position + right);
+	cond4 == object->hitbox().contains(position - right);
+	cond5 == object->hitbox().contains(position);
+	if (cond1 || cond2 || cond3 || cond4 || cond5)
+	{
+	    if (player != this)
+	    {
+		want_to_drop_bomb = true;
+	    }
+	    if (cond1)
+	    {
+	        up_score += local_score("player");
+		want_to_drop_bomb = true;
+	    }
+            if (cond2)
+            {
+	        down_score += local_score("player");
+		want_to_drop_bomb = true;
+	    }
+	    if (cond3)
+	    {
+	        right_score += local_score("player");
+		want_to_drop_bomb = true;
+	    }
+	    if (cond4)
+	    {
+	        left_score += local_score("player");
+		want_to_drop_bomb = true;
+	    }
+            if (cond5)
+            {
+	        pos_score += local_score("player");
+		want_to_drop_bomb = true;
+	    }
+	}
+    }
+}
+
 void NPC::update(std::list<Players*>& players, std::list<Bomb*>& bombs, list<Fire*>& fires
 		 std::list<Powerup*>& powerups, std::list<Wooden_box*>& wooden_boxes, std::list<Solid_box*>& solid_boxes)
 {
@@ -80,7 +125,7 @@ void NPC::update(std::list<Players*>& players, std::list<Bomb*>& bombs, list<Fir
     sf::Vector2f right{hitbox().width, 0};
     sf::Vector2f up{0, -hitbox().height};
 
-    score_assigner(players, up_score, down_score, right_score, left_score, up, down, "player");
+    score_assigner(players, up_score, down_score, right_score, left_score, up, down);
     score_assigner(bombs, up_score, down_score, right_score, left_score, up, down, "bomb");
     score_assigner(fires, up_score, down_score, right_score, left_score, up, down, "fire");
     score_assigner(powerups, up_score, down_score, right_score, left_score, up, down, "powerup");
@@ -93,7 +138,7 @@ void NPC::update(std::list<Players*>& players, std::list<Bomb*>& bombs, list<Fir
 
     srand (time(NULL));
     int rand_int = rand() % num_max + 1;
-    int counter{1}
+    int counter{1};
     
     for (i = 0; i < 5; i++)
     {
@@ -105,18 +150,22 @@ void NPC::update(std::list<Players*>& players, std::list<Bomb*>& bombs, list<Fir
 	    }
 	    else if (i == 0 && counter == rand_int)
 	    {
+		sprite.setRotation(0);
 		sprite.move(0, -speed);
 	    }
 	    else if (i == 1 && counter == rand_int)
 	    {
+		sprite.setRotation(180);
 		sprite.move(0, speed);
 	    }
 	    else if (i == 2 && counter == rand_int)
 	    {
+		sprite.setRotation(90);
                 sprite.move(speed, 0);
 	    }
 	    else if (i == 3 && counter == rand_int)
 	    {
+		sprite.setRotation(-90);
                 sprite.move(-speed, 0);
 	    }
 	}
