@@ -41,7 +41,9 @@ Game_state::Game_state(): State("Game_state"),
         speed_texture.loadFromFile("textures/speed_texture.png");
     }
 
-void Game_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard)
+void Game_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard,
+			Game_state* game_state, Menu_state* menu_state,
+			End_screen* end_screen, State* current_state)
 {
     user_input_handler(mouse, keyboard);
     check_collisions();
@@ -114,7 +116,7 @@ void Game_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard)
         new_round();
         if (is_game_over())
         {
-            end_game();
+            end_game(current_state, end_screen);
         }
     }
 }
@@ -227,7 +229,9 @@ void Game_state::draw(sf::RenderWindow& window)
 }
 
 
-void Game_state::user_input_handler(sf::Mouse& mouse, sf::Keyboard& keyboard)
+void Game_state::user_input_handler(sf::Mouse& mouse, sf::Keyboard& keyboard,
+				    Game_state* game_state, Menu_state* menu_state,
+				    End_screen* end_screen, State* current_state)
 {
     /*
     if (mouse.isButtonPressed(sf::Mouse::Left)
@@ -276,7 +280,7 @@ void Game_state::new_game(int PC, int NPC1, int NPC2, int NPC3)
     is_playing = true;
 }
 
-void Game_state::end_game()
+void Game_state::end_game(State* current_state, End_screen* end_screen)
 {
     /*
      * TODO: delete relevant objects
@@ -284,6 +288,8 @@ void Game_state::end_game()
      * Change current state to End_screen
      * set is_playing to false.
     */
+    end_screen->set_players(players);
+    current_state = end_state;
 }
 
 bool Game_state::is_round_over()
@@ -322,12 +328,16 @@ bool Game_state::is_time_up()
 */
 
 
-void Menu_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard)
+void Menu_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard,
+			Game_state* game_state, Menu_state* menu_state,
+			End_screen* end_screen, State* current_state)
 {
     user_input_handler(mouse, keyboard);
 }
 
-void Menu_state::user_input_handler(sf::Mouse& mouse, sf::Keyboard&)
+void Menu_state::user_input_handler(sf::Mouse& mouse, sf::Keyboard&,
+				    Game_state* game_state, Menu_state* menu_state,
+				    End_screen* end_screen, State* current_state)
 {
     //check the collisions with menu_buttons
     /*
@@ -386,16 +396,53 @@ struct PlayerComparator
 };
 
 
-End_screen::End_screen(sf::Texture s, std::list<Player*> list)
-  :State("end_screen"), sprite{s}, list_of_Player{list},
-   pos{50,50}, end_button{pos, sprite}
+End_screen::End_screen( std::list<Player*> list)
+  :State("end_screen"), sprite{fire_texture.loadFromFile("textures/fire_texture.png")},
+   list_of_Player{list}, pos{50,50}, end_button{pos, sprite}
 {
 
   list_of_Player.sort(PlayerComparator());
   
 }
 
-void End_screen::Draw(sf::RenderWindow& window)
+void End_screen::new_players(std::list<Player*> Players)
+{
+  
+  list_of_Player = Players;
+  list_of_Player.sort(PlayerComparator());
+  
+}
+  
+void End_screen::update(sf::Mouse& mouse, sf::Keyboard& keyboard,
+			Game_state* game_state, Menu_state* menu_state,
+			End_screen* end_screen, State* current_state)
+{
+    user_input_handler(mouse, keyboard);
+}
+
+void End_screen::user_input_handler(sf::Mouse& mouse, sf::Keyboard&,
+				    Game_state* game_state, Menu_state* menu_state,
+				    End_screen* end_screen, State* current_state)
+{
+    //check the collisions with menu_buttons
+    
+    if (mouse.isButtonPressed(sf::Mouse::Left)
+    {
+        if (end_button->click(mouse))
+        {
+	  list_of_Players.clear();
+	  current_state = menu_state;
+      
+            else
+            {
+                //not valid game message
+            }
+        }
+    }
+    
+}
+
+void End_screen::draw(sf::RenderWindow& window)
 {
     int number{1};  
     int ycorrd{70};

@@ -2,6 +2,7 @@
 //#include <SFML/RenderWindow.hpp>
 #include <string>
 #include "State.h"
+#include "State_handler.h"
 
 int main()
 {
@@ -14,9 +15,7 @@ int main()
     sf::Keyboard keyboard;
     sf::Mouse mouse;
 
-    Game_state game_state;
-    game_state.new_game(1,0,0,0);
-    
+    State_handler state_handler;
     while (window.isOpen())
     {
         sf::Event event;
@@ -28,8 +27,8 @@ int main()
                 }
         }
         window.clear();
-        game_state.update(mouse, keyboard);
-        game_state.draw(window);
+        state_handler.update(mouse, keyboard);
+        state_handler.draw(window);
         window.display();
     }
 
