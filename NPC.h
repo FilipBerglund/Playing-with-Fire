@@ -24,17 +24,18 @@ public:
 protected:
     int local_score(std::string) const;
     void score_assigner(std::list<Bomb*>& ,int&, int&, int&, int&, int&,
-			sf::Vector2f, sf::Vector2f, std::string) const;
+			sf::Vector2f, sf::Vector2f) const;
     void score_assigner(std::list<Fire*>& ,int&, int&, int&, int&, int&,
-			sf::Vector2f, sf::Vector2f, std::string) const;
+			sf::Vector2f, sf::Vector2f) const;
     void score_assigner(std::list<Powerup*>& ,int&, int&, int&, int&, int&,
-			sf::Vector2f, sf::Vector2f, std::string) const;
+			sf::Vector2f, sf::Vector2f) const;
     void score_assigner(std::list<Wooden_box*>& ,int&, int&, int&, int&, int&,
-			sf::Vector2f, sf::Vector2f, std::string) const;
+			sf::Vector2f, sf::Vector2f) const;
     void score_assigner(std::list<Solid_box*>& ,int&, int&, int&, int&, int&,
-			sf::Vector2f, sf::Vector2f, std::string) const;
+			sf::Vector2f, sf::Vector2f) const;
     void score_assigner(std::list<Player*>& ,int&, int&, int&, int&, int&,
 			sf::Vector2f, sf::Vector2f);
+    sf::Vector2f direction;
 };
 
 #endif

@@ -40,7 +40,6 @@ Game_state::Game_state(): State("Game_state"),
 void Game_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard)
 {
     user_input_handler(mouse, keyboard);
-    check_collisions();
 
 
     if (!is_playing)
@@ -68,6 +67,7 @@ void Game_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard)
 	}
     }
 
+    check_collisions();
     wooden_boxes.remove_if(
 	[this](Wooden_box* wooden_box)
         {
@@ -258,10 +258,12 @@ void Game_state::new_game(int PC, int NPC1, int NPC2, int NPC3)
     //initialize everything
    // Player* player = new Player(sf::Vector2f(300,300), player1_texture, 3, false, 3, 5, 2, 5);
     //players.push_back(player);
-    Pc* pc = new Pc(sf::Vector2f(150,150), player1_texture, 3, false, 3, 1, 2, 5, "Pelle svanslös", sf::Keyboard::A,sf::Keyboard::D,sf::Keyboard::S,sf::Keyboard::W,sf::Keyboard::Q);
+    Pc* pc = new Pc(sf::Vector2f(150,150), player1_texture, 3, false, 3, 2, 2, 5, "Pelle svanslös", sf::Keyboard::A,sf::Keyboard::D,sf::Keyboard::S,sf::Keyboard::W,sf::Keyboard::Q);
     players.push_back(pc);
-    Npc* npc = new Npc(sf::Vector2f(150,250), player1_texture, 3, false, 3, 1, 2, 5, "Pelle svanslös");
+
+    Npc* npc = new Npc(sf::Vector2f(150,250), player1_texture, 3, false, 3, 2, 2, 5, "Pelle svanslös");
     players.push_back(npc);
+    
     
    for (int i = 2; i < 19; i++)
    { 
