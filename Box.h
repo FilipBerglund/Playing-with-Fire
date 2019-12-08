@@ -19,7 +19,10 @@ public:
     Solid_box(sf::Vector2f pos, sf::Texture & texture):
     Box(pos, texture) {}
 
-    void collision() {}
+    void apply_on_hit_effect(Game_object* object) override
+    {
+        object->undo_last_move();
+    }
 };
 
 

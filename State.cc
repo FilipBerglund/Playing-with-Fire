@@ -40,6 +40,7 @@ Game_state::Game_state(): State("Game_state"),
         push_texture.loadFromFile("textures/push_texture.png");
         extra_bomb_texture.loadFromFile("textures/extra_bomb_texture.png");
         speed_texture.loadFromFile("textures/speed_texture.png");
+	bigger_blast_texture.loadFromFile("textures/bigger_blast_texture.png");
     }
 
 void Game_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard)
@@ -139,7 +140,6 @@ void Game_state::check_collisions()
             if (player->hitbox().intersects(wooden_box->hitbox()))
             {
                 wooden_box->apply_on_hit_effect(player);
-                std::cout << "collision" << std::endl;
             }
         }
         for (Solid_box* solid_box : solid_boxes)
@@ -283,9 +283,9 @@ void Game_state::new_game(int PC, int NPC1, int NPC2, int NPC3)
     */
 
     powerups.push_back(new Speed(sf::Vector2f(600,250), speed_texture));
-    powerups.push_back(new Bigger_blast(sf::Vector2f(650,250), speed_texture));
-    powerups.push_back(new Extra_bomb(sf::Vector2f(600,350), speed_texture));
-    powerups.push_back(new Push(sf::Vector2f(600,450), speed_texture));
+    powerups.push_back(new Bigger_blast(sf::Vector2f(650,250), bigger_blast_texture));
+    powerups.push_back(new Extra_bomb(sf::Vector2f(600,350), extra_bomb_texture));
+    powerups.push_back(new Push(sf::Vector2f(600,450), push_texture));
     
 	
     
@@ -293,19 +293,19 @@ void Game_state::new_game(int PC, int NPC1, int NPC2, int NPC3)
     
    for (int i = 2; i < 19; i++)
    { 
-    	wooden_boxes.push_back(new Wooden_box(sf::Vector2f(i*50, 100), wooden_box_texture));
-    	wooden_boxes.push_back(new Wooden_box(sf::Vector2f(i*50, 700), wooden_box_texture));
+    	solid_boxes.push_back(new Solid_box(sf::Vector2f(i*50, 100), solid_box_texture));
+        solid_boxes.push_back(new Solid_box(sf::Vector2f(i*50, 700), solid_box_texture));
    }
    for (int i = 2; i < 19; i++)
    { 
-    	wooden_boxes.push_back(new Wooden_box(sf::Vector2f(100, i*50), wooden_box_texture));
-    	wooden_boxes.push_back(new Wooden_box(sf::Vector2f(900, i*50), wooden_box_texture));
+    	solid_boxes.push_back(new Solid_box(sf::Vector2f(100, i*50), solid_box_texture));
+    	solid_boxes.push_back(new Solid_box(sf::Vector2f(900, i*50), solid_box_texture));
    }
    for (int i = 2; i < 10; i++)
    { 
    	for (int j = 2; j < 10; j++)
 	{ 
-		wooden_boxes.push_back(new Wooden_box(sf::Vector2f(i*100, j*100), wooden_box_texture));
+		solid_boxes.push_back(new Solid_box(sf::Vector2f(i*100, j*100), solid_box_texture));
 	}
    }
 
