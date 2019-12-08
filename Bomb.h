@@ -2,18 +2,32 @@
 #define BOMB_H
 
 #include <SFML/Graphics.hpp>
-#include "Game_object.h"
 #include <string>
+#include "Box.h"
+#include "Player.h"
+#include "Game_object.h"
 
-class Player;
+
 class Bomb: public Game_object
 {
 public:
-    Bomb(sf::Vector2f, sf::Texture&, Player*);
-    void apply_on_hit_effect(Game_object*) {}
-    void glide(std::string) {};
-    bool is_gliding() {return false;}
+    Bomb (sf::Vector2f pos, sf::Texture & texture,
+    Player* player);
+    
+    bool is_blasted() const;
+    
+    void update() override;
+    
+    void apply_on_hit_effect(Game_object*);
+    
+    void glide(std::string);
+    
 private:
+    
+    bool is_gliding;
     Player* owner;
+    int speed;
+    std::string move_direction;
+    sf::Clock fuse_timer;
 };
 #endif
