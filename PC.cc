@@ -21,9 +21,14 @@ Pc::Pc(sf::Vector2f pos, sf::Texture & texture, int cooldown, bool in_push,
 void Pc::update(sf::Keyboard keyboard)
 {
     old_position = sprite.getPosition();
-    if (keyboard.isKeyPressed(bomb_button))
+    if (keyboard.isKeyPressed(bomb_button) && !previous_bomb_button)
     {
         want_to_drop_bomb = true;
+        previous_bomb_button = true;
+    }
+    else if (!keyboard.isKeyPressed(bomb_button))
+    {
+	previous_bomb_button = false;
     }
     if (keyboard.isKeyPressed(left))
     {

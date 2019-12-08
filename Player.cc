@@ -25,7 +25,7 @@ Player::Player(sf::Vector2f pos, sf::Texture & texture, int cooldown,
 	name{in_name}
 {
     sf::Clock new_clock;
-    bomb_cds.push_back(new_clock);  //Listan får storlek 1.
+    bomb_cds.push_back(std::make_pair(new_clock, true));  //Listan får storlek 1.
     // sprite.setOrigin(hitbox().width/2, hitbox().height/2); //Origin blir i mitten.
 }
 
@@ -40,8 +40,8 @@ void Player::new_round()  //Variabler återställs vid ny runda.
     want_to_drop_bomb = false;
     sprite.setPosition(spawn_point);
     bomb_cds.resize(1);
-    bomb_cds[0].restart();
-    first_bomb = true;
+    bomb_cds[0].first.restart();
+    bomb_cds[0].second = true;
 }
 
 
@@ -175,7 +175,7 @@ int Player::get_score() const
 void Player::give_bomb()
 {
     sf::Clock new_clock;
-    bomb_cds.push_back(new_clock);
+    bomb_cds.push_back(std::make_pair(new_clock, true));
 }
 
 
@@ -198,10 +198,10 @@ bool Player::request_to_drop_bomb()  //Hjälpfunktion när bomber ska droppas.
 	want_to_drop_bomb = false;
         for (unsigned int i = 0; i < bomb_cds.size(); i++)  //Går igenom hela listan av klockor.
         {
-            if (bomb_cds[i].getElapsedTime().asSeconds() >= cd || first_bomb) //När detta uppfylls har spelaren möjligheten att droppa en bomb.
+            if (bomb_cds[i].first.getElapsedTime().asSeconds() >= cd || bomb_cds[i].second) //När detta uppfylls har spelaren möjligheten att droppa en bomb.
             {
-		first_bomb = false;
-                bomb_cds[i].restart();
+		bomb_cds[i].second = false;
+                bomb_cds[i].first.restart();
 	        return true;
             }
 	}
