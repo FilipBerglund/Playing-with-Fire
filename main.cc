@@ -11,7 +11,7 @@ int main()
     std::mt19937 mt{rd()};
     std::uniform_int_distribution<int> dist(0, 9);
     */
-    srand(123);
+    srand(time(NULL));
     int const width{1280};
     int const height{720};
 

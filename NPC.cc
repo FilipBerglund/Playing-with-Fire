@@ -40,53 +40,10 @@ int Npc::local_score(std::string object) const
     }
     else if (object == "player")
     {
-	return 2;
+	return 1;
     }
     return 0;
 }
-
-/*
-void Npc::score_assigner(std::list<Bomb*>& objects, int& up_score, int& down_score, int& right_score,
-			 int& left_score, int& pos_score, sf::Vector2f up, sf::Vector2f right, std::string type) const
-{
-    sf::Vector2f up_1{-hitbox().width/2, -hitbox().height};
-    sf::Vector2f up_2{hitbox().width/2, -hitbox().height};
-    sf::Vector2f down_1{-hitbox().width/2, hitbox().height};
-    sf::Vector2f down_2{hitbox().width/2, hitbox().height};
-    sf::Vector2f right_1{hitbox().width, hitbox().height/2};
-    sf::Vector2f right_2{hitbox().width, -hitbox().height/2};
-    sf::Vector2f left_1{-hitbox().width, hitbox().height/2};
-    sf::Vector2f left_2{-hitbox().width, -hitbox().height/2};
-    cond1 = 
-    for (Game_object * object : objects)
-    {
-	if (object->hitbox().contains(sprite.getPosition() + up_1) ||
-	    object->hitbox().contains(sprite.getPosition() + up_2))
-	{
-	    up_score += local_score("bomb");
-	}
-	if (object->hitbox().contains(sprite.getPosition() + down1) ||
-	    object->hitbox().contains(sprite.getPosition() + down2))
-	{
-	    down_score += local_score("bomb");
-	}
-	if (object->hitbox().contains(sprite.getPosition() + right1) ||
-	    object->hitbox().contains(sprite.getPosition() + right2))
-	{
-	    right_score += local_score("bomb");
-	}
-	if (object->hitbox().contains(sprite.getPosition() + left1) ||
-	    object->hitbox().contains(sprite.getPosition() + left2))
-	{
-	    left_score += local_score("bomb");
-	}
-	if (object->hitbox().contains(sprite.getPosition()))
-	{
-	    pos_score += local_score("bomb");
-	}
-    }
-}
-*/
 
 void Npc::score_assigner(std::list<Bomb*>& objects, int& up_score, int& down_score, int& right_score,
 			 int& left_score, int& pos_score, sf::Vector2f up, sf::Vector2f right) const
@@ -277,29 +234,7 @@ void Npc::update(std::list<Player*>& players, std::list<Bomb*>& bombs, std::list
 
 
     bool at_mid{((int)old_position.x) % 50 == 0 && ((int)old_position.y) % 50 == 0};
-/*
 
-      else if ((int)old_position.x % 50 < 15 && (int)old_position.x % 50 != 0) 
-    {
-    	sprite.move(-1,0);
-    }
-    else if ((int)old_position.y % 50 < 15 && (int)old_position.y % 50 != 0)
-    {
-    	sprite.move(0,-1);
-    }
-    else if ((int)old_position.y % 50 > 35 && (int)old_position.y % 50 != 0)
-    {
-    	sprite.move(0,1);
-    }
-    else if ((int)old_position.x % 50 > 35 && (int)old_position.x % 50 != 0)
-    {
-    	sprite.move(1,0);
-    }
-*/
-    //  std::cout << "up_score" << up_score << std::endl;
-    //  std::cout << "down_score" << down_score << std::endl;
-    //  std::cout << "up_score" << up_score << std::endl;
-    //  std::cout << "down_score" << down_score << std::endl;
     if (at_mid)
     {
 	int up_score{0};
@@ -321,19 +256,28 @@ void Npc::update(std::list<Player*>& players, std::list<Bomb*>& bombs, std::list
     
 	if (direction.x > 0)
 	{
-	    right_score += 1;
+	    right_score += rand() % 3;
+	    down_score += rand() % 2;
+	    up_score += rand() % 2;
+	    
 	}
 	else if (direction.x < 0)
 	{
-	    left_score += 1;
+	    left_score += rand() % 3;
+	    down_score += rand() % 2;
+	    up_score += rand() % 2;
 	}
 	else if (direction.y > 0)
 	{
-	    down_score += 1;
+	    down_score += rand() % 3;
+	    right_score += rand() % 2;
+	    left_score += rand() % 2;
 	}
 	else if (direction.y < 0)
 	{
-	    up_score += 1;
+	    up_score += rand() % 3;
+	    right_score += rand() % 2;
+	    left_score += rand() % 2;
 	}
     
 	pos_score -= 20;
@@ -347,6 +291,7 @@ void Npc::update(std::list<Player*>& players, std::list<Bomb*>& bombs, std::list
 	counter = 1;
         for (int i = 0; i < 4; i++)
         {
+	    /*
 	    std::cout << "i" << i << std::endl;
 	    std::cout << score_vec[i] << std::endl;
 	    std::cout << "num_max" << num_max << std::endl;
@@ -358,6 +303,7 @@ void Npc::update(std::list<Player*>& players, std::list<Bomb*>& bombs, std::list
 	    std::cout << "left_score" << left_score << std::endl;
 	    std::cout << "pos_score" << pos_score << std::endl;
 	    std::cout << "counter" << counter << std::endl;
+	    */
 	    
 	    if (score_vec[i] == max_score)
 	    {
@@ -403,8 +349,10 @@ void Npc::update(std::list<Player*>& players, std::list<Bomb*>& bombs, std::list
     }
     else
     {
+	/*
 	std::cout << "xdir" << direction.x << std::endl;
 	std::cout << "ydir" << direction.y << std::endl;
+	*/
         sprite.move(direction);
     }
 }

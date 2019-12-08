@@ -41,6 +41,7 @@ void Player::new_round()  //Variabler återställs vid ny runda.
     sprite.setPosition(spawn_point);
     bomb_cds.resize(1);
     bomb_cds[0].restart();
+    first_bomb = true;
 }
 
 
