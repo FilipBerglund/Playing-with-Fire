@@ -7,7 +7,7 @@
 #include "Player.h"
 #include "Game_object.h"
 
-
+class Player;
 class Bomb: public Game_object
 {
 public:
@@ -16,7 +16,7 @@ public:
     
     bool is_blasted() const;
     
-    void update() override;
+    void update();
     
     void apply_on_hit_effect(Game_object*);
     

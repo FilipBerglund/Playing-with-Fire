@@ -74,6 +74,12 @@ void Game_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard)
 	}
     }
 
+    for (Bomb* bomb : bombs)
+    {
+    	bomb->update();
+    }
+
+
     check_collisions();
     wooden_boxes.remove_if(
 	[this](Wooden_box* wooden_box)
@@ -125,6 +131,7 @@ void Game_state::check_collisions()
         for (Bomb* bomb : bombs)
             if (player->hitbox().intersects(bomb->hitbox()))
             {
+		    std::cout << "bomb" << std::endl;
                 bomb->apply_on_hit_effect(player);
                 player->apply_on_hit_effect(bomb);
             }
@@ -163,11 +170,13 @@ void Game_state::check_collisions()
     {
         for (Bomb* bomb2 : bombs)
         {
-            if (bomb->hitbox().intersects(bomb2->hitbox()))
+            if (bomb->hitbox().intersects(bomb2->hitbox()) && bomb != bomb2)
                 //add check if bomb1 == bomb
             {
                 bomb->apply_on_hit_effect(bomb2);
                 bomb2->apply_on_hit_effect(bomb);
+                bomb->undo_last_move();
+                bomb2->undo_last_move();
             }
         }
         for (Wooden_box* wooden_box : wooden_boxes)

@@ -27,6 +27,11 @@ public:
         return sprite.getPosition();
     }
 
+    sf::Vector2f get_old_position()
+    {
+        return old_position;
+    }
+
     virtual void apply_on_hit_effect(Game_object*) {};
     void undo_last_move()
     {
