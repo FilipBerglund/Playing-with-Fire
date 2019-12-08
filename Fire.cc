@@ -2,24 +2,18 @@
 #include "Player.h"
 #include "Fire.h"
 
-Fire::Fire(sf::Vector2f pos, sf::Texture& sprite, Player* player) 
-: Game_objects(pos, sprite), owner{player}
+Fire::Fire(sf::Vector2f pos, sf::Texture& texture, Player* player):
+    Game_objects(pos, texture), 
+    owner{player},
+    aflame_timer{}
+{}
+
+void apply_on_hit_effect(Game_object* object)
 {
-  aflame_timer.getElapsedTime().asSeconds()<=3;
+    dynamic_cast<Player*>(object)->reduce_health(1);
 }
 
-void apply_on_hit_effect(Game_object* object) override
+bool Fire::is_extinguished() const
 {
-  dynamic_cast<Player*>(object)->reduce_health(1);
-  dynamic_cast<Wooden_box*>(object)->is_dead()==true;
-}
-
-bool Fire:: is_extinguished() const
-{
-  if(aflame_timer.getElapsedTime().asSeconds()>3)
-    {
-      return true;
-    }
-  
-  return false;
+    return aflame_timer.getElapsedTime().asSeconds()>3;
 }

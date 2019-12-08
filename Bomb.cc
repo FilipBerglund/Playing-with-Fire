@@ -1,39 +1,23 @@
 #include <SFML/Graphics.hpp>
 #include <string>
 #include "Player.h"
-//#include "Fire.h"
 #include "Bomb.h"
 
-Bomb::Bomb (sf::Vector2f pos,
- sf::Texture & texture, Player* player):     
-    Game_objects(pos, texture), owner{player}
+Bomb::Bomb(sf::Vector2f pos, sf::Texture& texture, Player* player):     
+    Game_objects(pos, texture),
+    owner{player},
+    speed{3}
+    fuse_timer{}
 {}
 
-/*
-void Bomb::set_owner(Player* owner, Fire fire)
-{
-  if(is_blasted == true)
-    {
-       Player* owner = &fire;
-       return owner;
-    }
-}
-*/
 bool is_blasted() const
 {
-  if(fuse_timer.getElapsedTime().asSeconds()>3)
-    {
-      return true;
-    }
-  else
-    {
-      return false;
-    }
+    return fuse_timer.getElapsedTime().asSeconds() > 3;
 }
 
-void Bomb::update() override
+void Bomb::update()
 {
-  if(is_glidding = true)
+  if(is_gliding)
     {
         if (move_direction == "right")
         {
@@ -51,16 +35,16 @@ void Bomb::update() override
         {
           sprite.move(0,-speed);
         }
-    }  
+    }
 }
 
-void Bomb::apply_on_hit_effect(Game_object* object)
+void Bomb::apply_on_hit_effect(Game_object*)
 {
-  is_gliding = false;
+    is_gliding = false;
 }
 
-void Bomb::glide(std::string direction )
+void Bomb::glide(std::string direction)
 {
-  direction == move_direction;
-  is_gliding = true;
+    move_direction = direction;
+    is_gliding = true;
 }
