@@ -23,9 +23,9 @@ void Pc::update(sf::Keyboard keyboard)
     old_position = sprite.getPosition();
     if (keyboard.isKeyPressed(bomb_button))
     {
-        want_to_drop_bomb == true;
+        want_to_drop_bomb = true;
     }
-    else if (keyboard.isKeyPressed(left))
+    if (keyboard.isKeyPressed(left))
     {
         sprite.setRotation(-90);
         sprite.move(-speed, 0);
@@ -44,5 +44,21 @@ void Pc::update(sf::Keyboard keyboard)
     {
         sprite.setRotation(0);
         sprite.move(0, -speed);
+    }
+    else if ((int)old_position.x % 50 < 15 && (int)old_position.x % 50 != 0) 
+    {
+    	sprite.move(-1,0);
+    }
+    else if ((int)old_position.y % 50 < 15 && (int)old_position.y % 50 != 0)
+    {
+    	sprite.move(0,-1);
+    }
+    else if ((int)old_position.y % 50 > 35 && (int)old_position.y % 50 != 0)
+    {
+    	sprite.move(0,1);
+    }
+    else if ((int)old_position.x % 50 > 35 && (int)old_position.x % 50 != 0)
+    {
+    	sprite.move(1,0);
     }
 }
