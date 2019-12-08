@@ -12,8 +12,9 @@ public:
     Game_object(sf::Vector2f pos, sf::Texture & texture):
     sprite{}, old_position{pos}
     {
+	sprite.setTexture(texture);
+	sprite.setOrigin(hitbox().width/2, hitbox().height/2); 
         sprite.setPosition(pos);
-        sprite.setTexture(texture);
     }
 
     sf::Sprite get_drawable() const

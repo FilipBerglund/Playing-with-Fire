@@ -9,16 +9,15 @@
 class Powerup: public Game_object
 {
 public:
-    Powerup(sf::Vector2f pos, sf::Texture & texture):
+    Powerup(sf::Vector2f pos, sf::Texture& texture):
     Game_object(pos, texture)
     {}
-
 };
 
 class Speed: public Powerup
 {
 public:
-    Speed(sf::Vector2f pos, sf::Texture texture):
+    Speed(sf::Vector2f pos, sf::Texture& texture):
     Powerup(pos, texture)
     {}
 
@@ -28,7 +27,7 @@ public:
 class Bigger_blast: public Powerup
 {
 public:
-    Bigger_blast(sf::Vector2f pos, sf::Texture texture):
+    Bigger_blast(sf::Vector2f pos, sf::Texture& texture):
     Powerup(pos, texture)
     {}
 
@@ -38,7 +37,7 @@ public:
 class Extra_bomb: public Powerup
 {
 public:
-    Extra_bomb(sf::Vector2f pos, sf::Texture texture):
+    Extra_bomb(sf::Vector2f pos, sf::Texture& texture):
     Powerup(pos, texture)
     {}
 
@@ -48,7 +47,7 @@ public:
 class Push: public Powerup
 {
 public:
-    Push(sf::Vector2f pos, sf::Texture texture):
+    Push(sf::Vector2f pos, sf::Texture& texture):
     Powerup(pos, texture)
     {}
 

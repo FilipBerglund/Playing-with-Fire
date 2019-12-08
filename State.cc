@@ -9,17 +9,23 @@
 #include "Fire.h"
 #include "Player.h"
 #include "PC.h"
+#include "Menu_button.h"
+#include "NPC.h"
 #include <stdlib.h>     
 #include <time.h>       
 
 #include <iostream>
+#include <sstream>
 #include <string>
+#include <list>
+
 /*
  * GAME_STATE
  *
 */
 
 
+//TODO: is_playing should be initialised as false when state_handler is implemented fully.
 Game_state::Game_state(): State("Game_state"),
     current_round{0}, players{}, bombs{}, fires{}, wooden_boxes{}, solid_boxes{}, is_playing{true}
     {
@@ -39,36 +45,35 @@ Game_state::Game_state(): State("Game_state"),
 void Game_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard)
 {
     user_input_handler(mouse, keyboard);
-    check_collisions();
 
 
     if (!is_playing)
     {
-        //All clocks still run (both here and in player) so pausing will
-        //have unintended consequenses - exidental features.
+        // TODO: All clocks still run (both here and in player) so pausing will
+        // have unintended consequenses - exidental features. This problem has
+        // no trivaial solutions since sf::Clock has no pause function.
         return;
     }
 
     for (Player* player : players)
     {
-	Pc* ptr1 = dynamic_cast<Pc*>(player);
-	//ptr2 = dynamic_cast<NPC*>(player);
-	if (ptr1 != nullptr)
-	{
-	    ptr1->update(keyboard);
-	}
-	/*
-	else
-	{
-	    ptr2->update();
-	}
-	*/
         if (player->request_to_drop_bomb())
         {
             bombs.push_back(player->create_bomb(bomb_texture));
         }
+	Pc* ptr1 = dynamic_cast<Pc*>(player);
+	Npc* ptr2 = dynamic_cast<Npc*>(player);
+	if (ptr1 != nullptr)
+	{
+	    ptr1->update(keyboard);
+	}
+	else
+	{
+	    ptr2->update(players, bombs, fires, powerups, wooden_boxes, solid_boxes);
+	}
     }
 
+    check_collisions();
     wooden_boxes.remove_if(
 	[this](Wooden_box* wooden_box)
         {
@@ -100,6 +105,8 @@ void Game_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard)
 	    return true;
 	});
 
+    //TODO: Add remove_if for bombs and fires. The remove_if of bombs should also spawn fire.
+    //Note that powerups are removed in check_collisions().
 
     if (is_round_over())
     {
@@ -248,8 +255,8 @@ void Game_state::new_round()
         player->new_round();
     }
     current_round += 1;
-    //remove powerups, wooden_boxes, bombs, fires
-    //spawn Wooden_boxes
+    //TODO: Add removal of powerups, wooden_boxes, bombs, fires
+    //TODO: spawn Wooden_boxes
     round_timer.restart();
 
 }
@@ -259,20 +266,52 @@ void Game_state::new_game(int PC, int NPC1, int NPC2, int NPC3)
     //initialize everything
    // Player* player = new Player(sf::Vector2f(300,300), player1_texture, 3, false, 3, 5, 2, 5);
     //players.push_back(player);
-    Pc* pc = new Pc(sf::Vector2f(300,300), player1_texture, 3, false, 3, 1, 2, 5, "Pelle svanslös", sf::Keyboard::A,sf::Keyboard::D,sf::Keyboard::S,sf::Keyboard::W,sf::Keyboard::J);
-    players.push_back(pc);
+    //Pc* pc = new Pc(sf::Vector2f(150,150), player1_texture, 3, false, 3, 2, 2, 5, "Pelle svanslös", sf::Keyboard::A,sf::Keyboard::D,sf::Keyboard::S,sf::Keyboard::W,sf::Keyboard::Q);
+    //players.push_back(pc);
+
+    Npc* npc1 = new Npc(sf::Vector2f(150,250), player1_texture, 3, false, 3, 2, 2, 5, "Pelle svanslös");
+    players.push_back(npc1);
+
+    Npc* npc2 = new Npc(sf::Vector2f(200,250), player1_texture, 3, false, 3, 2, 2, 5, "Pelle svanslös");
+    players.push_back(npc2);
     
-    wooden_boxes.push_back(new Wooden_box(sf::Vector2f(800, 300), wooden_box_texture));
-    solid_boxes.push_back(new Solid_box(sf::Vector2f(500, 300), solid_box_texture));
+    Npc* npc3 = new Npc(sf::Vector2f(250,250), player1_texture, 3, false, 3, 2, 2, 5, "Pelle svanslös");
+    players.push_back(npc3);
+    
+    Npc* npc4 = new Npc(sf::Vector2f(300,250), player1_texture, 3, false, 3, 2, 2, 5, "Pelle svanslös");
+    players.push_back(npc4);
+    
+    
+   for (int i = 2; i < 19; i++)
+   { 
+    	wooden_boxes.push_back(new Wooden_box(sf::Vector2f(i*50, 100), wooden_box_texture));
+    	wooden_boxes.push_back(new Wooden_box(sf::Vector2f(i*50, 700), wooden_box_texture));
+   }
+   for (int i = 2; i < 19; i++)
+   { 
+    	wooden_boxes.push_back(new Wooden_box(sf::Vector2f(100, i*50), wooden_box_texture));
+    	wooden_boxes.push_back(new Wooden_box(sf::Vector2f(900, i*50), wooden_box_texture));
+   }
+   for (int i = 2; i < 10; i++)
+   { 
+   	for (int j = 2; j < 10; j++)
+	{ 
+		wooden_boxes.push_back(new Wooden_box(sf::Vector2f(i*100, j*100), wooden_box_texture));
+	}
+   }
+
     round_timer.restart();
     is_playing = true;
 }
 
 void Game_state::end_game()
 {
-    //delete relevant objects
-    //run the function that passes players to End_screen
-    //Change current state to End_screen
+    /*
+     * TODO: delete relevant objects
+     * run the function that passes players to End_screen
+     * Change current state to End_screen
+     * set is_playing to false.
+    */
 }
 
 bool Game_state::is_round_over()
@@ -361,3 +400,55 @@ void Menu_state::draw(sf::RenderWindow& window)
     //we need to somewhere give the buttons a position. Maybe that can be done here based on the size of window. We might add a scaling too.
     //And perhaps draw some fancy background
 }
+
+struct PlayerComparator
+{
+	// Compare 2 Player objects using points
+  bool operator ()(Player* & player1, Player* & player2)
+	{
+	  if(player1->get_score() == player2->get_score())
+	    return player1->get_score() < player2->get_score();
+	  return player1->get_score() < player2->get_score();
+ 
+	}
+};
+
+
+End_screen::End_screen(sf::Texture s, std::list<Player*> list)
+  :State("end_screen"), sprite{s}, list_of_Player{list},
+   pos{50,50}, end_button{pos, sprite}
+{
+
+  list_of_Player.sort(PlayerComparator());
+  
+}
+
+void End_screen::Draw(sf::RenderWindow& window)
+{
+    int number{1};  
+    int ycorrd{70};
+        
+    sf::Font font;    
+    if (!font.loadFromFile("arial.ttf"));
+
+ for (Player* player : list_of_Player)
+    {
+      
+      std::ostringstream info;
+      info << number << ".  " << player->get_name() << "  Points: " << player->get_score();
+    
+    sf::Text text(info.str(), font, 50);
+    text.setPosition(70,ycorrd);
+    text.setColor(sf::Color::Red);
+    
+    window.draw(text);
+    
+    ycorrd= ycorrd + 70;    
+    number= number + 1;
+
+    }
+
+
+ end_button.draw(window);
+}
+

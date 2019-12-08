@@ -8,6 +8,8 @@
 #include "Bomb.h"
 #include "Fire.h"
 
+#include "Menu_button.h"
+
 #include <string>
 #include <list>
 
@@ -82,4 +84,21 @@ private:
     void user_input_handler(sf::Mouse&, sf::Keyboard&) override;
   //  void load_textures() override;
 };
+
+class End_screen: public State
+{
+ public:
+  
+  End_screen(sf::Texture sprite, std::list<Player*> list_of_Player);
+
+  void Draw(sf::RenderWindow&);
+ 
+ private:
+  sf::Vector2f pos{50,50};
+  sf::Texture sprite;
+  std::list<Player*> list_of_Player;
+  Start_button end_button;
+};
+
+
 #endif
