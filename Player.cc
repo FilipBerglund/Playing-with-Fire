@@ -4,6 +4,8 @@
 #include <SFML/Graphics.hpp>
 #include <string>
 
+#include <iostream>
+
 Player::Player(sf::Vector2f pos, sf::Texture & texture, int cooldown,
 	       bool in_push, int in_health, int in_speed, int in_fire, int in_cd, std::string in_name):
         Game_object(pos, texture),
@@ -25,7 +27,7 @@ Player::Player(sf::Vector2f pos, sf::Texture & texture, int cooldown,
 	name{in_name}
 {
     sf::Clock new_clock;
-    bomb_cds.push_back(new_clock);  //Listan får storlek 1.
+    bomb_cds.push_back(std::make_pair(new_clock, true));  //Listan får storlek 1.
     // sprite.setOrigin(hitbox().width/2, hitbox().height/2); //Origin blir i mitten.
 }
 
@@ -40,8 +42,8 @@ void Player::new_round()  //Variabler återställs vid ny runda.
     want_to_drop_bomb = false;
     sprite.setPosition(spawn_point);
     bomb_cds.resize(1);
-    bomb_cds[0].restart();
-    first_bomb = true;
+    bomb_cds[0].first.restart();
+    bomb_cds[0].second = true;
 }
 
 
@@ -66,38 +68,39 @@ void Player::apply_on_hit_effect(Game_object* object)
     // ovanför denna kod skulle du kunna ta bort den första if satsen.
     // Då skulle den vara minder nästlad vilket skulle göra det
     // blir lite snyggare.
-    if (push_powerup == true)
+    if (abs(old_position.x - object->get_old_position().x) < 50 &&
+        abs(old_position.y - object->get_old_position().y) < 50)
+    {
+        return;
+    }
+    else if (push_powerup)
     {
         /*I de stora if-satsern nedanför kollar vi först  kollision i ett visst led
           och sedan kollar vi spelarens and bombens ursprungliga positioner
           för att bestämma i vilken riktning bomben ska skjutas iväg.*/
         if (sprite.getPosition().x + hitbox().width/2 >=
             ptr->get_position().x - ptr->hitbox().width/2 &&
-            old_position.x + hitbox().width/2 <
-            ptr->get_position().x - hitbox().width/2)
+            old_position.x < sprite.getPosition().x)
         {
             ptr->glide("right");
         }
-        else if(sprite.getPosition().x - hitbox().width/2 <=
+        else if (sprite.getPosition().x - hitbox().width/2 <=
 		ptr->get_position().x + ptr->hitbox().width/2 &&
-                old_position.x + hitbox().width/2 >
-                ptr->get_position().x - ptr->hitbox().width/2)
+                old_position.x > sprite.getPosition().x)
         {
             ptr->glide("left");
         }
-        else if(sprite.getPosition().y - hitbox().height/2 <=
+        else if (sprite.getPosition().y - hitbox().height/2 <=
 		ptr->get_position().y + ptr->hitbox().height/2 &&
-                old_position.y + hitbox().height/2 >
-                ptr->get_position().y - ptr->hitbox().width/2)
+                old_position.y > sprite.getPosition().y)
         {
             ptr->glide("up");
         }
-        else  // If-sats ej nödvändig p.g.a. uteslutning.
+        else if (old_position.y < sprite.getPosition().y)
         {
             ptr->glide("down");
         }
     }
-    // ptr->undo_last_move(); 
 }
 
 
@@ -175,7 +178,7 @@ int Player::get_score() const
 void Player::give_bomb()
 {
     sf::Clock new_clock;
-    bomb_cds.push_back(new_clock);
+    bomb_cds.push_back(std::make_pair(new_clock, true));
 }
 
 
@@ -198,10 +201,10 @@ bool Player::request_to_drop_bomb()  //Hjälpfunktion när bomber ska droppas.
 	want_to_drop_bomb = false;
         for (unsigned int i = 0; i < bomb_cds.size(); i++)  //Går igenom hela listan av klockor.
         {
-            if (bomb_cds[i].getElapsedTime().asSeconds() >= cd || first_bomb) //När detta uppfylls har spelaren möjligheten att droppa en bomb.
+            if (bomb_cds[i].first.getElapsedTime().asSeconds() >= cd || bomb_cds[i].second) //När detta uppfylls har spelaren möjligheten att droppa en bomb.
             {
-		first_bomb = false;
-                bomb_cds[i].restart();
+		bomb_cds[i].second = false;
+                bomb_cds[i].first.restart();
 	        return true;
             }
 	}

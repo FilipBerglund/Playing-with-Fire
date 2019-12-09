@@ -5,6 +5,7 @@
 #include "Bomb.h"
 #include <vector>
 #include <string>
+#include <utility>
 
 class Bomb;
 class Player: public Game_object
@@ -43,21 +44,6 @@ public:
     void set_name(std::string);
     std::string get_name() const;
 
-    
-
-    /*testing!! remove later.
-    void update(sf::Keyboard keyboard) override
-    {
-        if (keyboard.isKeyPressed(sf::Keyboard::Key::D))
-        {
-            old_position = sprite.getPosition() - sf::Vector2f(1,0);
-            sprite.move(sf::Vector2f(1,0));
-        }
-
-    }
-    */
-
-
 protected:
     bool initial_push_powerup;
     int initial_health;
@@ -73,12 +59,12 @@ protected:
     int cd;
     bool want_to_drop_bomb;
 
-    bool first_bomb{true};
+    // bool first_bomb{true};
 
     std::string name;
 
     sf::Clock immune_clock;
-    std::vector<sf::Clock> bomb_cds;
+    std::vector<std::pair<sf::Clock, bool>> bomb_cds;
     sf::Vector2f spawn_point;
 };
 

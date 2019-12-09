@@ -25,6 +25,7 @@ protected:
     sf::Keyboard::Key down;
     sf::Keyboard::Key up;
     sf::Keyboard::Key bomb_button;
+    bool previous_bomb_button{false};
 };
 
 #endif

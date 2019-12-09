@@ -40,6 +40,7 @@ Game_state::Game_state(): State("Game_state"),
         push_texture.loadFromFile("textures/push_texture.png");
         extra_bomb_texture.loadFromFile("textures/extra_bomb_texture.png");
         speed_texture.loadFromFile("textures/speed_texture.png");
+	bigger_blast_texture.loadFromFile("textures/bigger_blast_texture.png");
     }
 
 void Game_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard)
@@ -73,6 +74,12 @@ void Game_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard)
 	}
     }
 
+    for (Bomb* bomb : bombs)
+    {
+    	bomb->update();
+    }
+
+
     check_collisions();
     wooden_boxes.remove_if(
 	[this](Wooden_box* wooden_box)
@@ -81,7 +88,6 @@ void Game_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard)
 	    {
 	        return false;
 	    }
-	    srand (time(NULL));
 	    if (rand() % 2 + 1 == 2)
 	    {
 		int rand_int = rand() % 4 + 1; 
@@ -125,6 +131,7 @@ void Game_state::check_collisions()
         for (Bomb* bomb : bombs)
             if (player->hitbox().intersects(bomb->hitbox()))
             {
+		    std::cout << "bomb" << std::endl;
                 bomb->apply_on_hit_effect(player);
                 player->apply_on_hit_effect(bomb);
             }
@@ -140,7 +147,6 @@ void Game_state::check_collisions()
             if (player->hitbox().intersects(wooden_box->hitbox()))
             {
                 wooden_box->apply_on_hit_effect(player);
-                std::cout << "collision" << std::endl;
             }
         }
         for (Solid_box* solid_box : solid_boxes)
@@ -150,24 +156,27 @@ void Game_state::check_collisions()
                 solid_box->apply_on_hit_effect(player);
             }
         }
-        for (Powerup* powerup : powerups)
-        {
-            if (player->hitbox().intersects(powerup->hitbox()))
-            {
-                powerup->apply_on_hit_effect(player);
-                powerups.remove(powerup);
-            }
-        }
+	powerups.remove_if([player](Powerup* powerup)
+	    {
+		if (player->hitbox().intersects(powerup->hitbox()))
+		{
+		    powerup->apply_on_hit_effect(player);
+		    return true;
+		}
+		return false;
+	    });
     }
     for (Bomb* bomb : bombs)
     {
         for (Bomb* bomb2 : bombs)
         {
-            if (bomb->hitbox().intersects(bomb2->hitbox()))
+            if (bomb->hitbox().intersects(bomb2->hitbox()) && bomb != bomb2)
                 //add check if bomb1 == bomb
             {
                 bomb->apply_on_hit_effect(bomb2);
                 bomb2->apply_on_hit_effect(bomb);
+                bomb->undo_last_move();
+                bomb2->undo_last_move();
             }
         }
         for (Wooden_box* wooden_box : wooden_boxes)
@@ -266,9 +275,9 @@ void Game_state::new_game(int PC, int NPC1, int NPC2, int NPC3)
     //initialize everything
    // Player* player = new Player(sf::Vector2f(300,300), player1_texture, 3, false, 3, 5, 2, 5);
     //players.push_back(player);
-    //Pc* pc = new Pc(sf::Vector2f(150,150), player1_texture, 3, false, 3, 2, 2, 5, "Pelle svanslös", sf::Keyboard::A,sf::Keyboard::D,sf::Keyboard::S,sf::Keyboard::W,sf::Keyboard::Q);
-    //players.push_back(pc);
-
+    Pc* pc = new Pc(sf::Vector2f(150,150), player1_texture, 3, false, 3, 2, 2, 5, "Pelle svanslös", sf::Keyboard::A,sf::Keyboard::D,sf::Keyboard::S,sf::Keyboard::W,sf::Keyboard::Q);
+    players.push_back(pc);
+/*
     Npc* npc1 = new Npc(sf::Vector2f(150,250), player1_texture, 3, false, 3, 2, 2, 5, "Pelle svanslös");
     players.push_back(npc1);
 
@@ -280,23 +289,32 @@ void Game_state::new_game(int PC, int NPC1, int NPC2, int NPC3)
     
     Npc* npc4 = new Npc(sf::Vector2f(300,250), player1_texture, 3, false, 3, 2, 2, 5, "Pelle svanslös");
     players.push_back(npc4);
+    */
+
+    powerups.push_back(new Speed(sf::Vector2f(600,250), speed_texture));
+    powerups.push_back(new Bigger_blast(sf::Vector2f(650,250), bigger_blast_texture));
+    powerups.push_back(new Extra_bomb(sf::Vector2f(600,350), extra_bomb_texture));
+    powerups.push_back(new Push(sf::Vector2f(600,450), push_texture));
+    
+	
+    
     
     
    for (int i = 2; i < 19; i++)
    { 
-    	wooden_boxes.push_back(new Wooden_box(sf::Vector2f(i*50, 100), wooden_box_texture));
-    	wooden_boxes.push_back(new Wooden_box(sf::Vector2f(i*50, 700), wooden_box_texture));
+    	solid_boxes.push_back(new Solid_box(sf::Vector2f(i*50, 100), solid_box_texture));
+        solid_boxes.push_back(new Solid_box(sf::Vector2f(i*50, 700), solid_box_texture));
    }
    for (int i = 2; i < 19; i++)
    { 
-    	wooden_boxes.push_back(new Wooden_box(sf::Vector2f(100, i*50), wooden_box_texture));
-    	wooden_boxes.push_back(new Wooden_box(sf::Vector2f(900, i*50), wooden_box_texture));
+    	solid_boxes.push_back(new Solid_box(sf::Vector2f(100, i*50), solid_box_texture));
+    	solid_boxes.push_back(new Solid_box(sf::Vector2f(900, i*50), solid_box_texture));
    }
    for (int i = 2; i < 10; i++)
    { 
    	for (int j = 2; j < 10; j++)
 	{ 
-		wooden_boxes.push_back(new Wooden_box(sf::Vector2f(i*100, j*100), wooden_box_texture));
+		solid_boxes.push_back(new Solid_box(sf::Vector2f(i*100, j*100), solid_box_texture));
 	}
    }
 
