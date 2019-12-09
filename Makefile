@@ -2,7 +2,7 @@ CCC = g++
 CFLAGS = -std=c++17 -Wall -Wextra -Weffc++ -Wpedantic -Weffc++ -g -fno-elide-constructors
 SFMLFLAGS = -lsfml-graphics -lsfml-window -lsfml-system
 
-NECESSARY = Powerup.cc State.cc Player.cc Bomb.cc PC.cc NPC.cc Menu_button.cc
+NECESSARY = Powerup.cc State.cc Player.cc Bomb.cc PC.cc NPC.cc Menu_button.cc Fire.cc
 BIN_NECESSARY := $(NECESSARY:.cc=.o)
 
 all: test clearscreen run

@@ -9,7 +9,12 @@ Bomb::Bomb(sf::Vector2f pos, sf::Texture& texture, Player* player):
     owner{player},
     speed{3},
     fuse_timer{}
+{}
+
+Bomb::~Bomb()
 {
+    owner = nullptr;
+    delete owner;
 }
 
 bool Bomb::is_blasted() const
@@ -77,4 +82,14 @@ void Bomb::glide(std::string direction)
 {
     move_direction = direction;
     is_gliding = true;
+}
+
+Player* Bomb::get_owner() const
+{
+    return owner;
+}
+
+sf::Vector2f Bomb::get_position() const
+{
+    return sprite.getPosition();
 }

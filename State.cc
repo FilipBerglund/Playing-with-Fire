@@ -47,12 +47,30 @@ Game_state::Game_state(): State("Game_state"),
 void Game_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard)
 {
     user_input_handler(mouse, keyboard);
-    
-    alive_players.remove_if([player](Player* player)
-	{
-	    return player->is_dead();
-	});
 
+    fires.remove_if([this](Fire* fire)
+        {
+            if (fire->is_extinguished())
+            {
+                delete fire;
+	        return true;
+	    }
+            return false;
+        });
+
+    /*
+    bombs.remove_if([this](Bomb* bomb)
+        {
+            if (bomb->is_blasted())
+            {
+                imaginary_spawn_fire_function(bomb->get_owner(), bomb->get_position());
+                delete bomb;
+	        return true;
+	    }
+            return false;
+        });
+    */
+       
     if (!is_playing)
     {
         // TODO: All clocks still run (both here and in player) so pausing will
@@ -86,6 +104,7 @@ void Game_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard)
 
 
     check_collisions();
+    
     wooden_boxes.remove_if(
 	[this](Wooden_box* wooden_box)
         {
@@ -116,8 +135,12 @@ void Game_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard)
 	    return true;
 	});
 
-    //TODO: Add remove_if for bombs and fires. The remove_if of bombs should also spawn fire.
-    //Note that powerups are removed in check_collisions().
+    
+    alive_players.remove_if([this](Player* player)
+        {
+            return player->is_dead();  
+        });
+    
 
     if (is_round_over())
     {
@@ -130,7 +153,7 @@ void Game_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard)
 }
 
 void Game_state::check_collisions()
-{
+{   
     for (Player* player : alive_players)
     {
         for (Bomb* bomb : bombs)
@@ -165,6 +188,7 @@ void Game_state::check_collisions()
 		if (player->hitbox().intersects(powerup->hitbox()))
 		{
 		    powerup->apply_on_hit_effect(player);
+		    delete powerup;
 		    return true;
 		}
 		return false;
@@ -175,7 +199,6 @@ void Game_state::check_collisions()
         for (Bomb* bomb2 : bombs)
         {
             if (bomb->hitbox().intersects(bomb2->hitbox()) && bomb != bomb2)
-                //add check if bomb1 == bomb
             {
                 bomb->apply_on_hit_effect(bomb2);
                 bomb2->apply_on_hit_effect(bomb);
@@ -207,10 +230,11 @@ void Game_state::check_collisions()
             if (fire->hitbox().intersects(wooden_box->hitbox()))
             {
                 fire->apply_on_hit_effect(wooden_box);
-                wooden_box->apply_on_hit_effect(fire);	
+                wooden_box->apply_on_hit_effect(fire);
+		//Should fire detonate other bombs?
             }
         }
-    }
+    }   
 }
 
 
@@ -276,6 +300,7 @@ void Game_state::new_round()
 
 void Game_state::new_game(int PC, int NPC1, int NPC2, int NPC3)
 {
+    /*
     sf::Vector2f offset{0,0};
     int initilized{0};                  //player_data[i] = (position, texture, string, vector<keys>)
     for (int i{0}; i < PC, i++)
@@ -304,15 +329,17 @@ void Game_state::new_game(int PC, int NPC1, int NPC2, int NPC3)
         players.push_back(pc);
         initialized++;
     }
+    */
 	
     alive_players = players;
     
     //initialize everything
    // Player* player = new Player(sf::Vector2f(300,300), player1_texture, 3, false, 3, 5, 2, 5);
     //players.push_back(player);
+    /*
     Pc* pc = new Pc(sf::Vector2f(150,150), player1_texture, 3, false, 3, 2, 2, 5, "Pelle svanslös", sf::Keyboard::A,sf::Keyboard::D,sf::Keyboard::S,sf::Keyboard::W,sf::Keyboard::Q);
     players.push_back(pc);
-/*
+
     Npc* npc1 = new Npc(sf::Vector2f(150,250), player1_texture, 3, false, 3, 2, 2, 5, "Pelle svanslös");
     players.push_back(npc1);
 
@@ -324,14 +351,14 @@ void Game_state::new_game(int PC, int NPC1, int NPC2, int NPC3)
     
     Npc* npc4 = new Npc(sf::Vector2f(300,250), player1_texture, 3, false, 3, 2, 2, 5, "Pelle svanslös");
     players.push_back(npc4);
-    */
+    
 
     powerups.push_back(new Speed(sf::Vector2f(600,250), speed_texture));
     powerups.push_back(new Bigger_blast(sf::Vector2f(650,250), bigger_blast_texture));
     powerups.push_back(new Extra_bomb(sf::Vector2f(600,350), extra_bomb_texture));
     powerups.push_back(new Push(sf::Vector2f(600,450), push_texture));
     
-	
+   
     
     
     
@@ -352,6 +379,7 @@ void Game_state::new_game(int PC, int NPC1, int NPC2, int NPC3)
 		solid_boxes.push_back(new Solid_box(sf::Vector2f(i*100, j*100), solid_box_texture));
 	}
    }
+   */
 
     round_timer.restart();
     is_playing = true;
