@@ -11,7 +11,7 @@ class Bomb;
 class Player: public Game_object
 {
 public:
-    Player(sf::Vector2f pos, sf::Texture & texture, int cooldown, bool in_push,
+    Player(sf::Vector2f pos, sf::Texture & texture, bool in_push,
 	   int in_health, int in_speed, int in_fire, int in_cd, std::string in_name);
 
     ~Player() = default;

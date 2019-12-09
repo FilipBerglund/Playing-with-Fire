@@ -48,6 +48,7 @@ private:
     bool is_playing;
 
     std::list<Player*> players;
+    std::list<Player*> alive_players;
     std::list<Bomb*> bombs;
     std::list<Fire*> fires;
     std::list<Powerup*> powerups;

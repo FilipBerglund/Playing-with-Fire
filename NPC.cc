@@ -13,9 +13,9 @@
 
 #include <iostream>
 
-Npc::Npc(sf::Vector2f pos, sf::Texture & texture, int cooldown, bool in_push,
+Npc::Npc(sf::Vector2f pos, sf::Texture & texture, bool in_push,
          int in_health, int in_speed, int in_fire, int in_cd, std::string in_name):
-    Player(pos, texture, cooldown, in_push, in_health, in_speed, in_fire, in_cd, in_name)
+    Player(pos, texture, in_push, in_health, in_speed, in_fire, in_cd, in_name)
 {
     direction = sf::Vector2f(0,0);
 }
@@ -224,8 +224,6 @@ void Npc::score_assigner(std::list<Player*>& players, int& up_score, int& down_s
     }
 }
 
-int counter{1};
-
 void Npc::update(std::list<Player*>& players, std::list<Bomb*>& bombs, std::list<Fire*>& fires,
 		 std::list<Powerup*>& powerups, std::list<Wooden_box*>& wooden_boxes, std::list<Solid_box*>& solid_boxes)
 {
@@ -288,7 +286,7 @@ void Npc::update(std::list<Player*>& players, std::list<Bomb*>& bombs, std::list
 	int num_max = std::count(score_vec.begin(), score_vec.end(), max_score);
 
 	int rand_int = rand() % num_max + 1;
-	counter = 1;
+	int counter{1};
         for (int i = 0; i < 4; i++)
         {
 	    /*

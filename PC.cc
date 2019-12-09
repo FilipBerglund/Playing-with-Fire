@@ -3,14 +3,14 @@
 #include <iostream>
 
 
-Pc::Pc(sf::Vector2f pos, sf::Texture & texture, int cooldown, bool in_push,
+Pc::Pc(sf::Vector2f pos, sf::Texture & texture, bool in_push,
        int in_health, int in_speed, int in_fire, int in_cd, std::string in_name,
        sf::Keyboard::Key left_arg,
        sf::Keyboard::Key right_arg,
        sf::Keyboard::Key down_arg,
        sf::Keyboard::Key up_arg,
        sf::Keyboard::Key bomb_arg):
-    Player(pos, texture, cooldown, in_push, in_health, in_speed, in_fire, in_cd, in_name),
+    Player(pos, texture, in_push, in_health, in_speed, in_fire, in_cd, in_name),
     left{left_arg},
     right{right_arg},
     down{down_arg},

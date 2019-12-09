@@ -18,6 +18,7 @@
 #include <sstream>
 #include <string>
 #include <list>
+#include <tuple>
 
 /*
  * GAME_STATE
@@ -27,7 +28,7 @@
 
 //TODO: is_playing should be initialised as false when state_handler is implemented fully.
 Game_state::Game_state(): State("Game_state"),
-    current_round{0}, players{}, bombs{}, fires{}, wooden_boxes{}, solid_boxes{}, is_playing{true}
+			  current_round{0}, players{}, alive_players{}, bombs{}, fires{}, wooden_boxes{}, solid_boxes{}, is_playing{true}
     {
         fire_texture.loadFromFile("textures/fire_texture.png");
         player1_texture.loadFromFile("textures/player1_texture.png");
@@ -46,7 +47,11 @@ Game_state::Game_state(): State("Game_state"),
 void Game_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard)
 {
     user_input_handler(mouse, keyboard);
-
+    
+    alive_players.remove_if([player](Player* player)
+	{
+	    return player->is_dead();
+	});
 
     if (!is_playing)
     {
@@ -56,7 +61,7 @@ void Game_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard)
         return;
     }
 
-    for (Player* player : players)
+    for (Player* player : alive_players)
     {
         if (player->request_to_drop_bomb())
         {
@@ -70,7 +75,7 @@ void Game_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard)
 	}
 	else
 	{
-	    ptr2->update(players, bombs, fires, powerups, wooden_boxes, solid_boxes);
+	    ptr2->update(alive_players, bombs, fires, powerups, wooden_boxes, solid_boxes);
 	}
     }
 
@@ -126,12 +131,11 @@ void Game_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard)
 
 void Game_state::check_collisions()
 {
-    for (Player* player : players)
+    for (Player* player : alive_players)
     {
         for (Bomb* bomb : bombs)
             if (player->hitbox().intersects(bomb->hitbox()))
             {
-		    std::cout << "bomb" << std::endl;
                 bomb->apply_on_hit_effect(player);
                 player->apply_on_hit_effect(bomb);
             }
@@ -212,7 +216,7 @@ void Game_state::check_collisions()
 
 void Game_state::draw(sf::RenderWindow& window)
 {
-    for (Player* player : players)
+    for (Player* player : alive_players)
     {
         if (!player->is_dead())
         {
@@ -272,6 +276,37 @@ void Game_state::new_round()
 
 void Game_state::new_game(int PC, int NPC1, int NPC2, int NPC3)
 {
+    sf::Vector2f offset{0,0};
+    int initilized{0};                  //player_data[i] = (position, texture, string, vector<keys>)
+    for (int i{0}; i < PC, i++)
+    {
+	Pc* pc = new Pc(std::get<0>(player_data[initilized]) + offset, std::get<1>(player_data[initilized]), false, 3, 2, 2, 3, std::get<2>(player_data[initilized]),
+			std::get<3>(player_data[initilized])[0], std::get<3>(player_data[initilized])[1], std::get<3>(player_data[initilized])[2],
+		        std::get<3>(player_data[initilized])[3], std::get<3>(player_data[initilized])[4]);
+        players.push_back(pc);
+        initialized++;
+    }
+    for (int i{0}; i < NPC1; i++)
+    {
+        Npc* npc = new Npc(get<0>(player_data[initilized]) + offset, std::get<1>(player_data[initilized]), false, 3, 2, 2, 3, std::get<2>(player_data[initilized]));
+        players.push_back(npc);
+        initialized++;
+    }
+    for (int i{0}; i < NPC1; i++)
+    {
+        Npc* npc = new Npc(get<0>(player_data[initilized]) + offset, std::get<1>(player_data[initilized]), false, 3, 6, 2, 6, std::get<2>(player_data[initilized]));
+        players.push_back(pc);
+        initialized++;
+    }
+    for (int i{0}; i < NPC1; i++)
+    {
+        Npc* npc = new Npc(get<0>(player_data[initilized]) + offset, std::get<1>(player_data[initilized]), false, 3, 2, 2, 6, std::get<2>(player_data[initilized]));
+        players.push_back(pc);
+        initialized++;
+    }
+	
+    alive_players = players;
+    
     //initialize everything
    // Player* player = new Player(sf::Vector2f(300,300), player1_texture, 3, false, 3, 5, 2, 5);
     //players.push_back(player);
@@ -302,7 +337,7 @@ void Game_state::new_game(int PC, int NPC1, int NPC2, int NPC3)
     
    for (int i = 2; i < 19; i++)
    { 
-    	solid_boxes.push_back(new Solid_box(sf::Vector2f(i*50, 100), solid_box_texture));
+    	solid_boxes.push_back(new Solid_box(sf::Vector2f(i*50, 100) + offset, solid_box_texture));
         solid_boxes.push_back(new Solid_box(sf::Vector2f(i*50, 700), solid_box_texture));
    }
    for (int i = 2; i < 19; i++)
