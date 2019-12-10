@@ -6,10 +6,12 @@
 #include "Player.h"
 #include "Game_object.h"
 
+class Player;
 class Fire: public Game_object
 {
 public: 
     Fire(sf::Vector2f, sf::Texture&, Player*);
+    Fire(){}
 
     ~Fire();
     

@@ -22,7 +22,7 @@ public:
             sf::Texture fire_texture);
 private:
     Player* owner;
-    bool obj_at_pos(std::list<Game_object*> lst, float x, float y);
+    bool obj_at_pos(std::list<Game_object*> & lst, float & x, float & y) const; 
     int radius;
 };
 #endif
