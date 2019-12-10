@@ -19,6 +19,7 @@
 #include <string>
 #include <list>
 #include <tuple>
+#include <fstream>
 
 /*
  * GAME_STATE
@@ -300,8 +301,9 @@ void Game_state::new_round()
 
 void Game_state::new_game(int PC, int NPC1, int NPC2, int NPC3)
 {
+    
+    sf::Vector2f offset{280,60};
     /*
-    sf::Vector2f offset{0,0};
     int initilized{0};                  //player_data[i] = (position, texture, string, vector<keys>)
     for (int i{0}; i < PC, i++)
     {
@@ -357,30 +359,43 @@ void Game_state::new_game(int PC, int NPC1, int NPC2, int NPC3)
     powerups.push_back(new Bigger_blast(sf::Vector2f(650,250), bigger_blast_texture));
     powerups.push_back(new Extra_bomb(sf::Vector2f(600,350), extra_bomb_texture));
     powerups.push_back(new Push(sf::Vector2f(600,450), push_texture));
+    */
     
-   
-    
-    
-    
-   for (int i = 2; i < 19; i++)
-   { 
-    	solid_boxes.push_back(new Solid_box(sf::Vector2f(i*50, 100) + offset, solid_box_texture));
-        solid_boxes.push_back(new Solid_box(sf::Vector2f(i*50, 700), solid_box_texture));
-   }
-   for (int i = 2; i < 19; i++)
-   { 
-    	solid_boxes.push_back(new Solid_box(sf::Vector2f(100, i*50), solid_box_texture));
-    	solid_boxes.push_back(new Solid_box(sf::Vector2f(900, i*50), solid_box_texture));
-   }
-   for (int i = 2; i < 10; i++)
-   { 
-   	for (int j = 2; j < 10; j++)
-	{ 
-		solid_boxes.push_back(new Solid_box(sf::Vector2f(i*100, j*100), solid_box_texture));
-	}
-   }
-   */
+ 
+    std::ifstream maptext;
+    maptext.open("initmatrix.txt");
+    std::vector<std::vector<int>> mat;
+    std::vector<int> row;
+    int val;
+    for(uint i{0}; i < 13; ++i)
+    {
+        row.clear();
+        for(uint j{0}; j < 15; ++j)
+        {
+            maptext >> val;
+            row.push_back(val);
+        }
+        mat.push_back(row);
+    }
 
+    for(int r{0}; r < 13; r++)
+    {
+        for(int c{0}; c < 15; c++)
+        {
+            switch(mat[r][c])
+            {
+                case 0 :
+                    break;
+                case 1 :
+                    solid_boxes.push_back(new Solid_box(sf::Vector2f(c*50, r*50) + offset, solid_box_texture));
+                    break;
+                case 2 :
+                    wooden_boxes.push_back(new Wooden_box(sf::Vector2f(c*50, r*50) + offset, wooden_box_texture));
+                default :
+                    break;
+            }
+        }
+    }
     round_timer.restart();
     is_playing = true;
 }
