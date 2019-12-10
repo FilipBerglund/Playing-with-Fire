@@ -86,10 +86,10 @@ void Bomb::glide(std::string direction)
     is_gliding = true;
 }
 
-void Bomb::spawn_fire(std::list<Wooden_box*> wooden_boxes,
-	       	std::list<Solid_box*> solid_boxes,
-	       	std::list<Fire*> fires,
-            sf::Texture fire_texture)
+void Bomb::spawn_fire(std::list<Wooden_box*>& wooden_boxes,
+	       	std::list<Solid_box*>& solid_boxes,
+	       	std::list<Fire*>& fires,
+            sf::Texture& fire_texture)
 {
     int roundedx = (((int)get_position().x + 25) / 50 ) * 50;
     int roundedy = (((int)get_position().y + 25) / 50 ) * 50;

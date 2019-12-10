@@ -24,10 +24,10 @@ public:
     Player* get_owner() const;
     sf::Vector2f get_position() const;
     
-    void spawn_fire(std::list<Wooden_box*> wooden_boxes, 
-		    std::list<Solid_box*> solid_boxes,
-		    std::list<Fire*> fires,
-            sf::Texture fire_texture);
+    void spawn_fire(std::list<Wooden_box*>& wooden_boxes, 
+		    std::list<Solid_box*>& solid_boxes,
+		    std::list<Fire*> & fires,
+            sf::Texture& fire_texture);
 
 private:    
     bool is_gliding;
@@ -37,6 +37,6 @@ private:
     sf::Clock fuse_timer;
     bool solidbox_at_pos(std::list<Solid_box*> & lst, float x, float y) const; 
     bool woodenbox_at_pos(std::list<Wooden_box*> & lst, float x, float y) const; 
-    int radius;
+    int radius{5};
 };
 #endif

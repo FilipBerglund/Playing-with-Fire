@@ -53,24 +53,23 @@ void Game_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard)
         {
             if (fire->is_extinguished())
             {
-                delete fire;
-	        return true;
-	    }
+         //       delete fire;
+                return true;
+            }
             return false;
         });
 
-    /*
     bombs.remove_if([this](Bomb* bomb)
         {
             if (bomb->is_blasted())
             {
-                imaginary_spawn_fire_function(bomb->get_owner(), bomb->get_position());
-                delete bomb;
-	        return true;
-	    }
+                bomb->spawn_fire(wooden_boxes, solid_boxes, fires, player2_texture);
+                //delete bomb;
+                std::cout << "HEJ, nu ska fire spawna!" << std::endl;
+                return true;
+            }
             return false;
         });
-    */
        
     if (!is_playing)
     {
@@ -302,7 +301,7 @@ void Game_state::new_round()
 void Game_state::new_game(int PC, int NPC1, int NPC2, int NPC3)
 {
     
-    sf::Vector2f offset{280,60};
+    sf::Vector2f offset{250,50};
     /*
     int initilized{0};                  //player_data[i] = (position, texture, string, vector<keys>)
     for (int i{0}; i < PC, i++)
@@ -333,15 +332,15 @@ void Game_state::new_game(int PC, int NPC1, int NPC2, int NPC3)
     }
     */
 	
-    alive_players = players;
     
     //initialize everything
    // Player* player = new Player(sf::Vector2f(300,300), player1_texture, 3, false, 3, 5, 2, 5);
     //players.push_back(player);
-    /*
-    Pc* pc = new Pc(sf::Vector2f(150,150), player1_texture, 3, false, 3, 2, 2, 5, "Pelle svanslös", sf::Keyboard::A,sf::Keyboard::D,sf::Keyboard::S,sf::Keyboard::W,sf::Keyboard::Q);
+    
+    Pc* pc = new Pc(sf::Vector2f(50,50)+offset, player2_texture, false, 3, 2, 2, 5, "Pelle svanslös", sf::Keyboard::A,sf::Keyboard::D,sf::Keyboard::S,sf::Keyboard::W,sf::Keyboard::Q);
     players.push_back(pc);
-
+    alive_players = players;
+/*
     Npc* npc1 = new Npc(sf::Vector2f(150,250), player1_texture, 3, false, 3, 2, 2, 5, "Pelle svanslös");
     players.push_back(npc1);
 
