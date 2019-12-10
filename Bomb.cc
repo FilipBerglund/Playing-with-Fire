@@ -13,37 +13,52 @@ void Bomb::spawn_fire(std::list<Wooden_box*> wooden_boxes,
 {
     sf::Vector2f pos{get_position()};
 	fires.push_back(new Fire fire1{});
-	for (int i=0; i <= radius && solidbox_at_pos(pos.x+i, pos.y);i++)
+	for (int i=0; i <= radius && obj_at_pos(solid_boxes, pos.x+50*i, pos.y);i++)
 	{
-        sf::Vector2f newPos{pos.x + i, pos.y};
+        sf::Vector2f newPos{pos.x + 50*i, pos.y};
 		fires.push_back(new Fire fire{newPos, fire_texture});
-		if (woodenbox_at_pos(pos.x+i,pos.y))
+		if (obj_at_pos(wooden_boxes, pos.x+50*i,pos.y))
 		{
 			break;
 		}
     }
-	for (int i=0; i <= radius && solidbox_at_pos(pos.x-i,pos.y);i++)
+	for (int i=0; i <= radius && obj_at_pos(solid_boxes, pos.x-50*i,pos.y);i++)
 	{
-		fires.push_back(new Fire fire{pox.x-i,pos.y, fire_texture}); 
-		if (woodenbox_at_pos(pos.x-i,pos.y))
+        sf::Vector2f newPos{pos.x - 50*i, pos.y};
+		fires.push_back(new Fire fire{newPos, fire_texture}); 
+		if (obj_at_pos(wooden_boxes, pos.x-50*i,pos.y))
 		{
 			break;
 		}
 	}
-	for (int i=0; i <= radius && solidbox_at_pos(pos.x,pos.y+i);i++)
+	for (int i=0; i <= radius && obj_at_pos(solid_boxes, pos.x,pos.y+50*i);i++)
 	{
-		fires.push_back(new Fire fire{pox.x,pos.y+i, fire_texture}); 
-		if (woodenbox_at_pos(pos.x,pos.y+i))
+        sf::Vector2f newPos{pos.x, pos.y + 50*i};
+		fires.push_back(new Fire fire{newPos, fire_texture}); 
+		if (obj_at_pos(wooden_boxes, pos.x,pos.y+50*i))
 		{
 			break;
 		}
     }
-	for (int i=0; i <= radius && solidbox_at_pos(pos.x,pos.y-i);i++)
+	for (int i=0; i <= radius && obj_at_pos(solid_boxes, pos.x,pos.y-50*i);i++)
 	{
-		fires.push_back(new Fire fire{pox.x,pos.y-i, fire_texture}); 
-		if (woodenbox_at_pos(pos.x,pos.y-i))
+        sf::Vector2f newPos{pos.x, pos.y - 50*i};
+		fires.push_back(new Fire fire{newPos, fire_texture}); 
+		if (obj_at_pos(wooden_boxes, pos.x,pos.y-50*i))
 		{
 			break;
 		}
     }
+}
+
+bool Bomb::obj_at_pos(std::list<Game_object*> lst, float x, float y)
+{
+    for (Game_object* obj :  lst)
+    {
+        if (obj.get_position().x == x && obj.get_position().y == y)
+        {
+            return true;
+        }
+    }
+    return false;
 }
