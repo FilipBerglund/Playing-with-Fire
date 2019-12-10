@@ -34,10 +34,22 @@ public:
 
     bool is_dead() const
     {
-        return health == 0 ? true : false;
+        return health == 0;
+    }
+
+    void reduce_health(int damage) 
+    {
+        if (health - damage <= 0)
+        {
+            health = 0;
+        }
+        else
+        {
+            health -= damage;
+        }
     }
 
 private:
-    uint health;
+    int health;
 };
 #endif
