@@ -13,6 +13,12 @@ Bomb::Bomb(sf::Vector2f pos, sf::Texture& texture, Player* player):
     is_gliding{false}
 {}
 
+Bomb::~Bomb()
+{
+    owner = nullptr;
+    delete owner;
+}
+
 bool Bomb::is_blasted() const
 {
     return fuse_timer.getElapsedTime().asSeconds() > 3;
@@ -151,4 +157,14 @@ bool Bomb::woodenbox_at_pos(std::list<Wooden_box*> & lst, float x, float y) cons
         }
     }
     return false;
+}
+
+Player* Bomb::get_owner() const
+{
+    return owner;
+}
+
+sf::Vector2f Bomb::get_position() const
+{
+    return sprite.getPosition();
 }

@@ -17,6 +17,8 @@ public:
         sprite.setPosition(pos);
     }
 
+    virtual ~Game_object() = default;
+
     sf::Sprite get_drawable() const
     {
         return sprite;

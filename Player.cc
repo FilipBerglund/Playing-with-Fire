@@ -6,7 +6,7 @@
 
 #include <iostream>
 
-Player::Player(sf::Vector2f pos, sf::Texture & texture, int cooldown,
+Player::Player(sf::Vector2f pos, sf::Texture & texture,
 	       bool in_push, int in_health, int in_speed, int in_fire, int in_cd, std::string in_name):
         Game_object(pos, texture),
         push_powerup{in_push},
