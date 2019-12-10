@@ -11,7 +11,6 @@ class Fire: public Game_object
 {
 public: 
     Fire(sf::Vector2f, sf::Texture&, Player*);
-    Fire(){}
 
     ~Fire();
     

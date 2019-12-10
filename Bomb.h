@@ -22,7 +22,8 @@ public:
             sf::Texture fire_texture);
 private:
     Player* owner;
-    bool obj_at_pos(std::list<Game_object*> & lst, float & x, float & y) const; 
+    bool solidbox_at_pos(std::list<Solid_box*> & lst, float x, float y) const; 
+    bool woodenbox_at_pos(std::list<Wooden_box*> & lst, float x, float y) const; 
     int radius;
 };
 #endif
