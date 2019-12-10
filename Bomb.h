@@ -24,6 +24,6 @@ private:
     Player* owner;
     bool solidbox_at_pos(float x, float y);
     bool woodenbox_at_pos(float x, float y);
-    int radius
+    int radius;
 };
 #endif
