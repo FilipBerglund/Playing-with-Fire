@@ -299,8 +299,6 @@ void Game_state::new_round()
     fires.clear();
     initialize_boxes();
 
-    //TODO: Add removal of powerups, wooden_boxes, bombs, fires
-    //TODO: spawn Wooden_boxes
     round_timer.restart();
 
 }
