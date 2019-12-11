@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include "Player.h"
 #include "Fire.h"
+#include <iostream>
 
 Fire::Fire(sf::Vector2f pos, sf::Texture& texture, Player* player):
     Game_object(pos, texture), 
@@ -21,6 +22,11 @@ void Fire::apply_on_hit_effect(Game_object* object)
     {
 	    ptr1->reduce_health(1);
         ptr1->make_immune();
+        if (ptr1!=owner)
+        {
+            owner->increase_score(25);
+            std::cout << "Player " << owner->get_name() << " has " << owner->get_score() << " points" << std::endl; 
+        }
 	    return;
     }
     Wooden_box* ptr2 = dynamic_cast<Wooden_box*>(object);

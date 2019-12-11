@@ -42,7 +42,7 @@ Game_state::Game_state(): State("Game_state"),
         push_texture.loadFromFile("textures/push_texture.png");
         extra_bomb_texture.loadFromFile("textures/extra_bomb_texture.png");
         speed_texture.loadFromFile("textures/speed_texture.png");
-	bigger_blast_texture.loadFromFile("textures/bigger_blast_texture.png");
+    	bigger_blast_texture.loadFromFile("textures/bigger_blast_texture.png");
     }
 
 void Game_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard)
@@ -63,7 +63,7 @@ void Game_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard)
         {
             if (bomb->is_blasted())
             {
-                bomb->spawn_fire(wooden_boxes, solid_boxes, fires, player2_texture);
+                bomb->spawn_fire(wooden_boxes, solid_boxes, fires, fire_texture);
                 //delete bomb;
                 return true;
             }
@@ -338,6 +338,8 @@ void Game_state::new_game(int PC, int NPC1, int NPC2, int NPC3)
     
     Pc* pc = new Pc(sf::Vector2f(50,50)+offset, player2_texture, false, 3, 2, 2, 5, "Pelle svanslös", sf::Keyboard::A,sf::Keyboard::D,sf::Keyboard::S,sf::Keyboard::W,sf::Keyboard::Q);
     players.push_back(pc);
+    Pc* pc2 = new Pc(sf::Vector2f(650,50)+offset, player2_texture, false, 3, 2, 2, 5, "Pelle svanslös 2", sf::Keyboard::J,sf::Keyboard::L,sf::Keyboard::K,sf::Keyboard::I,sf::Keyboard::U);
+    players.push_back(pc2);
     alive_players = players;
 /*
     Npc* npc1 = new Npc(sf::Vector2f(150,250), player1_texture, 3, false, 3, 2, 2, 5, "Pelle svanslös");
