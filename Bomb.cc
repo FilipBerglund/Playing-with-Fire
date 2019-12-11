@@ -120,6 +120,7 @@ void Bomb::spawn_fire(std::list<Wooden_box*>& wooden_boxes,
 	{
         sf::Vector2f newPos{pos.x, pos.y + 50*i};
 		fires.push_back(new Fire {newPos, fire_texture, owner}); 
+        fires.back()->set_rotation(90);
 		if (woodenbox_at_pos(wooden_boxes, pos.x, pos.y+50*i))
 		{
 			break;
@@ -129,6 +130,7 @@ void Bomb::spawn_fire(std::list<Wooden_box*>& wooden_boxes,
 	{
         sf::Vector2f newPos{pos.x, pos.y - 50*i};
 		fires.push_back(new Fire {newPos, fire_texture, owner}); 
+        fires.back()->set_rotation(90);
 		if (woodenbox_at_pos(wooden_boxes, pos.x, pos.y-50*i))
 		{
 			break;
