@@ -65,7 +65,6 @@ void Game_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard)
             {
                 bomb->spawn_fire(wooden_boxes, solid_boxes, fires, player2_texture);
                 //delete bomb;
-                std::cout << "HEJ, nu ska fire spawna!" << std::endl;
                 return true;
             }
             return false;
