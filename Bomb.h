@@ -13,7 +13,7 @@ class Player;
 class Bomb: public Game_object
 {
 public:
-    Bomb(sf::Vector2f, sf::Texture &, Player*);
+    Bomb(sf::Vector2f, sf::Texture &, Player*, int);
 
     ~Bomb();
     
@@ -37,6 +37,6 @@ private:
     sf::Clock fuse_timer;
     bool solidbox_at_pos(std::list<Solid_box*> & lst, float x, float y) const; 
     bool woodenbox_at_pos(std::list<Wooden_box*> & lst, float x, float y) const; 
-    int radius{5};
+    int radius;
 };
 #endif

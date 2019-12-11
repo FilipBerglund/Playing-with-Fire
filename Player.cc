@@ -214,7 +214,7 @@ bool Player::request_to_drop_bomb()  //Hjälpfunktion när bomber ska droppas.
 
 Bomb* Player::create_bomb(sf::Texture& bomb_texture)
 {
-    return new Bomb(sprite.getPosition(), bomb_texture, this);
+    return new Bomb(sprite.getPosition(), bomb_texture, this, fire_size);
 }
 
 void Player::set_name(std::string new_name)

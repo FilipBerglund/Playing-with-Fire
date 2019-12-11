@@ -5,12 +5,13 @@
 #include "Fire.h"
 #include <stdlib.h>
 
-Bomb::Bomb(sf::Vector2f pos, sf::Texture& texture, Player* player):     
+Bomb::Bomb(sf::Vector2f pos, sf::Texture& texture, Player* player, int fire_radius):
     Game_object(pos, texture),
     owner{player},
     speed{3},
     fuse_timer{},
-    is_gliding{false}
+    is_gliding{false},
+    radius{fire_radius}
 {}
 
 Bomb::~Bomb()
