@@ -41,6 +41,7 @@ private:
     void user_input_handler(sf::Mouse&, sf::Keyboard&) override;
  //   virtual void load_textures() override;
     void new_round();
+    void initialize_boxes();
     void end_game();
     bool is_game_over();
     bool is_round_over();
@@ -57,6 +58,8 @@ private:
 
     int current_round;
     sf::Clock round_timer;
+
+    sf::Vector2f offset{250,50};
 
     sf::Texture fire_texture;
     sf::Texture player1_texture;

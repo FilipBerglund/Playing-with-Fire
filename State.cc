@@ -291,6 +291,14 @@ void Game_state::new_round()
         player->new_round();
     }
     current_round += 1;
+    
+    wooden_boxes.clear(); //This prolly causes memory leaks...
+    powerups.clear();
+    alive_players = players;
+    bombs.clear();
+    fires.clear();
+    initialize_boxes();
+
     //TODO: Add removal of powerups, wooden_boxes, bombs, fires
     //TODO: spawn Wooden_boxes
     round_timer.restart();
@@ -300,7 +308,6 @@ void Game_state::new_round()
 void Game_state::new_game(int PC, int NPC1, int NPC2, int NPC3)
 {
     
-    sf::Vector2f offset{250,50};
     /*
     int initilized{0};                  //player_data[i] = (position, texture, string, vector<keys>)
     for (int i{0}; i < PC, i++)
@@ -360,8 +367,14 @@ void Game_state::new_game(int PC, int NPC1, int NPC2, int NPC3)
     powerups.push_back(new Extra_bomb(sf::Vector2f(600,350), extra_bomb_texture));
     powerups.push_back(new Push(sf::Vector2f(600,450), push_texture));
     */
-    
- 
+    is_playing = true;
+    initialize_boxes();
+    round_timer.restart();
+    current_round = 0;
+}
+
+void Game_state::initialize_boxes()
+{
     std::ifstream maptext;
     maptext.open("initmatrix.txt");
     std::vector<std::vector<int>> mat;
@@ -396,8 +409,6 @@ void Game_state::new_game(int PC, int NPC1, int NPC2, int NPC3)
             }
         }
     }
-    round_timer.restart();
-    is_playing = true;
 }
 
 void Game_state::end_game()
