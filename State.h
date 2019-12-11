@@ -104,7 +104,7 @@ class End_screen: public State
 {
  public:
   
-  End_screen(std::list<Player*> list_of_Player);
+  End_screen();
   void new_players(std::list<Player*>);
   void draw(sf::RenderWindow&) override;
   void update(sf::Mouse& , sf::Keyboard&,
@@ -112,9 +112,9 @@ class End_screen: public State
 	      End_screen*, State*) override;
  private:
   sf::Vector2f pos{50,50};
-  sf::Texture sprite;
+  sf::Texture button_texture;
   std::list<Player*> list_of_Player;
-  Start_button end_button;
+  Start_button* end_button;
   void user_input_handler(sf::Mouse& , sf::Keyboard&,
 			  Game_state*, Menu_state*,
 			  End_screen*, State*) override;

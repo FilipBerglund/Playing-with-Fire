@@ -23,10 +23,12 @@ class Start_button : public Menu_button
  public:
   
  //  Start_button();
-   Start_button(sf::Vector2f pos, sf::Texture s);
+  Start_button(sf::Vector2f, sf::Texture&);
    
    bool click(sf::Mouse&) override;   
    void draw(sf::RenderWindow&) override;
+   void new_pos(sf::Vector2f);
+   void new_sprite(sf::Texture&);
  
  private:
    sf::Sprite sprite;

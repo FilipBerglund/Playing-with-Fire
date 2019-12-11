@@ -206,6 +206,7 @@ void Game_state::check_collisions()
 
 void Game_state::draw(sf::RenderWindow& window)
 {
+    window.setTitle("game screen");
     for (Player* player : players)
     {
         if (!player->is_dead())
@@ -373,6 +374,7 @@ void Menu_state::user_input_handler(sf::Mouse& mouse, sf::Keyboard&,
 
 void Menu_state::draw(sf::RenderWindow& window)
 {
+    window.setTitle("menu screen");
     /*
     for (Menu_button* menu_button : menu_buttons)
     {
@@ -382,6 +384,11 @@ void Menu_state::draw(sf::RenderWindow& window)
     //we need to somewhere give the buttons a position. Maybe that can be done here based on the size of window. We might add a scaling too.
     //And perhaps draw some fancy background
 }
+
+/*
+ * END_SCREEN
+ *
+*/
 
 struct PlayerComparator
 {
@@ -396,11 +403,13 @@ struct PlayerComparator
 };
 
 
-End_screen::End_screen( std::list<Player*> list)
-  :State("end_screen"), list_of_Player{list}, pos{50,50}, end_button{pos, sprite}
-{
-  sprite.loadFromFile("textures/fire_texture.png");
-
+End_screen::End_screen()
+  :State("end_screen"), list_of_Player{}, pos{500,500}, button_texture{}, end_button{}
+{ 
+  button_texture.loadFromFile("textures/player1_texture.png");
+  end_button = new Start_button(pos, button_texture);
+  //end_button->new_sprite(button_texture);
+  //end_button->new_pos(sf::Vector2f(50,50));
   list_of_Player.sort(PlayerComparator());
   
 }
@@ -428,10 +437,16 @@ void End_screen::user_input_handler(sf::Mouse& mouse, sf::Keyboard&,
     
   if (mouse.isButtonPressed(sf::Mouse::Left))
     {
-        if (end_button.click(mouse))
+       std::cout<< "Hej 1" << std::endl;
+       std::cout<< "Mouse pos: "<< mouse.getPosition().x<< "  "
+		<< mouse.getPosition().y << std::endl;
+
+        if (end_button->click(mouse))
 	  {
-	  list_of_Player.clear();
-	  current_state = menu_state;
+	    std::cout<< "Hej 2" << std::endl;
+
+	    list_of_Player.clear();
+	  current_state = game_state;
 	  }
             else
 	      {
@@ -444,11 +459,13 @@ void End_screen::user_input_handler(sf::Mouse& mouse, sf::Keyboard&,
 
 void End_screen::draw(sf::RenderWindow& window)
 {
-    int number{1};  
-    int ycorrd{70};
+  window.setTitle("End screen");
+  
+  int number{1};  
+  int ycorrd{70};
         
-    sf::Font font;    
-    if (!font.loadFromFile("arial.ttf"));
+  sf::Font font;    
+  if (!font.loadFromFile("arial.ttf"));
 
  for (Player* player : list_of_Player)
     {
@@ -456,18 +473,19 @@ void End_screen::draw(sf::RenderWindow& window)
       std::ostringstream info;
       info << number << ".  " << player->get_name() << "  Points: " << player->get_score();
     
-    sf::Text text(info.str(), font, 50);
-    text.setPosition(70,ycorrd);
-    text.setColor(sf::Color::Red);
+      sf::Text text(info.str(), font, 50);
+
+      text.setPosition(70,ycorrd);
+      text.setColor(sf::Color::Red);
     
-    window.draw(text);
+      window.draw(text);
     
-    ycorrd= ycorrd + 70;    
-    number= number + 1;
+      ycorrd= ycorrd + 70;    
+      number= number + 1;
 
     }
 
+ end_button->draw(window);
 
- end_button.draw(window);
 }
 

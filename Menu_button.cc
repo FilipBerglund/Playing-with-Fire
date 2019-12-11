@@ -3,6 +3,9 @@
 #include <SFML/Graphics.hpp>
 #include "Menu_button.h"
 
+
+#include <iostream>
+
 //Menu_button::Menu_button()
 //{
 //}
@@ -12,15 +15,17 @@
 //}
 
 
-Start_button::Start_button(sf::Vector2f pos, sf::Texture s):
-  sprite{s}
+Start_button::Start_button(sf::Vector2f pos, sf::Texture& texture):
+  sprite{}
 {
+  sprite.setTexture(texture);
   sprite.setPosition(pos);
 }
 
 //Kollar om musen är på bool button
 bool Start_button::click(sf::Mouse& mouse)
 {
+  
   if (sprite.getGlobalBounds().contains(mouse.getPosition().x , mouse.getPosition().y))
     {
       return true;
@@ -29,13 +34,24 @@ bool Start_button::click(sf::Mouse& mouse)
     {
       return false;
     }
-
 }
 //ritar Start button
 void Start_button::draw(sf::RenderWindow& window)
 {
   window.draw(sprite);
+  std::cout << "inside Start_button draw" << sprite.getPosition().x << "  "<<
+    sprite.getPosition().y << std::endl;
+}
 
+void Start_button::new_pos(sf::Vector2f newpos)
+{
+  sprite.setPosition(newpos);
+
+}
+
+void Start_button::new_sprite(sf::Texture& s)
+{
+  sprite.setTexture(s);
 }
 
 
