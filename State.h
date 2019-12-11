@@ -13,6 +13,9 @@
 #include <string>
 #include <list>
 
+class Game_state;
+class Menu_state;
+class End_screen;
 class State
 {
 public:
@@ -112,7 +115,6 @@ class End_screen: public State
   sf::Texture sprite;
   std::list<Player*> list_of_Player;
   Start_button end_button;
-
   void user_input_handler(sf::Mouse& , sf::Keyboard&,
 			  Game_state*, Menu_state*,
 			  End_screen*, State*) override;

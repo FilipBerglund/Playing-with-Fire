@@ -45,7 +45,7 @@ void Game_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard,
 			Game_state* game_state, Menu_state* menu_state,
 			End_screen* end_screen, State* current_state)
 {
-    user_input_handler(mouse, keyboard);
+  user_input_handler(mouse, keyboard, game_state, menu_state, end_screen, current_state);
     check_collisions();
 
 
@@ -288,8 +288,8 @@ void Game_state::end_game(State* current_state, End_screen* end_screen)
      * Change current state to End_screen
      * set is_playing to false.
     */
-    end_screen->set_players(players);
-    current_state = end_state;
+    end_screen->new_players(players);
+    current_state = end_screen;
 }
 
 bool Game_state::is_round_over()
@@ -332,7 +332,7 @@ void Menu_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard,
 			Game_state* game_state, Menu_state* menu_state,
 			End_screen* end_screen, State* current_state)
 {
-    user_input_handler(mouse, keyboard);
+  user_input_handler(mouse, keyboard, game_state, menu_state, end_screen, current_state);
 }
 
 void Menu_state::user_input_handler(sf::Mouse& mouse, sf::Keyboard&,
@@ -397,9 +397,9 @@ struct PlayerComparator
 
 
 End_screen::End_screen( std::list<Player*> list)
-  :State("end_screen"), sprite{fire_texture.loadFromFile("textures/fire_texture.png")},
-   list_of_Player{list}, pos{50,50}, end_button{pos, sprite}
+  :State("end_screen"), list_of_Player{list}, pos{50,50}, end_button{pos, sprite}
 {
+  sprite.loadFromFile("textures/fire_texture.png");
 
   list_of_Player.sort(PlayerComparator());
   
@@ -417,7 +417,7 @@ void End_screen::update(sf::Mouse& mouse, sf::Keyboard& keyboard,
 			Game_state* game_state, Menu_state* menu_state,
 			End_screen* end_screen, State* current_state)
 {
-    user_input_handler(mouse, keyboard);
+  user_input_handler(mouse, keyboard, game_state, menu_state, end_screen, current_state);
 }
 
 void End_screen::user_input_handler(sf::Mouse& mouse, sf::Keyboard&,
@@ -426,18 +426,18 @@ void End_screen::user_input_handler(sf::Mouse& mouse, sf::Keyboard&,
 {
     //check the collisions with menu_buttons
     
-    if (mouse.isButtonPressed(sf::Mouse::Left)
+  if (mouse.isButtonPressed(sf::Mouse::Left))
     {
-        if (end_button->click(mouse))
-        {
-	  list_of_Players.clear();
+        if (end_button.click(mouse))
+	  {
+	  list_of_Player.clear();
 	  current_state = menu_state;
-      
+	  }
             else
-            {
+	      {
                 //not valid game message
-            }
-        }
+	      }
+        
     }
     
 }
