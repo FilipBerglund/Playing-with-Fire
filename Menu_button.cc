@@ -23,10 +23,11 @@ Start_button::Start_button(sf::Vector2f pos, sf::Texture& texture):
 }
 
 //Kollar om musen är på bool button
-bool Start_button::click(sf::Mouse& mouse)
+bool Start_button::click(sf::Mouse& mouse, sf::RenderWindow& window)
 {
-  
-  if (sprite.getGlobalBounds().contains(mouse.getPosition().x , mouse.getPosition().y))
+  std::cout << "mouse pos: " << mouse.getPosition(window).x << " " << mouse.getPosition(window).y << std::endl;
+  std::cout << "sprite pos" << sprite.getPosition().x << " " << sprite.getPosition().y << std::endl;
+  if (sprite.getGlobalBounds().contains(mouse.getPosition(window).x , mouse.getPosition(window).y))
     {
       return true;
     }
@@ -81,7 +82,7 @@ Int_button::Int_button(sf::Vector2f pos, sf::Texture s0, sf::Texture s1,
  }
 
 // KOllar vilken låda musen är över och anger rätt value				     
-bool Int_button::click(sf::Mouse& mouse)
+bool Int_button::click(sf::Mouse& mouse, sf::RenderWindow& window)
 {
   if (sprite0.getGlobalBounds().contains(mouse.getPosition().x, mouse.getPosition().y))
     {

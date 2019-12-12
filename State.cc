@@ -43,9 +43,9 @@ Game_state::Game_state(): State("Game_state"),
 
 void Game_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard,
 			Game_state* game_state, Menu_state* menu_state,
-			End_screen* end_screen, State** current_state)
+			End_screen* end_screen, State** current_state, sf::RenderWindow& window)
 {
-  user_input_handler(mouse, keyboard, game_state, menu_state, end_screen, current_state);
+  user_input_handler(mouse, keyboard, game_state, menu_state, end_screen, current_state, window);
     check_collisions();
 
 
@@ -114,6 +114,7 @@ void Game_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard,
     if (is_round_over())
     {
         new_round();
+	end_game(current_state, end_screen);
         if (is_game_over())
         {
             end_game(current_state, end_screen);
@@ -144,6 +145,7 @@ void Game_state::check_collisions()
             {
                 wooden_box->apply_on_hit_effect(player);
                 std::cout << "collision" << std::endl;
+		
             }
         }
         for (Solid_box* solid_box : solid_boxes)
@@ -232,7 +234,7 @@ void Game_state::draw(sf::RenderWindow& window)
 
 void Game_state::user_input_handler(sf::Mouse& mouse, sf::Keyboard& keyboard,
 				    Game_state* game_state, Menu_state* menu_state,
-				    End_screen* end_screen, State** current_state)
+				    End_screen* end_screen, State** current_state, sf::RenderWindow&)
 {
     /*
     if (mouse.isButtonPressed(sf::Mouse::Left)
@@ -329,33 +331,40 @@ bool Game_state::is_time_up()
 */
 
 
+Menu_state::Menu_state()
+  : State("Menu_state"), pos_start{500,200}, start_texture{}, start_button{}
+{
+  start_texture.loadFromFile("textures/player1_texture.png");
+  start_button = new Start_button(pos_start, start_texture);
+}
+
 void Menu_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard,
 			Game_state* game_state, Menu_state* menu_state,
-			End_screen* end_screen, State** current_state)
+			End_screen* end_screen, State** current_state ,sf::RenderWindow& window)
 {
-  user_input_handler(mouse, keyboard, game_state, menu_state, end_screen, current_state);
+  user_input_handler(mouse, keyboard, game_state, menu_state, end_screen, current_state, window);
 }
 
 void Menu_state::user_input_handler(sf::Mouse& mouse, sf::Keyboard&,
 				    Game_state* game_state, Menu_state* menu_state,
-				    End_screen* end_screen, State** current_state)
+				    End_screen* end_screen, State** current_state, sf::RenderWindow& window)
 {
     //check the collisions with menu_buttons
-    /*
-    if (mouse.isButtonPressed(sf::Mouse::Left)
+    
+  if (mouse.isButtonPressed(sf::Mouse::Left))
     {
-        PC_button->click(mouse);
-        NPC1_button->click(mouse);
-        NPC2_button->click(mouse);
-        NPC3_button->click(mouse);
-
-        if (start_button->click(mouse))
+      //   PC_button->click(mouse);
+      // NPC1_button->click(mouse);
+      // NPC2_button->click(mouse);
+      // NPC3_button->click(mouse);
+      
+      if (start_button->click(mouse, window))
         {
-            nr_players = PC->get_value() +
-                NPC1->get_value() +
-                NPC2->get_value() +
-                NPC3->get_value();
-
+	  // nr_players = PC->get_value() +
+	  //    NPC1->get_value() +
+	  //    NPC2->get_value() +
+	  //    NPC3->get_value();
+	  /*
             if (nr_players <= 4 && nr_players != 0)
             {
                 game_state->create_game(PC->get_value(),
@@ -363,18 +372,24 @@ void Menu_state::user_input_handler(sf::Mouse& mouse, sf::Keyboard&,
                                     NPC2->get_value(),
                                     NPC3->get_value());
             }
+	  */
+	  game_state->new_game(1,0,0,0);
+	  *current_state = game_state;
+
+	}
             else
             {
                 //not valid game message
             }
-        }
+	    //}
     }
-    */
+    
 }
 
 void Menu_state::draw(sf::RenderWindow& window)
 {
     window.setTitle("menu screen");
+     start_button->draw(window);
     /*
     for (Menu_button* menu_button : menu_buttons)
     {
@@ -424,14 +439,14 @@ void End_screen::new_players(std::list<Player*> Players)
   
 void End_screen::update(sf::Mouse& mouse, sf::Keyboard& keyboard,
 			Game_state* game_state, Menu_state* menu_state,
-			End_screen* end_screen, State** current_state)
+			End_screen* end_screen, State** current_state, sf::RenderWindow& window)
 {
-  user_input_handler(mouse, keyboard, game_state, menu_state, end_screen, current_state);
+  user_input_handler(mouse, keyboard, game_state, menu_state, end_screen, current_state, window);
 }
 
 void End_screen::user_input_handler(sf::Mouse& mouse, sf::Keyboard&,
 				    Game_state* game_state, Menu_state* menu_state,
-				    End_screen* end_screen, State** current_state)
+				    End_screen* end_screen, State** current_state, sf::RenderWindow& window)
 {
     //check the collisions with menu_buttons
     
@@ -441,12 +456,12 @@ void End_screen::user_input_handler(sf::Mouse& mouse, sf::Keyboard&,
        std::cout<< "Mouse pos: "<< mouse.getPosition().x<< "  "
 		<< mouse.getPosition().y << std::endl;
 
-        if (end_button->click(mouse))
+       if (end_button->click(mouse, window))
 	  {
 	    std::cout<< "Hej 2" << std::endl;
 
 	    list_of_Player.clear();
-	  *current_state = game_state;
+	  *current_state = menu_state;
 	  }
             else
 	      {

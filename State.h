@@ -24,13 +24,13 @@ public:
 
     virtual void update(sf::Mouse&, sf::Keyboard&,
 			Game_state*, Menu_state*,
-			End_screen*, State**) = 0;
+			End_screen*, State**, sf::RenderWindow&) = 0;
     virtual void draw(sf::RenderWindow&) = 0;
     std::string name;
 private:
     virtual void user_input_handler(sf::Mouse&, sf::Keyboard&,
 				    Game_state*, Menu_state*,
-				    End_screen*, State**) = 0;
+				    End_screen*, State**, sf::RenderWindow&) = 0;
 //    virtual void load_textures() = 0;
 };
 
@@ -41,7 +41,7 @@ public:
 
     void update(sf::Mouse&, sf::Keyboard&,
 		Game_state*, Menu_state*,
-		End_screen*, State**) override;
+		End_screen*, State**, sf::RenderWindow&) override;
     void draw(sf::RenderWindow&) override;
     void new_game(int, int, int, int);
 
@@ -49,7 +49,7 @@ private:
     void check_collisions();
     void user_input_handler(sf::Mouse&, sf::Keyboard&,
 			    Game_state*, Menu_state*,
-			    End_screen*, State**) override;
+			    End_screen*, State**, sf::RenderWindow&) override;
  //   virtual void load_textures() override;
     void new_round();
     void end_game(State** current_state, End_screen* end_screen);
@@ -85,19 +85,24 @@ private:
 class Menu_state: public State
 {
 public:
-    Menu_state(): State("Menu_state")
-    {}
+  Menu_state();
 
   void update(sf::Mouse&, sf::Keyboard&,
 	      Game_state*, Menu_state*,
-	      End_screen*, State**) override;
+	      End_screen*, State**, sf::RenderWindow&) override;
     void draw(sf::RenderWindow&) override;
 
 private:
     void user_input_handler(sf::Mouse&, sf::Keyboard&,
 			    Game_state*, Menu_state*,
-			    End_screen*, State**) override;
+			    End_screen*, State**, sf::RenderWindow&) override;
   //  void load_textures() override;
+
+    sf::Vector2f pos_start{50, 20};
+    sf::Texture start_texture;
+    Start_button* start_button;
+    
+       
 };
 
 class End_screen: public State
@@ -109,7 +114,7 @@ class End_screen: public State
   void draw(sf::RenderWindow&) override;
   void update(sf::Mouse& , sf::Keyboard&,
 	      Game_state*, Menu_state*,
-	      End_screen*, State**) override;
+	      End_screen*, State**, sf::RenderWindow&) override;
  private:
   sf::Vector2f pos{50,50};
   sf::Texture button_texture;
@@ -117,7 +122,7 @@ class End_screen: public State
   Start_button* end_button;
   void user_input_handler(sf::Mouse& , sf::Keyboard&,
 			  Game_state*, Menu_state*,
-			  End_screen*, State**) override;
+			  End_screen*, State**, sf::RenderWindow&) override;
 };
 
 

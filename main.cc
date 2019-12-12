@@ -27,7 +27,7 @@ int main()
                 }
         }
         window.clear();
-        state_handler.update(mouse, keyboard);
+        state_handler.update(mouse, keyboard, window);
         state_handler.draw(window);
         window.display();
     }
