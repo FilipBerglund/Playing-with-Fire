@@ -24,13 +24,13 @@ public:
 
     virtual void update(sf::Mouse&, sf::Keyboard&,
 			Game_state*, Menu_state*,
-			End_screen*, State*) = 0;
+			End_screen*, State**) = 0;
     virtual void draw(sf::RenderWindow&) = 0;
     std::string name;
 private:
     virtual void user_input_handler(sf::Mouse&, sf::Keyboard&,
 				    Game_state*, Menu_state*,
-				    End_screen*, State*) = 0;
+				    End_screen*, State**) = 0;
 //    virtual void load_textures() = 0;
 };
 
@@ -41,7 +41,7 @@ public:
 
     void update(sf::Mouse&, sf::Keyboard&,
 		Game_state*, Menu_state*,
-		End_screen*, State*) override;
+		End_screen*, State**) override;
     void draw(sf::RenderWindow&) override;
     void new_game(int, int, int, int);
 
@@ -49,10 +49,10 @@ private:
     void check_collisions();
     void user_input_handler(sf::Mouse&, sf::Keyboard&,
 			    Game_state*, Menu_state*,
-			    End_screen*, State*) override;
+			    End_screen*, State**) override;
  //   virtual void load_textures() override;
     void new_round();
-    void end_game(State* current_state, End_screen* end_screen);
+    void end_game(State** current_state, End_screen* end_screen);
     bool is_game_over();
     bool is_round_over();
     bool is_time_up();
@@ -90,13 +90,13 @@ public:
 
   void update(sf::Mouse&, sf::Keyboard&,
 	      Game_state*, Menu_state*,
-	      End_screen*, State*) override;
+	      End_screen*, State**) override;
     void draw(sf::RenderWindow&) override;
 
 private:
     void user_input_handler(sf::Mouse&, sf::Keyboard&,
 			    Game_state*, Menu_state*,
-			    End_screen*, State*) override;
+			    End_screen*, State**) override;
   //  void load_textures() override;
 };
 
@@ -109,7 +109,7 @@ class End_screen: public State
   void draw(sf::RenderWindow&) override;
   void update(sf::Mouse& , sf::Keyboard&,
 	      Game_state*, Menu_state*,
-	      End_screen*, State*) override;
+	      End_screen*, State**) override;
  private:
   sf::Vector2f pos{50,50};
   sf::Texture button_texture;
@@ -117,7 +117,7 @@ class End_screen: public State
   Start_button* end_button;
   void user_input_handler(sf::Mouse& , sf::Keyboard&,
 			  Game_state*, Menu_state*,
-			  End_screen*, State*) override;
+			  End_screen*, State**) override;
 };
 
 
