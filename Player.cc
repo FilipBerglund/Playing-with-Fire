@@ -25,10 +25,11 @@ Player::Player(sf::Vector2f pos, sf::Texture & texture,
         initial_cd{in_cd},
 	want_to_drop_bomb{false},
 	name{in_name}
+
 {
+    
     sf::Clock new_clock;
-    bomb_cds.push_back(std::make_pair(new_clock, true));  //Listan får storlek 1.
-    // sprite.setOrigin(hitbox().width/2, hitbox().height/2); //Origin blir i mitten.
+    bomb_cds.push_back(std::make_pair(new_clock, true));  //Listan får storlek 1.   
 }
 
 

@@ -49,7 +49,7 @@ void Game_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard)
 {
     user_input_handler(mouse, keyboard);
 
-    fires.remove_if([this](Fire* fire)
+    fires.remove_if([](Fire* fire)
         {
             if (fire->is_extinguished())
             {
@@ -60,7 +60,7 @@ void Game_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard)
         });
 
     /*
-    bombs.remove_if([this](Bomb* bomb)
+    bombs.remove_if([](Bomb* bomb)
         {
             if (bomb->is_blasted())
             {
@@ -299,39 +299,68 @@ void Game_state::new_round()
 
 }
 
-void Game_state::new_game(int PC, int NPC1, int NPC2, int NPC3)
+sf::Texture& Game_state::get_texture(sf::Texture& t1, sf::Texture& t2, sf::Texture& t3, sf::Texture& t4, int idx) 
 {
+    switch (idx)
+    {
+        case 0: return t1;
+        case 1: return t2;
+        case 2: return t3;
+        case 3: return t4;
+    }
+}
+
+void Game_state::new_game(int PC, int NPC1, int NPC2, int NPC3)
+{  
+    sf::Vector2f offset{250,50};
+
+    std::vector<sf::Vector2f> positions{sf::Vector2f(50,50), sf::Vector2f(650,50), sf::Vector2f(650,550), sf::Vector2f(50,550)}; //Start_pos.
+    std::vector<std::string> names{"Player 1", "Player 2", "Player 3", "Player 4"};
+    std::vector<sf::Keyboard::Key> player1_buttons{sf::Keyboard::A, sf::Keyboard::D, sf::Keyboard::S, sf::Keyboard::W, sf::Keyboard::Q};
+    std::vector<sf::Keyboard::Key> player2_buttons{sf::Keyboard::Numpad1, sf::Keyboard::Numpad3, sf::Keyboard::Numpad2, sf::Keyboard::Numpad5, sf::Keyboard::Numpad4};
+    std::vector<sf::Keyboard::Key> player3_buttons{sf::Keyboard::Num0, sf::Keyboard::Num1, sf::Keyboard::Num2, sf::Keyboard::Num3, sf::Keyboard::Num4};
+    std::vector<sf::Keyboard::Key> player4_buttons{sf::Keyboard::Num5, sf::Keyboard::Num6, sf::Keyboard::Num7, sf::Keyboard::Num8, sf::Keyboard::Num9};
+    std::vector<std::vector<sf::Keyboard::Key>> buttons{player1_buttons, player2_buttons, player3_buttons, player4_buttons};
+    std::vector<sf::Texture> textures{player1_texture, player2_texture, player3_texture, player4_texture};
     
-    sf::Vector2f offset{280,60};
-    /*
-    int initilized{0};                  //player_data[i] = (position, texture, string, vector<keys>)
-    for (int i{0}; i < PC, i++)
+    PC = 4;
+    NPC1 = 0;
+    NPC2 = 0;
+    NPC3 = 0;
+
+    sf::Texture& texture{player1_texture};
+    
+    int initilized{0};                  
+    for (int i{0}; i < PC; i++)
     {
-	Pc* pc = new Pc(std::get<0>(player_data[initilized]) + offset, std::get<1>(player_data[initilized]), false, 3, 2, 2, 3, std::get<2>(player_data[initilized]),
-			std::get<3>(player_data[initilized])[0], std::get<3>(player_data[initilized])[1], std::get<3>(player_data[initilized])[2],
-		        std::get<3>(player_data[initilized])[3], std::get<3>(player_data[initilized])[4]);
-        players.push_back(pc);
-        initialized++;
+	sf::Texture& tet = get_texture(player1_texture, player2_texture, player3_texture, player4_texture, initilized);
+        players.push_back(new Pc(positions[initilized] + offset, tet, false, 3, 2, 2, 3, names[initilized],
+				 buttons[initilized][0], buttons[initilized][1], buttons[initilized][2], buttons[initilized][3], buttons[initilized][4]));
+        initilized++;
     }
     for (int i{0}; i < NPC1; i++)
     {
-        Npc* npc = new Npc(get<0>(player_data[initilized]) + offset, std::get<1>(player_data[initilized]), false, 3, 2, 2, 3, std::get<2>(player_data[initilized]));
-        players.push_back(npc);
-        initialized++;
+	sf::Texture& tet = get_texture(player1_texture, player2_texture, player3_texture, player4_texture, initilized);
+        players.push_back(new Npc(positions[initilized] + offset, tet, false, 3, 2, 2, 3, names[initilized]));
+        initilized++;
     }
-    for (int i{0}; i < NPC1; i++)
+    for (int i{0}; i < NPC2; i++)
     {
-        Npc* npc = new Npc(get<0>(player_data[initilized]) + offset, std::get<1>(player_data[initilized]), false, 3, 6, 2, 6, std::get<2>(player_data[initilized]));
-        players.push_back(pc);
-        initialized++;
+	sf::Texture& tet = get_texture(player1_texture, player2_texture, player3_texture, player4_texture, initilized);
+        players.push_back(new Npc(positions[initilized] + offset, tet, false, 3, 6, 2, 6, names[initilized]));
+        initilized++;
     }
-    for (int i{0}; i < NPC1; i++)
+    for (int i{0}; i < NPC3; i++)
     {
-        Npc* npc = new Npc(get<0>(player_data[initilized]) + offset, std::get<1>(player_data[initilized]), false, 3, 2, 2, 6, std::get<2>(player_data[initilized]));
-        players.push_back(pc);
-        initialized++;
+	sf::Texture& tet = get_texture(player1_texture, player2_texture, player3_texture, player4_texture, initilized);
+        players.push_back(new Npc(positions[initilized] + offset, tet, false, 3, 2, 2, 6, names[initilized]));
+        initilized++;
     }
-    */
+   
+
+
+    
+    
 	
     alive_players = players;
     
