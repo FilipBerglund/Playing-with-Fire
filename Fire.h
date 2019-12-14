@@ -8,15 +8,16 @@
 
 class Fire: public Game_object
 {
-public:
-  
+public: 
     Fire(sf::Vector2f, sf::Texture&, Player*);
+
+    ~Fire();
     
     void apply_on_hit_effect(Game_object* object) override;
-
     bool is_extinguished() const;
     
 private:
     sf::Clock aflame_timer;
+    Player* owner;
 };
 #endif        

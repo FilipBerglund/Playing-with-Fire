@@ -6,7 +6,7 @@
 
 #include <iostream>
 
-Player::Player(sf::Vector2f pos, sf::Texture & texture, int cooldown,
+Player::Player(sf::Vector2f pos, sf::Texture & texture,
 	       bool in_push, int in_health, int in_speed, int in_fire, int in_cd, std::string in_name):
         Game_object(pos, texture),
         push_powerup{in_push},
@@ -25,10 +25,11 @@ Player::Player(sf::Vector2f pos, sf::Texture & texture, int cooldown,
         initial_cd{in_cd},
 	want_to_drop_bomb{false},
 	name{in_name}
+
 {
+    
     sf::Clock new_clock;
-    bomb_cds.push_back(std::make_pair(new_clock, true));  //Listan får storlek 1.
-    // sprite.setOrigin(hitbox().width/2, hitbox().height/2); //Origin blir i mitten.
+    bomb_cds.push_back(std::make_pair(new_clock, true));  //Listan får storlek 1.   
 }
 
 

@@ -13,7 +13,7 @@
 class Npc: public Player
 {
 public:
-    Npc(sf::Vector2f, sf::Texture &, int, bool,
+    Npc(sf::Vector2f, sf::Texture &, bool,
 	int, int, int, int, std::string);
 
     ~Npc() = default;

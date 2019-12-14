@@ -47,7 +47,10 @@ private:
     bool is_time_up();
     bool is_playing;
 
+    sf::Texture& get_texture(sf::Texture&,sf::Texture&,sf::Texture&,sf::Texture&,int);
+
     std::list<Player*> players;
+    std::list<Player*> alive_players;
     std::list<Bomb*> bombs;
     std::list<Fire*> fires;
     std::list<Powerup*> powerups;
@@ -57,18 +60,18 @@ private:
     int current_round;
     sf::Clock round_timer;
 
-    sf::Texture fire_texture;
     sf::Texture player1_texture;
     sf::Texture player2_texture;
     sf::Texture player3_texture;
     sf::Texture player4_texture;
+    sf::Texture fire_texture;
     sf::Texture solid_box_texture;
     sf::Texture wooden_box_texture;
     sf::Texture bomb_texture;
     sf::Texture push_texture;
     sf::Texture extra_bomb_texture;
     sf::Texture bigger_blast_texture;
-    sf::Texture speed_texture;
+    sf::Texture speed_texture;   
 };
 
 class Menu_state: public State
