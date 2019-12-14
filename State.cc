@@ -208,7 +208,7 @@ void Game_state::check_collisions()
 
 void Game_state::draw(sf::RenderWindow& window)
 {
-    window.setTitle("game screen");
+    //window.setTitle("game screen");
     for (Player* player : players)
     {
         if (!player->is_dead())
@@ -388,7 +388,7 @@ void Menu_state::user_input_handler(sf::Mouse& mouse, sf::Keyboard&,
 
 void Menu_state::draw(sf::RenderWindow& window)
 {
-    window.setTitle("menu screen");
+    //window.setTitle("menu screen");
      start_button->draw(window);
     /*
     for (Menu_button* menu_button : menu_buttons)
@@ -474,7 +474,7 @@ void End_screen::user_input_handler(sf::Mouse& mouse, sf::Keyboard&,
 
 void End_screen::draw(sf::RenderWindow& window)
 {
-  window.setTitle("End screen");
+  //window.setTitle("End screen");
   
   int number{1};  
   int ycorrd{70};
