@@ -63,7 +63,6 @@ private:
 
     sf::Vector2f offset{250,50};
 
-    sf::Texture fire_texture;
     sf::Texture player1_texture;
     sf::Texture player2_texture;
     sf::Texture player3_texture;
