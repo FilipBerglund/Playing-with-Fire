@@ -42,7 +42,7 @@ Game_state::Game_state(): State("Game_state"),
         push_texture.loadFromFile("textures/push_texture.png");
         extra_bomb_texture.loadFromFile("textures/extra_bomb_texture.png");
         speed_texture.loadFromFile("textures/speed_texture.png");
-	bigger_blast_texture.loadFromFile("textures/bigger_blast_texture.png");
+    	bigger_blast_texture.loadFromFile("textures/bigger_blast_texture.png");
     }
 
 void Game_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard)
@@ -53,24 +53,22 @@ void Game_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard)
         {
             if (fire->is_extinguished())
             {
-                delete fire;
-	        return true;
-	    }
+         //       delete fire;
+                return true;
+            }
             return false;
         });
 
-    /*
-    bombs.remove_if([](Bomb* bomb)
+    bombs.remove_if([this](Bomb* bomb)
         {
             if (bomb->is_blasted())
             {
-                imaginary_spawn_fire_function(bomb->get_owner(), bomb->get_position());
-                delete bomb;
-	        return true;
-	    }
+                bomb->spawn_fire(wooden_boxes, solid_boxes, fires, fire_texture);
+                //delete bomb;
+                return true;
+            }
             return false;
         });
-    */
        
     if (!is_playing)
     {
@@ -293,8 +291,14 @@ void Game_state::new_round()
         player->new_round();
     }
     current_round += 1;
-    //TODO: Add removal of powerups, wooden_boxes, bombs, fires
-    //TODO: spawn Wooden_boxes
+    
+    wooden_boxes.clear(); //This prolly causes memory leaks...
+    powerups.clear();
+    alive_players = players;
+    bombs.clear();
+    fires.clear();
+    initialize_boxes();
+
     round_timer.restart();
 
 }
@@ -327,8 +331,6 @@ void Game_state::new_game(int PC, int NPC1, int NPC2, int NPC3)
     NPC1 = 0;
     NPC2 = 0;
     NPC3 = 0;
-
-    sf::Texture& texture{player1_texture};
     
     int initilized{0};                  
     for (int i{0}; i < PC; i++)
@@ -356,41 +358,16 @@ void Game_state::new_game(int PC, int NPC1, int NPC2, int NPC3)
         players.push_back(new Npc(positions[initilized] + offset, tet, false, 3, 2, 2, 6, names[initilized]));
         initilized++;
     }
-   
-
-
     
-    
-	
     alive_players = players;
-    
-    //initialize everything
-   // Player* player = new Player(sf::Vector2f(300,300), player1_texture, 3, false, 3, 5, 2, 5);
-    //players.push_back(player);
-    /*
-    Pc* pc = new Pc(sf::Vector2f(150,150), player1_texture, 3, false, 3, 2, 2, 5, "Pelle svanslös", sf::Keyboard::A,sf::Keyboard::D,sf::Keyboard::S,sf::Keyboard::W,sf::Keyboard::Q);
-    players.push_back(pc);
+    is_playing = true;
+    initialize_boxes();
+    round_timer.restart();
+    current_round = 0;
+}
 
-    Npc* npc1 = new Npc(sf::Vector2f(150,250), player1_texture, 3, false, 3, 2, 2, 5, "Pelle svanslös");
-    players.push_back(npc1);
-
-    Npc* npc2 = new Npc(sf::Vector2f(200,250), player1_texture, 3, false, 3, 2, 2, 5, "Pelle svanslös");
-    players.push_back(npc2);
-    
-    Npc* npc3 = new Npc(sf::Vector2f(250,250), player1_texture, 3, false, 3, 2, 2, 5, "Pelle svanslös");
-    players.push_back(npc3);
-    
-    Npc* npc4 = new Npc(sf::Vector2f(300,250), player1_texture, 3, false, 3, 2, 2, 5, "Pelle svanslös");
-    players.push_back(npc4);
-    
-
-    powerups.push_back(new Speed(sf::Vector2f(600,250), speed_texture));
-    powerups.push_back(new Bigger_blast(sf::Vector2f(650,250), bigger_blast_texture));
-    powerups.push_back(new Extra_bomb(sf::Vector2f(600,350), extra_bomb_texture));
-    powerups.push_back(new Push(sf::Vector2f(600,450), push_texture));
-    */
-    
- 
+void Game_state::initialize_boxes()
+{
     std::ifstream maptext;
     maptext.open("initmatrix.txt");
     std::vector<std::vector<int>> mat;
@@ -425,8 +402,6 @@ void Game_state::new_game(int PC, int NPC1, int NPC2, int NPC3)
             }
         }
     }
-    round_timer.restart();
-    is_playing = true;
 }
 
 void Game_state::end_game()

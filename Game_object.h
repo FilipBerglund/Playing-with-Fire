@@ -34,6 +34,11 @@ public:
         return old_position;
     }
 
+    void set_rotation(float angle)
+    {
+        return sprite.setRotation(angle);
+    }
+
     virtual void apply_on_hit_effect(Game_object*) {};
     void undo_last_move()
     {
