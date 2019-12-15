@@ -439,30 +439,26 @@ sf::Texture& Game_state::get_texture(sf::Texture& t1, sf::Texture& t2, sf::Textu
 }
 
 void Game_state::new_game(int PC, int NPC1, int NPC2, int NPC3)
-{  
+{
      players.remove_if([this](Player* player)
         {
-	    delete player;
+            delete player;
             return true;
         });
 
     sf::Vector2f offset{250,50};
 
     std::vector<sf::Vector2f> positions{sf::Vector2f(50,50), sf::Vector2f(650,50), sf::Vector2f(650,550), sf::Vector2f(50,550)}; //Start_pos.
-    std::vector<std::string> names{"Player 1", "Player 2", "Player 3", "Player 4"};
-    std::vector<sf::Keyboard::Key> player1_buttons{sf::Keyboard::A, sf::Keyboard::D, sf::Keyboard::S, sf::Keyboard::W, sf::Keyboard::Q};
+    std::vector<std::string> names{"Red player", "Green player", "Blue player", "Yellow player"};
+    std::vector<sf::Keyboard::Key> player1_buttons{sf::Keyboard::A, sf::Keyboard::D,
+        sf::Keyboard::S, sf::Keyboard::W, sf::Keyboard::Q};
     std::vector<sf::Keyboard::Key> player2_buttons{sf::Keyboard::Numpad1, sf::Keyboard::Numpad3, sf::Keyboard::Numpad2, sf::Keyboard::Numpad5, sf::Keyboard::Numpad4};
-    std::vector<sf::Keyboard::Key> player3_buttons{sf::Keyboard::Num0, sf::Keyboard::Num1, sf::Keyboard::Num2, sf::Keyboard::Num3, sf::Keyboard::Num4};
-    std::vector<sf::Keyboard::Key> player4_buttons{sf::Keyboard::Num5, sf::Keyboard::Num6, sf::Keyboard::Num7, sf::Keyboard::Num8, sf::Keyboard::Num9};
+    std::vector<sf::Keyboard::Key> player3_buttons{sf::Keyboard::Left, sf::Keyboard::Right, sf::Keyboard::Down, sf::Keyboard::Up, sf::Keyboard::RControl};
+    std::vector<sf::Keyboard::Key> player4_buttons{sf::Keyboard::J, sf::Keyboard::L, sf::Keyboard::K, sf::Keyboard::I, sf::Keyboard::U};
     std::vector<std::vector<sf::Keyboard::Key>> buttons{player1_buttons, player2_buttons, player3_buttons, player4_buttons};
     std::vector<sf::Texture> textures{player1_texture, player2_texture, player3_texture, player4_texture};
 
-    PC = 1;
-    NPC1 = 1;
-    NPC2 = 1;
-    NPC3 = 1;
-    
-    int initilized{0};                  
+    int initilized{0};
     for (int i{0}; i < PC; i++)
     {
 	sf::Texture& tet = get_texture(player1_texture, player2_texture, player3_texture, player4_texture, initilized);
@@ -555,8 +551,6 @@ bool Game_state::is_round_over() const
 
     int alive_players_count = std::count_if(players.begin(), players.end(),
             [] (Player* p) {return !p->is_dead();});
-    std::cout << "alive:" << alive_players_count << std::endl;
-    std::cout << "total:" << players.size() << std::endl;
 
     //This works even if only one player is playing the game. In english,
     //if someone is dead and no more than one player is alive return true.
@@ -611,44 +605,38 @@ void Menu_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard,
 }
 
 void Menu_state::user_input_handler(sf::Mouse& mouse, sf::Keyboard&,
-				    Game_state* game_state, Menu_state* menu_state,
-				    End_screen* end_screen, State** current_state, sf::RenderWindow& window)
+    Game_state* game_state, Menu_state* menu_state,
+    End_screen* end_screen, State** current_state, sf::RenderWindow& window)
 {
     //check the collisions with menu_buttons
-    
-  if (mouse.isButtonPressed(sf::Mouse::Left))
+
+    if (mouse.isButtonPressed(sf::Mouse::Left))
     {
-      
-       PC_button->click(mouse, window);
-       NPC1_button->click(mouse, window);
-       NPC2_button->click(mouse, window);
-       NPC3_button->click(mouse, window);
-      if (start_button->click(mouse, window))
+        PC_button->click(mouse, window);
+        NPC1_button->click(mouse, window);
+        NPC2_button->click(mouse, window);
+        NPC3_button->click(mouse, window);
+        if (start_button->click(mouse, window))
         {
-	  // nr_players = PC->get_value() +
-	  //    NPC1->get_value() +
-	  //    NPC2->get_value() +
-	  //    NPC3->get_value();
-	  /*
+            int nr_players = PC_button->get_value() +
+                             NPC1_button->get_value() +
+                             NPC2_button->get_value() +
+                             NPC3_button->get_value();
             if (nr_players <= 4 && nr_players != 0)
             {
-                game_state->create_game(PC->get_value(),
-                                    NPC1->get_value(),
-                                    NPC2->get_value(),
-                                    NPC3->get_value());
+                game_state->new_game(PC_button->get_value(),
+                                    NPC1_button->get_value(),
+                                    NPC2_button->get_value(),
+                                    NPC3_button->get_value());
+                *current_state = game_state;
             }
-	  */
-	  game_state->new_game(1,0,0,0);
-	  *current_state = game_state;
 
-	}
-            else
-            {
-                //not valid game message
-            }
-	    //}
+        }
+        else
+        {
+            //not valid game message
+        }
     }
-    
 }
 
 void Menu_state::draw(sf::RenderWindow& window)
@@ -659,7 +647,7 @@ void Menu_state::draw(sf::RenderWindow& window)
      NPC1_button->draw(window);
      NPC2_button->draw(window);
      NPC3_button->draw(window);
-    
+
     /*
     for (Menu_button* menu_button : menu_buttons)
     {
