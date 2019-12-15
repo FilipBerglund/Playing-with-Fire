@@ -12,7 +12,6 @@ public:
     State_handler():
   game_state{new Game_state}, menu_state{new Menu_state}, end_screen{new End_screen}
     {
-    	game_state->new_game(1,0,0,0);
         *current_state= menu_state;
     }
     void update(sf::Mouse& mouse, sf::Keyboard& keyboard, sf::RenderWindow& window)

@@ -425,6 +425,12 @@ sf::Texture& Game_state::get_texture(sf::Texture& t1, sf::Texture& t2, sf::Textu
 
 void Game_state::new_game(int PC, int NPC1, int NPC2, int NPC3)
 {  
+     players.remove_if([this](Player* player)
+        {
+	    delete player;
+            return true;
+        });
+
     sf::Vector2f offset{250,50};
 
     std::vector<sf::Vector2f> positions{sf::Vector2f(50,50), sf::Vector2f(650,50), sf::Vector2f(650,550), sf::Vector2f(50,550)}; //Start_pos.
@@ -445,7 +451,7 @@ void Game_state::new_game(int PC, int NPC1, int NPC2, int NPC3)
     for (int i{0}; i < PC; i++)
     {
 	sf::Texture& tet = get_texture(player1_texture, player2_texture, player3_texture, player4_texture, initilized);
-        players.push_back(new Pc(positions[initilized] + offset, tet, false, 3, 2, 2, 3, names[initilized],
+        players.push_back(new Pc(positions[initilized] + offset, tet, false, 1, 2, 2, 3, names[initilized],
 				 buttons[initilized][0], buttons[initilized][1], buttons[initilized][2], buttons[initilized][3], buttons[initilized][4]));
         initilized++;
     }
@@ -640,10 +646,7 @@ struct PlayerComparator
 	// Compare 2 Player objects using points
   bool operator ()(Player* & player1, Player* & player2)
 	{
-	  if(player1->get_score() == player2->get_score())
-	    return player1->get_score() < player2->get_score();
 	  return player1->get_score() < player2->get_score();
- 
 	}
 };
 
@@ -665,7 +668,7 @@ End_screen::End_screen()
   end_button = new Start_button(pos, button_texture);
   //end_button->new_sprite(button_texture);
   //end_button->new_pos(sf::Vector2f(50,50));
-  list_of_Player.sort(PlayerComparator());
+  //list_of_Player.sort(PlayerComparator());
   
 }
 
@@ -673,7 +676,10 @@ void End_screen::new_players(std::list<Player*> Players)
 {
   
   list_of_Player = Players;
-  list_of_Player.sort(PlayerComparator());
+  list_of_Player.sort([](Player* player1, Player* player2)
+		  {
+		  	return player1->get_score() > player2->get_score();
+		  });
   
 }
   
@@ -692,14 +698,8 @@ void End_screen::user_input_handler(sf::Mouse& mouse, sf::Keyboard&,
     
   if (mouse.isButtonPressed(sf::Mouse::Left))
     {
-       std::cout<< "Hej 1" << std::endl;
-       std::cout<< "Mouse pos: "<< mouse.getPosition().x<< "  "
-		<< mouse.getPosition().y << std::endl;
-
        if (end_button->click(mouse, window))
 	  {
-	    std::cout<< "Hej 2" << std::endl;
-
 	    list_of_Player.clear();
 	  *current_state = menu_state;
 	  }
