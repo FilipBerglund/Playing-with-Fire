@@ -299,8 +299,7 @@ void Game_state::check_collisions()
                 wooden_box->apply_on_hit_effect(fire);
             }
         }
-	/* Funkar ej. fire ska detonera bomber. 
-        bombs.remove_if([fire](Bomb* bomb)
+        bombs.remove_if([fire,this](Bomb* bomb)
         {
             if (bomb->hitbox().intersects(fire->hitbox()))
             {
@@ -310,7 +309,7 @@ void Game_state::check_collisions()
             }
             return false;
         });
-	*/
+	
     }   
 }
 
