@@ -596,11 +596,10 @@ Menu_state::Menu_state()
   npc1_menu.loadFromFile("textures/Menu.png",sf::IntRect(0,74,350,75));
   npc2_menu.loadFromFile("textures/Menu1.png",sf::IntRect(0,74,350,75));
   npc3_menu.loadFromFile("textures/Menu2.png",sf::IntRect(0,74,350,75));
-  selected.loadFromFile("textures/choose.png");
-  PC_button   = new Int_button(sf::Vector2f(475,300), pc_menu, selected);
-  NPC1_button = new Int_button(sf::Vector2f(475,375), npc1_menu, selected);
-  NPC2_button = new Int_button(sf::Vector2f(475,450), npc2_menu, selected);
-  NPC3_button = new Int_button(sf::Vector2f(475,525), npc3_menu, selected);
+  PC_button   = new Int_button(sf::Vector2f(475,300), pc_menu);
+  NPC1_button = new Int_button(sf::Vector2f(475,375), npc1_menu);
+  NPC2_button = new Int_button(sf::Vector2f(475,450), npc2_menu);
+  NPC3_button = new Int_button(sf::Vector2f(475,525), npc3_menu);
 }
 
 void Menu_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard,
