@@ -60,7 +60,7 @@ void Start_button::new_sprite(sf::Texture& s)
  *
  */
 
-Int_button::Int_button(sf::Vector2f pos, sf::Texture& bar)
+Int_button::Int_button(sf::Vector2f pos, sf::Texture& bar, sf::Texture& selected)
   :menu_bar{bar}, value{0}
  {
   //menu's position
@@ -71,19 +71,24 @@ Int_button::Int_button(sf::Vector2f pos, sf::Texture& bar)
    //float npc_selection = pos.y + 88;
 
    button_0.setSize(sf::Vector2f(50,50));
-   button_0.setPosition(pos.x + 65, pos.y + 14);
+   button_0.setPosition(pos.x + 64, pos.y + 13);
+   button_0.setFillColor(sf::Color(2, 255, 2, 80));
 
    button_1.setSize(sf::Vector2f(50,50));
-   button_1.setPosition(pos.x + 122, pos.y + 14);
+   button_1.setPosition(pos.x + 121, pos.y + 13);
+   button_1.setFillColor(sf::Color(2, 255, 2, 80));
 
    button_2.setSize(sf::Vector2f(50,50));
-   button_2.setPosition(pos.x + 178, pos.y + 14);
+   button_2.setPosition(pos.x + 177, pos.y + 13);
+   button_2.setFillColor(sf::Color(2, 255, 2, 80));
 
    button_3.setSize(sf::Vector2f(50,50));
-   button_3.setPosition(pos.x + 234, pos.y + 14);
+   button_3.setPosition(pos.x + 233, pos.y + 13);
+   button_3.setFillColor(sf::Color(2, 255, 2, 80));
 
    button_4.setSize(sf::Vector2f(50,50));
-   button_4.setPosition(pos.x + 290, pos.y + 14);
+   button_4.setPosition(pos.x + 289, pos.y + 13);
+   button_4.setFillColor(sf::Color(2, 255, 2, 80));
  }
 // Kollar vilken låda musen är över och anger rätt value
 
@@ -123,4 +128,22 @@ bool Int_button::click(sf::Mouse& mouse, sf::RenderWindow& window)
 void Int_button::draw(sf::RenderWindow& window)
 {
   window.draw(menu_bar);
+  switch(value)
+    {
+      case 0 :
+      window.draw(button_0);
+      break;
+      case 1 :
+      window.draw(button_1);
+            break;
+      case 2 :
+      window.draw(button_2);
+            break;
+      case 3 :
+      window.draw(button_3);
+            break;
+      case 4 :
+      window.draw(button_4);
+            break;
+    }
 }

@@ -347,6 +347,15 @@ void Game_state::draw(sf::RenderWindow& window)
 
     //for (Menu_button* menu_button : menu_buttons)
     //    window.draw(menu_button->get_drawable());
+
+    sf::Font font;    
+    font.loadFromFile("arial.ttf");
+    std::ostringstream info;
+    info << "ROUND: " << current_round + 1;
+    sf::Text text(info.str(), font, 40);
+    text.setPosition(10,10);
+    text.setColor(sf::Color::White);
+    window.draw(text);
 }
 
 
@@ -576,21 +585,22 @@ bool Game_state::is_time_up() const
 
 
 Menu_state::Menu_state()
-  : State("Menu_state"), pos_start{610,605}, start_texture{}, start_button{},
+  : State("Menu_state"), pos_start{610,615}, start_texture{}, start_button{},
     PC_button{}, NPC1_button{}, NPC2_button{}, NPC3_button{}
 {
   start_texture.loadFromFile("textures/start.png");
   start_button = new Start_button(pos_start, start_texture);
   
   //menu bar
-  pc_menu.loadFromFile("textures/Menu.png",sf::IntRect(0,0,350,75));
-  npc1_menu.loadFromFile("textures/Menu.png",sf::IntRect(0,75,350,75));
-  npc2_menu.loadFromFile("textures/Menu1.png",sf::IntRect(0,75,350,75));
-  npc3_menu.loadFromFile("textures/Menu2.png",sf::IntRect(0,75,350,75));
-  PC_button = new Int_button(sf::Vector2f(475,300), pc_menu);
-  NPC1_button = new Int_button(sf::Vector2f(475,375), npc1_menu);
-  NPC2_button = new Int_button(sf::Vector2f(475,450), npc2_menu);
-  NPC3_button = new Int_button(sf::Vector2f(475,525), npc3_menu);
+  pc_menu.loadFromFile("textures/Menu.png",sf::IntRect(0,0,350,73));
+  npc1_menu.loadFromFile("textures/Menu.png",sf::IntRect(0,74,350,75));
+  npc2_menu.loadFromFile("textures/Menu1.png",sf::IntRect(0,74,350,75));
+  npc3_menu.loadFromFile("textures/Menu2.png",sf::IntRect(0,74,350,75));
+  selected.loadFromFile("textures/choose.png");
+  PC_button   = new Int_button(sf::Vector2f(475,300), pc_menu, selected);
+  NPC1_button = new Int_button(sf::Vector2f(475,375), npc1_menu, selected);
+  NPC2_button = new Int_button(sf::Vector2f(475,450), npc2_menu, selected);
+  NPC3_button = new Int_button(sf::Vector2f(475,525), npc3_menu, selected);
 }
 
 void Menu_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard,
@@ -678,7 +688,7 @@ End_screen::~End_screen()
 }
 
 End_screen::End_screen()
-  :State("end_screen"), list_of_Player{}, pos{500,500}, button_texture{}, end_button{}
+  :State("end_screen"), list_of_Player{}, pos{585,500}, button_texture{}, end_button{}
 { 
   button_texture.loadFromFile("textures/okay.png");
   end_button = new Start_button(pos, button_texture);
@@ -746,7 +756,7 @@ void End_screen::draw(sf::RenderWindow& window)
     
       sf::Text text(info.str(), font, 50);
 
-      text.setPosition(70,ycorrd);
+      text.setPosition(200,ycorrd);
       text.setColor(sf::Color::Red);
     
       window.draw(text);
