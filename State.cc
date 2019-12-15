@@ -348,14 +348,20 @@ void Game_state::draw(sf::RenderWindow& window)
     //for (Menu_button* menu_button : menu_buttons)
     //    window.draw(menu_button->get_drawable());
 
-    sf::Font font;    
+    sf::Font font;
     font.loadFromFile("arial.ttf");
     std::ostringstream info;
     info << "ROUND: " << current_round + 1;
-    sf::Text text(info.str(), font, 40);
-    text.setPosition(10,10);
-    text.setColor(sf::Color::White);
-    window.draw(text);
+    sf::Text text0(info.str(), font, 40);
+    text0.setPosition(10,10);
+    text0.setColor(sf::Color::White);
+    window.draw(text0);
+    std::ostringstream roundtimerinfo;
+    roundtimerinfo << "Time remaining: " << (int)(180 - round_timer.getElapsedTime().asSeconds());
+    sf::Text text1(roundtimerinfo.str(), font, 20);
+    text1.setPosition(10,690);
+    text1.setColor(sf::Color::White);
+    window.draw(text1);
 }
 
 
