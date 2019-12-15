@@ -332,10 +332,21 @@ bool Game_state::is_time_up()
 
 
 Menu_state::Menu_state()
-  : State("Menu_state"), pos_start{500,200}, start_texture{}, start_button{}
+  : State("Menu_state"), pos_start{500,200}, start_texture{}, start_button{},
+    PC_button{}, NPC1_button{}, NPC2_button{}, NPC3_button{}
 {
   start_texture.loadFromFile("textures/player1_texture.png");
   start_button = new Start_button(pos_start, start_texture);
+  
+  //menu bar
+  pc_menu.loadFromFile("textures/Menu.png",sf::IntRect(0,0,350,75));
+  npc1_menu.loadFromFile("textures/Menu.png",sf::IntRect(0,75,350,75));
+  npc2_menu.loadFromFile("textures/Menu1.png",sf::IntRect(0,75,350,75));
+  npc3_menu.loadFromFile("textures/Menu2.png",sf::IntRect(0,75,350,75));
+  PC_button = new Int_button(sf::Vector2f(475,300), pc_menu);
+  NPC1_button = new Int_button(sf::Vector2f(475,375), npc1_menu);
+  NPC2_button = new Int_button(sf::Vector2f(475,450), npc2_menu);
+  NPC3_button = new Int_button(sf::Vector2f(475,525), npc3_menu);
 }
 
 void Menu_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard,
@@ -353,11 +364,11 @@ void Menu_state::user_input_handler(sf::Mouse& mouse, sf::Keyboard&,
     
   if (mouse.isButtonPressed(sf::Mouse::Left))
     {
-      //   PC_button->click(mouse);
-      // NPC1_button->click(mouse);
-      // NPC2_button->click(mouse);
-      // NPC3_button->click(mouse);
       
+       PC_button->click(mouse, window);
+       NPC1_button->click(mouse, window);
+       NPC2_button->click(mouse, window);
+       NPC3_button->click(mouse, window);
       if (start_button->click(mouse, window))
         {
 	  // nr_players = PC->get_value() +
@@ -390,6 +401,11 @@ void Menu_state::draw(sf::RenderWindow& window)
 {
     //window.setTitle("menu screen");
      start_button->draw(window);
+     PC_button->draw(window);
+     NPC1_button->draw(window);
+     NPC2_button->draw(window);
+     NPC3_button->draw(window);
+    
     /*
     for (Menu_button* menu_button : menu_buttons)
     {
