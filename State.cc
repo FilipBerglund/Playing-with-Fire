@@ -54,7 +54,7 @@ Game_state::Game_state():
     
     {
         fire_texture.loadFromFile("textures/fire_texture.png");
-        player1_texture.loadFromFile("textures/Player1_left.png");
+        player1_texture.loadFromFile("textures/player1_texture.png");
         player2_texture.loadFromFile("textures/player2_texture.png");
         player3_texture.loadFromFile("textures/player3_texture.png");
         player4_texture.loadFromFile("textures/player4_texture.png");
@@ -109,12 +109,15 @@ Game_state::~Game_state()
         {
 	    delete wooden_box;
             return true;
-        }); 
+        });
 }
 
-void Game_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard)
+void Game_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard,
+			Game_state* game_state, Menu_state* menu_state,
+			End_screen* end_screen, State** current_state, sf::RenderWindow& window)
 {
-    user_input_handler(mouse, keyboard);
+  user_input_handler(mouse, keyboard, game_state, menu_state, end_screen, current_state, window);
+    check_collisions();
 
     fires.remove_if([this](Fire* fire)
         {
@@ -211,9 +214,10 @@ void Game_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard)
     if (is_round_over())
     {
         new_round();
+	end_game(current_state, end_screen);
         if (is_game_over())
         {
-            end_game();
+            end_game(current_state, end_screen);
         }
     }
 }
@@ -339,7 +343,9 @@ void Game_state::draw(sf::RenderWindow& window)
 }
 
 
-void Game_state::user_input_handler(sf::Mouse& mouse, sf::Keyboard& keyboard)
+void Game_state::user_input_handler(sf::Mouse& mouse, sf::Keyboard& keyboard,
+				    Game_state* game_state, Menu_state* menu_state,
+				    End_screen* end_screen, State** current_state, sf::RenderWindow&)
 {
     /*
     if (mouse.isButtonPressed(sf::Mouse::Left)
@@ -507,7 +513,7 @@ void Game_state::initialize_boxes()
     }
 }
 
-void Game_state::end_game()
+void Game_state::end_game(State** current_state, End_screen* end_screen)
 {
     /*
      * TODO: delete relevant objects
@@ -515,6 +521,8 @@ void Game_state::end_game()
      * Change current state to End_screen
      * set is_playing to false.
     */
+    end_screen->new_players(players);
+    *current_state = end_screen;
 }
 
 bool Game_state::is_round_over() const
@@ -553,29 +561,40 @@ bool Game_state::is_time_up() const
 */
 
 
-void Menu_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard)
+Menu_state::Menu_state()
+  : State("Menu_state"), pos_start{500,200}, start_texture{}, start_button{}
 {
-    user_input_handler(mouse, keyboard);
+  start_texture.loadFromFile("textures/player1_texture.png");
+  start_button = new Start_button(pos_start, start_texture);
 }
 
-void Menu_state::user_input_handler(sf::Mouse& mouse, sf::Keyboard&)
+void Menu_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard,
+			Game_state* game_state, Menu_state* menu_state,
+			End_screen* end_screen, State** current_state ,sf::RenderWindow& window)
+{
+  user_input_handler(mouse, keyboard, game_state, menu_state, end_screen, current_state, window);
+}
+
+void Menu_state::user_input_handler(sf::Mouse& mouse, sf::Keyboard&,
+				    Game_state* game_state, Menu_state* menu_state,
+				    End_screen* end_screen, State** current_state, sf::RenderWindow& window)
 {
     //check the collisions with menu_buttons
-    /*
-    if (mouse.isButtonPressed(sf::Mouse::Left)
+    
+  if (mouse.isButtonPressed(sf::Mouse::Left))
     {
-        PC_button->click(mouse);
-        NPC1_button->click(mouse);
-        NPC2_button->click(mouse);
-        NPC3_button->click(mouse);
-
-        if (start_button->click(mouse))
+      //   PC_button->click(mouse);
+      // NPC1_button->click(mouse);
+      // NPC2_button->click(mouse);
+      // NPC3_button->click(mouse);
+      
+      if (start_button->click(mouse, window))
         {
-            nr_players = PC->get_value() +
-                NPC1->get_value() +
-                NPC2->get_value() +
-                NPC3->get_value();
-
+	  // nr_players = PC->get_value() +
+	  //    NPC1->get_value() +
+	  //    NPC2->get_value() +
+	  //    NPC3->get_value();
+	  /*
             if (nr_players <= 4 && nr_players != 0)
             {
                 game_state->create_game(PC->get_value(),
@@ -583,17 +602,24 @@ void Menu_state::user_input_handler(sf::Mouse& mouse, sf::Keyboard&)
                                     NPC2->get_value(),
                                     NPC3->get_value());
             }
+	  */
+	  game_state->new_game(1,0,0,0);
+	  *current_state = game_state;
+
+	}
             else
             {
                 //not valid game message
             }
-        }
+	    //}
     }
-    */
+    
 }
 
 void Menu_state::draw(sf::RenderWindow& window)
 {
+    //window.setTitle("menu screen");
+     start_button->draw(window);
     /*
     for (Menu_button* menu_button : menu_buttons)
     {
@@ -603,6 +629,11 @@ void Menu_state::draw(sf::RenderWindow& window)
     //we need to somewhere give the buttons a position. Maybe that can be done here based on the size of window. We might add a scaling too.
     //And perhaps draw some fancy background
 }
+
+/*
+ * END_SCREEN
+ *
+*/
 
 struct PlayerComparator
 {
@@ -623,25 +654,73 @@ End_screen::~End_screen()
         {
 	    delete player;
             return true;
-        });    
+        });
+    delete end_button;
 }
 
-End_screen::End_screen(sf::Texture s, std::list<Player*> list)
-  :State("end_screen"), sprite{s}, list_of_Player{list},
-   pos{50,50}, end_button{pos, sprite}
-{
-
+End_screen::End_screen()
+  :State("end_screen"), list_of_Player{}, pos{500,500}, button_texture{}, end_button{}
+{ 
+  button_texture.loadFromFile("textures/player1_texture.png");
+  end_button = new Start_button(pos, button_texture);
+  //end_button->new_sprite(button_texture);
+  //end_button->new_pos(sf::Vector2f(50,50));
   list_of_Player.sort(PlayerComparator());
   
 }
 
-void End_screen::Draw(sf::RenderWindow& window)
+void End_screen::new_players(std::list<Player*> Players)
 {
-    int number{1};  
-    int ycorrd{70};
+  
+  list_of_Player = Players;
+  list_of_Player.sort(PlayerComparator());
+  
+}
+  
+void End_screen::update(sf::Mouse& mouse, sf::Keyboard& keyboard,
+			Game_state* game_state, Menu_state* menu_state,
+			End_screen* end_screen, State** current_state, sf::RenderWindow& window)
+{
+  user_input_handler(mouse, keyboard, game_state, menu_state, end_screen, current_state, window);
+}
+
+void End_screen::user_input_handler(sf::Mouse& mouse, sf::Keyboard&,
+				    Game_state* game_state, Menu_state* menu_state,
+				    End_screen* end_screen, State** current_state, sf::RenderWindow& window)
+{
+    //check the collisions with menu_buttons
+    
+  if (mouse.isButtonPressed(sf::Mouse::Left))
+    {
+       std::cout<< "Hej 1" << std::endl;
+       std::cout<< "Mouse pos: "<< mouse.getPosition().x<< "  "
+		<< mouse.getPosition().y << std::endl;
+
+       if (end_button->click(mouse, window))
+	  {
+	    std::cout<< "Hej 2" << std::endl;
+
+	    list_of_Player.clear();
+	  *current_state = menu_state;
+	  }
+            else
+	      {
+                //not valid game message
+	      }
         
-    sf::Font font;    
-    if (!font.loadFromFile("arial.ttf"));
+    }
+    
+}
+
+void End_screen::draw(sf::RenderWindow& window)
+{
+  //window.setTitle("End screen");
+  
+  int number{1};  
+  int ycorrd{70};
+        
+  sf::Font font;    
+  if (!font.loadFromFile("arial.ttf"));
 
  for (Player* player : list_of_Player)
     {
@@ -649,18 +728,19 @@ void End_screen::Draw(sf::RenderWindow& window)
       std::ostringstream info;
       info << number << ".  " << player->get_name() << "  Points: " << player->get_score();
     
-    sf::Text text(info.str(), font, 50);
-    text.setPosition(70,ycorrd);
-    text.setColor(sf::Color::Red);
+      sf::Text text(info.str(), font, 50);
+
+      text.setPosition(70,ycorrd);
+      text.setColor(sf::Color::Red);
     
-    window.draw(text);
+      window.draw(text);
     
-    ycorrd= ycorrd + 70;    
-    number= number + 1;
+      ycorrd= ycorrd + 70;    
+      number= number + 1;
 
     }
 
+ end_button->draw(window);
 
- end_button.draw(window);
 }
 

@@ -13,6 +13,9 @@
 #include <string>
 #include <list>
 
+class Game_state;
+class Menu_state;
+class End_screen;
 class State
 {
 public:
@@ -20,11 +23,15 @@ public:
     {}
     virtual ~State() = default;
 
-    virtual void update(sf::Mouse&, sf::Keyboard&) = 0;
+    virtual void update(sf::Mouse&, sf::Keyboard&,
+			Game_state*, Menu_state*,
+			End_screen*, State**, sf::RenderWindow&) = 0;
     virtual void draw(sf::RenderWindow&) = 0;
     std::string name;
 private:
-    virtual void user_input_handler(sf::Mouse&, sf::Keyboard&) = 0;
+    virtual void user_input_handler(sf::Mouse&, sf::Keyboard&,
+				    Game_state*, Menu_state*,
+				    End_screen*, State**, sf::RenderWindow&) = 0;
 //    virtual void load_textures() = 0;
 };
 
@@ -34,17 +41,21 @@ public:
     Game_state();
     ~Game_state();
 
-    void update(sf::Mouse&, sf::Keyboard&) override;
+    void update(sf::Mouse&, sf::Keyboard&,
+		Game_state*, Menu_state*,
+		End_screen*, State**, sf::RenderWindow&) override;
     void draw(sf::RenderWindow&) override;
     void new_game(int, int, int, int);
 
 private:
     void check_collisions();
-    void user_input_handler(sf::Mouse&, sf::Keyboard&) override;
+    void user_input_handler(sf::Mouse&, sf::Keyboard&,
+			    Game_state*, Menu_state*,
+			    End_screen*, State**, sf::RenderWindow&) override;
  //   virtual void load_textures() override;
     void new_round();
     void initialize_boxes();
-    void end_game();
+    void end_game(State**, End_screen*);
     bool is_game_over() const; 
     bool is_round_over() const; 
     bool is_time_up() const;
@@ -82,31 +93,46 @@ private:
 class Menu_state: public State
 {
 public:
-    Menu_state(): State("Menu_state")
-    {}
+    Menu_state();
     ~Menu_state() = default; 
 
-    void update(sf::Mouse&, sf::Keyboard&) override;
+  void update(sf::Mouse&, sf::Keyboard&,
+	      Game_state*, Menu_state*,
+	      End_screen*, State**, sf::RenderWindow&) override;
     void draw(sf::RenderWindow&) override;
 
 private:
-    void user_input_handler(sf::Mouse&, sf::Keyboard&) override;
+    void user_input_handler(sf::Mouse&, sf::Keyboard&,
+			    Game_state*, Menu_state*,
+			    End_screen*, State**, sf::RenderWindow&) override;
   //  void load_textures() override;
+
+    sf::Vector2f pos_start{50, 20};
+    sf::Texture start_texture;
+    Start_button* start_button;
+    
+       
 };
 
 class End_screen: public State
 {
- public: 
-  End_screen(sf::Texture sprite, std::list<Player*> list_of_Player);
+ public:
+  
+  End_screen();
   ~End_screen();
-
-  void Draw(sf::RenderWindow&);
- 
+  void new_players(std::list<Player*>);
+  void draw(sf::RenderWindow&) override;
+  void update(sf::Mouse& , sf::Keyboard&,
+	      Game_state*, Menu_state*,
+	      End_screen*, State**, sf::RenderWindow&) override;
  private:
   sf::Vector2f pos{50,50};
-  sf::Texture sprite;
+  sf::Texture button_texture;
   std::list<Player*> list_of_Player;
-  Start_button end_button;
+  Start_button* end_button;
+  void user_input_handler(sf::Mouse& , sf::Keyboard&,
+			  Game_state*, Menu_state*,
+			  End_screen*, State**, sf::RenderWindow&) override;
 };
 
 

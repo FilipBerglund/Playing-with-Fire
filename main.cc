@@ -3,6 +3,7 @@
 #include <string>
 #include "State.h"
 #include <random>
+#include "State_handler.h"
 
 int main()
 {
@@ -21,12 +22,10 @@ int main()
     sf::Keyboard keyboard;
     sf::Mouse mouse;
 
-    Game_state game_state;
-    game_state.new_game(1,0,0,0);
-    
     sf::Clock fps_clock;
     double const fps{144.0};
     sf::Time const target {sf::milliseconds(1000.0 / fps)};
+    State_handler state_handler;
     while (window.isOpen())
     {
         fps_clock.restart();
@@ -39,8 +38,8 @@ int main()
                 }
         }
         window.clear();
-        game_state.update(mouse, keyboard);
-        game_state.draw(window);
+        state_handler.update(mouse, keyboard, window);
+        state_handler.draw(window);
         window.display();
 	
 	sf::sleep (target - fps_clock.getElapsedTime());
