@@ -8,6 +8,7 @@
 #include "Fire.h"
 #include "Powerup.h"
 #include "Box.h"
+#include <random>
 
 
 class Npc: public Player
@@ -30,12 +31,16 @@ protected:
     void score_assigner(std::list<Powerup*>& ,int&, int&, int&, int&, int&,
 			sf::Vector2f, sf::Vector2f) const;
     void score_assigner(std::list<Wooden_box*>& ,int&, int&, int&, int&, int&,
-			sf::Vector2f, sf::Vector2f) const;
+			sf::Vector2f, sf::Vector2f);
     void score_assigner(std::list<Solid_box*>& ,int&, int&, int&, int&, int&,
 			sf::Vector2f, sf::Vector2f) const;
     void score_assigner(std::list<Player*>& ,int&, int&, int&, int&, int&,
 			sf::Vector2f, sf::Vector2f);
     sf::Vector2f direction;
+
+    std::random_device rd;
+    std::mt19937 mt;
+    std::uniform_int_distribution<int> dist;
 };
 
 #endif

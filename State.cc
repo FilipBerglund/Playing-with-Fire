@@ -50,7 +50,10 @@ Game_state::Game_state():
     push_texture{},
     extra_bomb_texture{},
     bigger_blast_texture{},
-    speed_texture{}
+    speed_texture{},
+    rd{},
+    mt{rd()}
+
     
     {
         fire_texture.loadFromFile("textures/fire_texture.png");
@@ -65,6 +68,8 @@ Game_state::Game_state():
         extra_bomb_texture.loadFromFile("textures/extra_bomb_texture.png");
         speed_texture.loadFromFile("textures/speed_texture.png");
     	bigger_blast_texture.loadFromFile("textures/bigger_blast_texture.png");
+    	std::uniform_int_distribution<int> dist(0, 99);
+
     }
 
 Game_state::~Game_state()
@@ -181,27 +186,30 @@ void Game_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard,
 	    {
 	        return false;
 	    }
-	    if (rand() % 2 + 1 == 2)
+	    if (dist(rd) % 2 + 1 == 2)
 	    {
-		int rand_int = rand() % 4 + 1; 
+		int rand_int = dist(rd) % 4 + 1; 
 	        if (rand_int == 1)
 	        {
 		    powerups.push_back(new Speed(wooden_box->get_position(), speed_texture));
+		    return true;
 		}
 	        else if (rand_int == 2)
 	        {
 		    powerups.push_back(new Bigger_blast(wooden_box->get_position(), bigger_blast_texture));
+		    return true;
 		}
 	        else if (rand_int == 3)
 	        {
 		    powerups.push_back(new Extra_bomb(wooden_box->get_position(), extra_bomb_texture));
+		    return true;
 		}
 	        else  //rand_int == 4.
 	        {
 		    powerups.push_back(new Push(wooden_box->get_position(), push_texture));
+		    return true;
 		}
 	    }
-	    return true;
 	});
 
     
@@ -214,7 +222,6 @@ void Game_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard,
     if (is_round_over())
     {
         new_round();
-	end_game(current_state, end_screen);
         if (is_game_over())
         {
             end_game(current_state, end_screen);
@@ -409,7 +416,6 @@ void Game_state::new_round()
     bombs.clear();
     initialize_boxes();
     round_timer.restart();
-    //Reset player positions. 
 }
 
 sf::Texture& Game_state::get_texture(sf::Texture& t1, sf::Texture& t2, sf::Texture& t3, sf::Texture& t4, int idx) 
@@ -442,35 +448,35 @@ void Game_state::new_game(int PC, int NPC1, int NPC2, int NPC3)
     std::vector<std::vector<sf::Keyboard::Key>> buttons{player1_buttons, player2_buttons, player3_buttons, player4_buttons};
     std::vector<sf::Texture> textures{player1_texture, player2_texture, player3_texture, player4_texture};
 
-    PC = 4;
-    NPC1 = 0;
-    NPC2 = 0;
-    NPC3 = 0;
+    PC = 1;
+    NPC1 = 1;
+    NPC2 = 1;
+    NPC3 = 1;
     
     int initilized{0};                  
     for (int i{0}; i < PC; i++)
     {
 	sf::Texture& tet = get_texture(player1_texture, player2_texture, player3_texture, player4_texture, initilized);
-        players.push_back(new Pc(positions[initilized] + offset, tet, false, 1, 2, 2, 3, names[initilized],
+        players.push_back(new Pc(positions[initilized] + offset, tet, false, 3, 1, 2, 3, names[initilized],
 				 buttons[initilized][0], buttons[initilized][1], buttons[initilized][2], buttons[initilized][3], buttons[initilized][4]));
         initilized++;
     }
     for (int i{0}; i < NPC1; i++)
     {
 	sf::Texture& tet = get_texture(player1_texture, player2_texture, player3_texture, player4_texture, initilized);
-        players.push_back(new Npc(positions[initilized] + offset, tet, false, 3, 2, 2, 3, names[initilized]));
+        players.push_back(new Npc(positions[initilized] + offset, tet, false, 3, 1, 2, 3, names[initilized]));
         initilized++;
     }
     for (int i{0}; i < NPC2; i++)
     {
 	sf::Texture& tet = get_texture(player1_texture, player2_texture, player3_texture, player4_texture, initilized);
-        players.push_back(new Npc(positions[initilized] + offset, tet, false, 3, 6, 2, 6, names[initilized]));
+        players.push_back(new Npc(positions[initilized] + offset, tet, false, 3, 2, 2, 3, names[initilized]));
         initilized++;
     }
     for (int i{0}; i < NPC3; i++)
     {
 	sf::Texture& tet = get_texture(player1_texture, player2_texture, player3_texture, player4_texture, initilized);
-        players.push_back(new Npc(positions[initilized] + offset, tet, false, 3, 2, 2, 6, names[initilized]));
+        players.push_back(new Npc(positions[initilized] + offset, tet, false, 3, 2, 2, 3, names[initilized]));
         initilized++;
     }
     
@@ -540,6 +546,8 @@ bool Game_state::is_round_over() const
 
     int alive_players_count = std::count_if(players.begin(), players.end(),
             [] (Player* p) {return !p->is_dead();});
+    std::cout << "alive:" << alive_players_count << std::endl;
+    std::cout << "total:" << players.size() << std::endl;
 
     //This works even if only one player is playing the game. In english,
     //if someone is dead and no more than one player is alive return true.
@@ -552,7 +560,7 @@ bool Game_state::is_round_over() const
 
 bool Game_state::is_game_over() const
 {
-    return is_round_over() && current_round > 2;
+    return current_round > 2;
 }
 
 bool Game_state::is_time_up() const
@@ -641,14 +649,6 @@ void Menu_state::draw(sf::RenderWindow& window)
  *
 */
 
-struct PlayerComparator
-{
-	// Compare 2 Player objects using points
-  bool operator ()(Player* & player1, Player* & player2)
-	{
-	  return player1->get_score() < player2->get_score();
-	}
-};
 
 
 End_screen::~End_screen()

@@ -42,7 +42,9 @@ public:
     virtual void apply_on_hit_effect(Game_object*) {};
     void undo_last_move()
     {
-        sprite.setPosition(old_position);
+        int roundedx = (((int)get_position().x + 25) / 50 ) * 50;
+        int roundedy = (((int)get_position().y + 25) / 50 ) * 50;
+        sprite.setPosition(roundedx, roundedy);
     }
 
     sf::Rect<float> hitbox() const

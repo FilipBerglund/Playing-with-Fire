@@ -9,6 +9,7 @@
 #include "Fire.h"
 
 #include "Menu_button.h"
+#include <random>
 
 #include <string>
 #include <list>
@@ -62,6 +63,11 @@ private:
     bool is_playing;
 
     sf::Texture& get_texture(sf::Texture&,sf::Texture&,sf::Texture&,sf::Texture&,int);
+
+    std::random_device rd;
+    std::mt19937 mt;
+    std::uniform_int_distribution<int> dist;
+
 
     std::list<Player*> players;
     std::list<Player*> alive_players;
