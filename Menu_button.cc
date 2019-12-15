@@ -55,77 +55,72 @@ void Start_button::new_sprite(sf::Texture& s)
   sprite.setTexture(s);
 }
 
+/*
+ * Int_button
+ *
+ */
 
-Int_button::Int_button(sf::Vector2f pos, sf::Texture s0, sf::Texture s1,
-		        sf::Texture s2,   sf::Texture s3, sf::Texture s4,
-		        sf::Texture sbg )
-  : sprite0{s0}, sprite1{s1}, sprite2{s2}, sprite3{s3},
-    sprite4{s4}, sprite_background{sbg} , value{0}
+Int_button::Int_button(sf::Vector2f pos, sf::Texture& bar)
+  :menu_bar{bar}, value{0}
  {
-  float corrdx{};
-  float corrdy{};
-  corrdx = pos.x;
-  corrdy = pos.y;
-  
-  //back grunds lådan
-  sprite_background.setPosition(pos);
-  //sprite0 lådan
-  sprite0.setPosition(sf::Vector2f(corrdx+50, corrdy+100));
-  //sprite1  lådan
-  sprite1.setPosition(sf::Vector2f(corrdx+100, corrdy+100));
-  //sprite2  lådan
-  sprite2.setPosition(sf::Vector2f(corrdx+150, corrdy+100));
-  //sprite3  lådan
-   sprite3.setPosition(sf::Vector2f(corrdx+200, corrdy+100));
-  //sprite4  lådan 
-  sprite4.setPosition(sf::Vector2f(corrdx+250, corrdy+100));
- }
+  //menu's position
+   menu_bar.setPosition(pos);
 
-// KOllar vilken låda musen är över och anger rätt value				     
+  //buttons' positions
+   //float pc_selection = pos.y + 14;
+   //float npc_selection = pos.y + 88;
+
+   button_0.setSize(sf::Vector2f(50,50));
+   button_0.setPosition(pos.x + 65, pos.y + 14);
+
+   button_1.setSize(sf::Vector2f(50,50));
+   button_1.setPosition(pos.x + 122, pos.y + 14);
+
+   button_2.setSize(sf::Vector2f(50,50));
+   button_2.setPosition(pos.x + 178, pos.y + 14);
+
+   button_3.setSize(sf::Vector2f(50,50));
+   button_3.setPosition(pos.x + 234, pos.y + 14);
+
+   button_4.setSize(sf::Vector2f(50,50));
+   button_4.setPosition(pos.x + 290, pos.y + 14);
+ }
+// Kollar vilken låda musen är över och anger rätt value
+
 bool Int_button::click(sf::Mouse& mouse, sf::RenderWindow& window)
 {
-  if (sprite0.getGlobalBounds().contains(mouse.getPosition().x, mouse.getPosition().y))
+  if (button_0.getGlobalBounds().contains(mouse.getPosition(window).x, mouse.getPosition(window).y))
     {
       value = 0;
       return true;
     }
-  else if(sprite1.getGlobalBounds().contains(mouse.getPosition().x, mouse.getPosition().y))
+  else if(button_1.getGlobalBounds().contains(mouse.getPosition(window).x, mouse.getPosition(window).y))
     {
       value = 1;
       return true;
     }
-  else if(sprite2.getGlobalBounds().contains(mouse.getPosition().x, mouse.getPosition().y))
-      {
-	value = 2;
-	return true;
+  else if(button_2.getGlobalBounds().contains(mouse.getPosition(window).x, mouse.getPosition(window).y))
+    {
+      value = 2;
+      return true;
+    }
+  else if(button_3.getGlobalBounds().contains(mouse.getPosition(window).x, mouse.getPosition(window).y))
+    {
+      value = 3;
+      return true;
+    }
+  else if(button_4.getGlobalBounds().contains(mouse.getPosition(window).x, mouse.getPosition(window).y))
+    {
+      value = 4;
+      return true;
       }
-  else if(sprite3.getGlobalBounds().contains(mouse.getPosition().x, mouse.getPosition().y))
-	{
-	  value = 3;
-	  return true;
-	}
-  else if(sprite4.getGlobalBounds().contains(mouse.getPosition().x, mouse.getPosition().y))
-	  {
-	    value = 4;
-	    return true;
-	  }
-	  else
-	    {
-	      return false;
-	    }
+  else
+    {
+      return false;
+    }
 }
 
-//Ritar Int_button
 void Int_button::draw(sf::RenderWindow& window)
 {
-  window.draw(sprite_background);
-  window.draw(sprite0);
-  window.draw(sprite1);
-  window.draw(sprite2);
-  window.draw(sprite3);
-  window.draw(sprite4);
+  window.draw(menu_bar);
 }
-
-	
-
-

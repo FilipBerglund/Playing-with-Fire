@@ -39,26 +39,22 @@ class Int_button: public Menu_button
 {
  public:
   //Int_button();
-  Int_button(sf::Vector2f pos, sf::Texture s0, sf::Texture s1,
-	     sf::Texture   s2, sf::Texture s3, sf::Texture s4,
-	     sf::Texture  sbg);
+  Int_button(sf::Vector2f, sf::Texture&);
   
   //bool contains(sf::Mouse&);
   bool click(sf::Mouse&, sf::RenderWindow&) override;
-   int get_value(){return value;}
+   int get_value() {return value;}
    void draw(sf::RenderWindow&) override;
    
  private:
  
-  int value{};
-  sf::Sprite sprite_background;
-  sf::Sprite sprite0;
-  sf::Sprite sprite1;
-  sf::Sprite sprite2;
-  sf::Sprite sprite3;
-  sf::Sprite sprite4; 
+  int value;
+  sf::Sprite menu_bar;
+  sf::RectangleShape button_0;
+  sf::RectangleShape button_1;
+  sf::RectangleShape button_2;
+  sf::RectangleShape button_3;
+  sf::RectangleShape button_4;
 };
-
-
 
 #endif
