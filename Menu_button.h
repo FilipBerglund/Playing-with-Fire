@@ -39,7 +39,7 @@ class Int_button: public Menu_button
 {
  public:
   //Int_button();
-  Int_button(sf::Vector2f, sf::Texture&, sf::Texture&);
+  Int_button(sf::Vector2f, sf::Texture&);
   
   //bool contains(sf::Mouse&);
   bool click(sf::Mouse&, sf::RenderWindow&) override;

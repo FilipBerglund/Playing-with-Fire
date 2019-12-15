@@ -120,7 +120,6 @@ private:
     sf::Texture npc1_menu;
     sf::Texture npc2_menu;
     sf::Texture npc3_menu;
-    sf::Texture selected;
     Int_button* PC_button;
     Int_button* NPC1_button;
     Int_button* NPC2_button;
