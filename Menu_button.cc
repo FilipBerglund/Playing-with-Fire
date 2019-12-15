@@ -89,11 +89,9 @@ Int_button::Int_button(sf::Vector2f pos, sf::Texture& bar)
 
 bool Int_button::click(sf::Mouse& mouse, sf::RenderWindow& window)
 {
-  std::cout<<value<<std::endl;
   if (button_0.getGlobalBounds().contains(mouse.getPosition(window).x, mouse.getPosition(window).y))
     {
       value = 0;
-      std::cout << value << std::endl;
       return true;
     }
   else if(button_1.getGlobalBounds().contains(mouse.getPosition(window).x, mouse.getPosition(window).y))

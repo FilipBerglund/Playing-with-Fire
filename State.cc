@@ -332,10 +332,10 @@ bool Game_state::is_time_up()
 
 
 Menu_state::Menu_state()
-  : State("Menu_state"), pos_start{500,200}, start_texture{}, start_button{},
+  : State("Menu_state"), pos_start{610,605}, start_texture{}, start_button{},
     PC_button{}, NPC1_button{}, NPC2_button{}, NPC3_button{}
 {
-  start_texture.loadFromFile("textures/player1_texture.png");
+  start_texture.loadFromFile("textures/start.png");
   start_button = new Start_button(pos_start, start_texture);
   
   //menu bar
@@ -437,7 +437,7 @@ struct PlayerComparator
 End_screen::End_screen()
   :State("end_screen"), list_of_Player{}, pos{500,500}, button_texture{}, end_button{}
 { 
-  button_texture.loadFromFile("textures/player1_texture.png");
+  button_texture.loadFromFile("textures/okay.png");
   end_button = new Start_button(pos, button_texture);
   //end_button->new_sprite(button_texture);
   //end_button->new_pos(sf::Vector2f(50,50));
