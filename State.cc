@@ -28,8 +28,30 @@
 
 
 //TODO: is_playing should be initialised as false when state_handler is implemented fully.
-Game_state::Game_state(): State("Game_state"),
-			  current_round{0}, players{}, alive_players{}, bombs{}, fires{}, wooden_boxes{}, solid_boxes{}, is_playing{true}
+Game_state::Game_state():
+    State("Game_state"),
+    current_round{0},
+    players{},
+    alive_players{},
+    bombs{},
+    fires{},
+    powerups{},
+    wooden_boxes{},
+    solid_boxes{},
+    is_playing{true},
+    player1_texture{},
+    player2_texture{},
+    player3_texture{},
+    player4_texture{},
+    fire_texture{},
+    solid_box_texture{},
+    wooden_box_texture{},
+    bomb_texture{},
+    push_texture{},
+    extra_bomb_texture{},
+    bigger_blast_texture{},
+    speed_texture{}
+    
     {
         fire_texture.loadFromFile("textures/fire_texture.png");
         player1_texture.loadFromFile("textures/Player1_left.png");
@@ -45,15 +67,60 @@ Game_state::Game_state(): State("Game_state"),
     	bigger_blast_texture.loadFromFile("textures/bigger_blast_texture.png");
     }
 
+Game_state::~Game_state()
+{
+    players.remove_if([this](Player* player)
+        {
+	    delete player;
+            return true;
+        });
+
+    alive_players.remove_if([this](Player* player)
+        {
+	    delete player;
+            return true;
+        });
+
+    bombs.remove_if([this](Bomb* bomb)
+        {
+	    delete bomb;
+            return true;
+        }); 
+    
+    fires.remove_if([this](Fire* fire)
+        {
+	    delete fire;
+            return true;
+        });
+
+    powerups.remove_if([this](Powerup* powerup)
+        {
+	    delete powerup;
+            return true;
+        });
+
+    solid_boxes.remove_if([this](Solid_box* solid_box)
+        {
+	    delete solid_box;
+            return true;
+        });
+
+    wooden_boxes.remove_if([this](Wooden_box* wooden_box)
+        {
+	    delete wooden_box;
+            return true;
+        }); 
+}
+
 void Game_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard)
 {
     user_input_handler(mouse, keyboard);
 
-    fires.remove_if([](Fire* fire)
+    fires.remove_if([this](Fire* fire)
         {
             if (fire->is_extinguished())
             {
-         //       delete fire;
+                delete fire;
                 return true;
             }
             return false;
@@ -64,7 +131,7 @@ void Game_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard)
             if (bomb->is_blasted())
             {
                 bomb->spawn_fire(wooden_boxes, solid_boxes, fires, fire_texture);
-                //delete bomb;
+                delete bomb;
                 return true;
             }
             return false;
@@ -226,13 +293,24 @@ void Game_state::check_collisions()
     {
         for (Wooden_box* wooden_box : wooden_boxes)
         {
-            if (fire->hitbox().intersects(wooden_box->hitbox()))
+            if (fire->hitbox().intersects(wooden_box->hitbox()))      
             {
                 fire->apply_on_hit_effect(wooden_box);
                 wooden_box->apply_on_hit_effect(fire);
-		//Should fire detonate other bombs?
             }
         }
+	/* Funkar ej. fire ska detonera bomber. 
+        bombs.remove_if([fire](Bomb* bomb)
+        {
+            if (bomb->hitbox().intersects(fire->hitbox()))
+            {
+                bomb->spawn_fire(wooden_boxes, solid_boxes, fires, fire_texture);
+                delete bomb;
+                return true;
+            }
+            return false;
+        });
+	*/
     }   
 }
 
@@ -291,16 +369,42 @@ void Game_state::new_round()
         player->new_round();
     }
     current_round += 1;
+
+    bombs.remove_if([this](Bomb* bomb)
+        {
+	    delete bomb;
+            return true;
+        }); 
     
-    wooden_boxes.clear(); //This prolly causes memory leaks...
-    powerups.clear();
+    fires.remove_if([this](Fire* fire)
+        {
+	    delete fire;
+            return true;
+        });
+
+    powerups.remove_if([this](Powerup* powerup)
+        {
+	    delete powerup;
+            return true;
+        });
+
+    solid_boxes.remove_if([this](Solid_box* solid_box)
+        {
+	    delete solid_box;
+            return true;
+        });
+
+    wooden_boxes.remove_if([this](Wooden_box* wooden_box)
+        {
+	    delete wooden_box;
+            return true;
+        }); 
+    
     alive_players = players;
     bombs.clear();
-    fires.clear();
     initialize_boxes();
-
     round_timer.restart();
-
+    //Reset player positions. 
 }
 
 sf::Texture& Game_state::get_texture(sf::Texture& t1, sf::Texture& t2, sf::Texture& t3, sf::Texture& t4, int idx) 
@@ -326,7 +430,7 @@ void Game_state::new_game(int PC, int NPC1, int NPC2, int NPC3)
     std::vector<sf::Keyboard::Key> player4_buttons{sf::Keyboard::Num5, sf::Keyboard::Num6, sf::Keyboard::Num7, sf::Keyboard::Num8, sf::Keyboard::Num9};
     std::vector<std::vector<sf::Keyboard::Key>> buttons{player1_buttons, player2_buttons, player3_buttons, player4_buttons};
     std::vector<sf::Texture> textures{player1_texture, player2_texture, player3_texture, player4_texture};
-    
+
     PC = 4;
     NPC1 = 0;
     NPC2 = 0;
@@ -414,7 +518,7 @@ void Game_state::end_game()
     */
 }
 
-bool Game_state::is_round_over()
+bool Game_state::is_round_over() const
 {
     if (is_time_up())
     {
@@ -433,12 +537,12 @@ bool Game_state::is_round_over()
     return false;
 }
 
-bool Game_state::is_game_over()
+bool Game_state::is_game_over() const
 {
     return is_round_over() && current_round > 2;
 }
 
-bool Game_state::is_time_up()
+bool Game_state::is_time_up() const
 {
     return round_timer.getElapsedTime().asSeconds() > 180;
 }
@@ -513,6 +617,15 @@ struct PlayerComparator
 	}
 };
 
+
+End_screen::~End_screen()
+{
+    list_of_Player.remove_if([this](Player* player)
+        {
+	    delete player;
+            return true;
+        });    
+}
 
 End_screen::End_screen(sf::Texture s, std::list<Player*> list)
   :State("end_screen"), sprite{s}, list_of_Player{list},

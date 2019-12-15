@@ -18,6 +18,7 @@ class State
 public:
     State(std::string n): name{n}
     {}
+    virtual ~State() = default;
 
     virtual void update(sf::Mouse&, sf::Keyboard&) = 0;
     virtual void draw(sf::RenderWindow&) = 0;
@@ -31,6 +32,7 @@ class Game_state: public State
 {
 public:
     Game_state();
+    ~Game_state();
 
     void update(sf::Mouse&, sf::Keyboard&) override;
     void draw(sf::RenderWindow&) override;
@@ -43,9 +45,9 @@ private:
     void new_round();
     void initialize_boxes();
     void end_game();
-    bool is_game_over();
-    bool is_round_over();
-    bool is_time_up();
+    bool is_game_over() const; 
+    bool is_round_over() const; 
+    bool is_time_up() const;
     bool is_playing;
 
     sf::Texture& get_texture(sf::Texture&,sf::Texture&,sf::Texture&,sf::Texture&,int);
@@ -82,6 +84,7 @@ class Menu_state: public State
 public:
     Menu_state(): State("Menu_state")
     {}
+    ~Menu_state() = default; 
 
     void update(sf::Mouse&, sf::Keyboard&) override;
     void draw(sf::RenderWindow&) override;
@@ -93,9 +96,9 @@ private:
 
 class End_screen: public State
 {
- public:
-  
+ public: 
   End_screen(sf::Texture sprite, std::list<Player*> list_of_Player);
+  ~End_screen();
 
   void Draw(sf::RenderWindow&);
  

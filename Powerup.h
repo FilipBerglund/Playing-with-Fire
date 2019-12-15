@@ -12,6 +12,7 @@ public:
     Powerup(sf::Vector2f pos, sf::Texture& texture):
     Game_object(pos, texture)
     {}
+    ~Powerup() = default;
 };
 
 class Speed: public Powerup
@@ -20,6 +21,7 @@ public:
     Speed(sf::Vector2f pos, sf::Texture& texture):
     Powerup(pos, texture)
     {}
+    ~Speed() = default;
 
     void apply_on_hit_effect(Game_object*) override;
 };
@@ -30,6 +32,7 @@ public:
     Bigger_blast(sf::Vector2f pos, sf::Texture& texture):
     Powerup(pos, texture)
     {}
+    ~Bigger_blast() = default;
 
     void apply_on_hit_effect(Game_object*) override;
 };
@@ -40,6 +43,7 @@ public:
     Extra_bomb(sf::Vector2f pos, sf::Texture& texture):
     Powerup(pos, texture)
     {}
+    ~Extra_bomb() = default;
 
     void apply_on_hit_effect(Game_object*) override;
 };
@@ -50,6 +54,7 @@ public:
     Push(sf::Vector2f pos, sf::Texture& texture):
     Powerup(pos, texture)
     {}
+    ~Push() = default;
 
     void apply_on_hit_effect(Game_object*) override;
 };
