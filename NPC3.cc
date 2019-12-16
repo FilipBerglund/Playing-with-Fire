@@ -9,7 +9,7 @@
 #include <stdlib.h> 
 
 Npc3::Npc3(sf::Vector2f pos, sf::Texture& texture, std::string in_name):
-    Npc(pos, texture, true, 10, 2, 2, 2, in_name)
+    Npc(pos, texture, true, 3, 2, 2, 2, in_name)
 {}
 
 
@@ -158,22 +158,22 @@ void Npc3::score_assigner(std::list<Powerup*>& objects, int& up_score, int& down
 
 //Help function that goes through a list of players.
 void Npc3::score_assigner(std::list<Player*>& players, int& up_score, int& down_score, int& right_score,
-			 int& left_score, int& pos_score, sf::Vector2f up, sf::Vector2f right) 
+    int& left_score, int& pos_score, sf::Vector2f up, sf::Vector2f right) 
 {
     sf::Vector2f min_dir{1000,1000};
     int scale{1};
     Player* ptr{nullptr};
     for (Player * player : players)
-    {	
-	if (player != this)
-	{
-	    if (abs(min_dir.x) + abs(min_dir.y) > abs(get_position().x - player->get_position().x) + abs(get_position().y - player->get_position().y))
-	    {
-	        min_dir.x = get_position().x - player->get_position().x;
-	        min_dir.y = get_position().y - player->get_position().y;
-		ptr = player;
-	    }
-	}
+    {
+        if (player != this)
+        {
+            if (abs(min_dir.x) + abs(min_dir.y) > abs(get_position().x - player->get_position().x) + abs(get_position().y - player->get_position().y))
+            {
+                min_dir.x = player->get_position().x - get_position().x;
+                min_dir.y = player->get_position().y - get_position().y;
+                ptr = player;
+            }
+        }
     }
     if (ptr->hitbox().contains(sprite.getPosition() + up) ||
         ptr->hitbox().contains(sprite.getPosition() + up + up) ||
@@ -185,10 +185,10 @@ void Npc3::score_assigner(std::list<Player*>& players, int& up_score, int& down_
         ptr->hitbox().contains(sprite.getPosition() - up - right) ||
         ptr->hitbox().contains(sprite.getPosition() + right) ||
         ptr->hitbox().contains(sprite.getPosition() - right) ||
-	ptr->hitbox().contains(sprite.getPosition()))
+        ptr->hitbox().contains(sprite.getPosition()))
    {
-        scale = 5;
-	want_to_drop_bomb = true;
+        scale = 3;
+        want_to_drop_bomb = true;
    }
    if (min_dir.x < 0)
    {

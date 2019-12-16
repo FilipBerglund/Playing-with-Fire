@@ -468,8 +468,8 @@ void Game_state::new_game(int PC, int NPC1, int NPC2, int NPC3)
                 player3_texture,
                 player4_texture,
                 initilized);
-        players.push_back(new Npc(player_positions[initilized], tet, false,
-                    3, 1, 2, 3, player_names[initilized]));
+        players.push_back(new Npc1(player_positions[initilized], tet,
+                   player_names[initilized]));
         initilized++;
     }
     for (int i{0}; i < NPC2; i++)
@@ -480,8 +480,8 @@ void Game_state::new_game(int PC, int NPC1, int NPC2, int NPC3)
                 player3_texture,
                 player4_texture,
                 initilized);
-        players.push_back(new Npc(player_positions[initilized], tet, false,
-                    3, 2, 2, 3, player_names[initilized]));
+        players.push_back(new Npc2(player_positions[initilized], tet,
+                   player_names[initilized]));
         initilized++;
     }
     for (int i{0}; i < NPC3; i++)
@@ -492,8 +492,8 @@ void Game_state::new_game(int PC, int NPC1, int NPC2, int NPC3)
                 player3_texture,
                 player4_texture,
                 initilized);
-        players.push_back(new Npc(player_positions[initilized], tet, false,
-                    3, 2, 2, 3, player_names[initilized]));
+        players.push_back(new Npc3(player_positions[initilized], tet,
+                   player_names[initilized]));
         initilized++;
     }
 
