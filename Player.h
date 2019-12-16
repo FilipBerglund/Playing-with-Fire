@@ -7,7 +7,7 @@
 #include <string>
 #include <utility>
 
-class Bomb;
+class Bomb;  //Bomb depends on Player and vice versa, this line solves the problem.
 class Player: public Game_object
 {
 public:
@@ -16,7 +16,7 @@ public:
 
     ~Player() = default;
 
-    void new_round();
+    void new_round(); 
     void apply_on_hit_effect(Game_object* object) override;
 
     void set_push_powerup(bool var);
@@ -58,8 +58,6 @@ protected:
     int score;
     int cd;
     bool want_to_drop_bomb;
-
-    // bool first_bomb{true};
 
     std::string name;
 

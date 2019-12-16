@@ -63,10 +63,10 @@ private:
     bool is_playing;
 
     sf::Texture& get_texture(sf::Texture&,sf::Texture&,sf::Texture&,sf::Texture&,int);
-
-    std::random_device rd;
-    std::mt19937 mt;
-    std::uniform_int_distribution<int> dist;
+    
+    std::random_device rd{};
+    std::mt19937 mt{rd()};
+    std::uniform_int_distribution<int> dist{0,99};
 
 
     std::list<Player*> players;

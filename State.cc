@@ -7,13 +7,11 @@
 #include "Box.h"
 #include "Bomb.h"
 #include "Fire.h"
-#include "Player.h"
 #include "PC.h"
 #include "Menu_button.h"
-#include "NPC.h"
-#include <stdlib.h>     
-#include <time.h>       
-
+#include "NPC1.h"
+#include "NPC2.h"
+#include "NPC3.h"   
 #include <iostream>
 #include <sstream>
 #include <string>
@@ -50,11 +48,7 @@ Game_state::Game_state():
     push_texture{},
     extra_bomb_texture{},
     bigger_blast_texture{},
-    speed_texture{},
-    rd{},
-    mt{rd()}
-
-    
+    speed_texture{}
     {
         fire_texture.loadFromFile("textures/fire_texture.png");
         player1_texture.loadFromFile("textures/player1_texture.png");
@@ -68,8 +62,6 @@ Game_state::Game_state():
         extra_bomb_texture.loadFromFile("textures/extra_bomb_texture.png");
         speed_texture.loadFromFile("textures/speed_texture.png");
     	bigger_blast_texture.loadFromFile("textures/bigger_blast_texture.png");
-    	std::uniform_int_distribution<int> dist(0, 99);
-
     }
 
 Game_state::~Game_state()
@@ -186,29 +178,28 @@ void Game_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard,
 	    {
 	        return false;
 	    }
-	    if (dist(rd) % 2 + 1 == 2)
+	    int rand_int2 = dist(rd) % 2 + 1;
+	    if (rand_int2 == 2)
 	    {
 		int rand_int = dist(rd) % 4 + 1; 
 	        if (rand_int == 1)
 	        {
 		    powerups.push_back(new Speed(wooden_box->get_position(), speed_texture));
-		    return true;
 		}
 	        else if (rand_int == 2)
 	        {
 		    powerups.push_back(new Bigger_blast(wooden_box->get_position(), bigger_blast_texture));
-		    return true;
 		}
 	        else if (rand_int == 3)
 	        {
 		    powerups.push_back(new Extra_bomb(wooden_box->get_position(), extra_bomb_texture));
-		    return true;
 		}
 	        else  //rand_int == 4.
 	        {
 		    powerups.push_back(new Push(wooden_box->get_position(), push_texture));
-		    return true;
 		}
+		delete wooden_box;
+	        return true;
 	    }
 	});
 
@@ -475,21 +466,22 @@ void Game_state::new_game(int PC, int NPC1, int NPC2, int NPC3)
     for (int i{0}; i < NPC1; i++)
     {
 	sf::Texture& tet = get_texture(player1_texture, player2_texture, player3_texture, player4_texture, initilized);
-        players.push_back(new Npc(positions[initilized] + offset, tet, false, 3, 1, 2, 3, names[initilized]));
+        players.push_back(new Npc1(positions[initilized] + offset, tet, names[initilized]));
         initilized++;
     }
     for (int i{0}; i < NPC2; i++)
     {
 	sf::Texture& tet = get_texture(player1_texture, player2_texture, player3_texture, player4_texture, initilized);
-        players.push_back(new Npc(positions[initilized] + offset, tet, false, 3, 2, 2, 3, names[initilized]));
+        players.push_back(new Npc2(positions[initilized] + offset, tet, names[initilized]));
         initilized++;
     }
     for (int i{0}; i < NPC3; i++)
     {
 	sf::Texture& tet = get_texture(player1_texture, player2_texture, player3_texture, player4_texture, initilized);
-        players.push_back(new Npc(positions[initilized] + offset, tet, false, 3, 2, 2, 3, names[initilized]));
+        players.push_back(new Npc3(positions[initilized] + offset, tet, names[initilized]));
         initilized++;
     }
+ 
     
     alive_players = players;
     is_playing = true;
