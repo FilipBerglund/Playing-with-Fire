@@ -52,9 +52,11 @@ Game_state::Game_state():
     bigger_blast_texture{},
     speed_texture{},
     rd{},
-    mt{rd()}
+    mt{rd()},
 
-    
+    player_positions{},
+    player_names{},
+    player_buttons{}
     {
         fire_texture.loadFromFile("textures/fire_texture.png");
         player1_texture.loadFromFile("textures/player1_texture.png");
@@ -67,9 +69,9 @@ Game_state::Game_state():
         push_texture.loadFromFile("textures/push_texture.png");
         extra_bomb_texture.loadFromFile("textures/extra_bomb_texture.png");
         speed_texture.loadFromFile("textures/speed_texture.png");
-    	bigger_blast_texture.loadFromFile("textures/bigger_blast_texture.png");
-    	std::uniform_int_distribution<int> dist(0, 99);
-
+        bigger_blast_texture.loadFromFile("textures/bigger_blast_texture.png");
+        std::uniform_int_distribution<int> dist(0, 99);
+        load_player_data();
     }
 
 Game_state::~Game_state()
@@ -454,43 +456,61 @@ void Game_state::new_game(int PC, int NPC1, int NPC2, int NPC3)
 
     sf::Vector2f offset{250,50};
 
-    std::vector<sf::Vector2f> positions{sf::Vector2f(50,50), sf::Vector2f(650,50), sf::Vector2f(650,550), sf::Vector2f(50,550)}; //Start_pos.
-    std::vector<std::string> names{"Red player", "Green player", "Blue player", "Yellow player"};
-    std::vector<sf::Keyboard::Key> player1_buttons{sf::Keyboard::A, sf::Keyboard::D,
-        sf::Keyboard::S, sf::Keyboard::W, sf::Keyboard::Q};
-    std::vector<sf::Keyboard::Key> player2_buttons{sf::Keyboard::Numpad1, sf::Keyboard::Numpad3, sf::Keyboard::Numpad2, sf::Keyboard::Numpad5, sf::Keyboard::Numpad4};
-    std::vector<sf::Keyboard::Key> player3_buttons{sf::Keyboard::Left, sf::Keyboard::Right, sf::Keyboard::Down, sf::Keyboard::Up, sf::Keyboard::RControl};
-    std::vector<sf::Keyboard::Key> player4_buttons{sf::Keyboard::J, sf::Keyboard::L, sf::Keyboard::K, sf::Keyboard::I, sf::Keyboard::U};
-    std::vector<std::vector<sf::Keyboard::Key>> buttons{player1_buttons, player2_buttons, player3_buttons, player4_buttons};
-    std::vector<sf::Texture> textures{player1_texture, player2_texture, player3_texture, player4_texture};
-
     int initilized{0};
     for (int i{0}; i < PC; i++)
     {
-	sf::Texture& tet = get_texture(player1_texture, player2_texture, player3_texture, player4_texture, initilized);
-        players.push_back(new Pc(positions[initilized] + offset, tet, false, 3, 1, 2, 3, names[initilized],
-				 buttons[initilized][0], buttons[initilized][1], buttons[initilized][2], buttons[initilized][3], buttons[initilized][4]));
+        sf::Texture& tet = get_texture(
+                player1_texture,
+                player2_texture,
+                player3_texture,
+                player4_texture,
+                initilized);
+        players.push_back(new Pc(player_positions[initilized] + offset, tet, false,
+            3, 1, 2, 3, player_names[initilized],
+            player_buttons[initilized][0],
+            player_buttons[initilized][1],
+            player_buttons[initilized][2],
+            player_buttons[initilized][3],
+            player_buttons[initilized][4]));
         initilized++;
     }
     for (int i{0}; i < NPC1; i++)
     {
-	sf::Texture& tet = get_texture(player1_texture, player2_texture, player3_texture, player4_texture, initilized);
-        players.push_back(new Npc(positions[initilized] + offset, tet, false, 3, 1, 2, 3, names[initilized]));
+        sf::Texture& tet = get_texture(
+                player1_texture,
+                player2_texture,
+                player3_texture,
+                player4_texture,
+                initilized);
+        players.push_back(new Npc(player_positions[initilized] + offset, tet, false,
+                    3, 1, 2, 3, player_names[initilized]));
         initilized++;
     }
     for (int i{0}; i < NPC2; i++)
     {
-	sf::Texture& tet = get_texture(player1_texture, player2_texture, player3_texture, player4_texture, initilized);
-        players.push_back(new Npc(positions[initilized] + offset, tet, false, 3, 2, 2, 3, names[initilized]));
+        sf::Texture& tet = get_texture(
+                player1_texture,
+                player2_texture,
+                player3_texture,
+                player4_texture,
+                initilized);
+        players.push_back(new Npc(player_positions[initilized] + offset, tet, false,
+                    3, 2, 2, 3, player_names[initilized]));
         initilized++;
     }
     for (int i{0}; i < NPC3; i++)
     {
-	sf::Texture& tet = get_texture(player1_texture, player2_texture, player3_texture, player4_texture, initilized);
-        players.push_back(new Npc(positions[initilized] + offset, tet, false, 3, 2, 2, 3, names[initilized]));
+        sf::Texture& tet = get_texture(
+                player1_texture,
+                player2_texture,
+                player3_texture,
+                player4_texture,
+                initilized);
+        players.push_back(new Npc(player_positions[initilized] + offset, tet, false,
+                    3, 2, 2, 3, player_names[initilized]));
         initilized++;
     }
-    
+
     alive_players = players;
     is_playing = true;
     initialize_boxes();
@@ -578,6 +598,51 @@ bool Game_state::is_time_up() const
 }
 
 
+void Game_state::load_player_data()
+{
+
+    player_positions = std::vector<sf::Vector2f> {
+        sf::Vector2f(50,50),
+        sf::Vector2f(650,50),
+        sf::Vector2f(650,550),
+        sf::Vector2f(50,550)}; //Start_positions.
+    player_names = std::vector<std::string>{
+        "Red player",
+        "Green player",
+        "Blue player",
+        "Yellow player"};
+    std::vector<sf::Keyboard::Key> player1_buttons{
+        sf::Keyboard::A,
+        sf::Keyboard::D,
+        sf::Keyboard::S,
+        sf::Keyboard::W,
+        sf::Keyboard::Q};
+    std::vector<sf::Keyboard::Key> player2_buttons{
+        sf::Keyboard::Numpad1,
+        sf::Keyboard::Numpad3,
+        sf::Keyboard::Numpad2,
+        sf::Keyboard::Numpad5,
+        sf::Keyboard::Numpad4};
+    std::vector<sf::Keyboard::Key> player3_buttons{
+        sf::Keyboard::Left,
+        sf::Keyboard::Right,
+        sf::Keyboard::Down,
+        sf::Keyboard::Up,
+        sf::Keyboard::RControl};
+    std::vector<sf::Keyboard::Key> player4_buttons{
+        sf::Keyboard::J,
+        sf::Keyboard::L,
+        sf::Keyboard::K,
+        sf::Keyboard::I,
+        sf::Keyboard::U};
+    player_buttons = std::vector<std::vector<sf::Keyboard::Key>> {
+        player1_buttons,
+        player2_buttons,
+        player3_buttons,
+        player4_buttons};
+
+}
+
 /*
  * MENU_STATE
  *
@@ -593,11 +658,11 @@ Menu_state::Menu_state()
   background.setTexture(bg_texture);
   background.setPosition(sf::Vector2f(0,0));
 
-  
+
   //start button
   start_texture.loadFromFile("textures/start.png");
   start_button = new Start_button(pos_start, start_texture);
-  
+
   //menu bar
   pc_menu.loadFromFile("textures/Menu.png",sf::IntRect(0,0,350,73));
   npc1_menu.loadFromFile("textures/Menu.png",sf::IntRect(0,74,350,75));
@@ -610,8 +675,8 @@ Menu_state::Menu_state()
 }
 
 void Menu_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard,
-			Game_state* game_state, Menu_state* menu_state,
-			End_screen* end_screen, State** current_state ,sf::RenderWindow& window)
+Game_state* game_state, Menu_state* menu_state,
+End_screen* end_screen, State** current_state ,sf::RenderWindow& window)
 {
   user_input_handler(mouse, keyboard, game_state, menu_state, end_screen, current_state, window);
 }

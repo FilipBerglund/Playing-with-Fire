@@ -93,14 +93,27 @@ private:
     sf::Texture push_texture;
     sf::Texture extra_bomb_texture;
     sf::Texture bigger_blast_texture;
-    sf::Texture speed_texture;   
+    sf::Texture speed_texture;
+
+    //Player data.
+    void load_player_data();
+    std::vector<sf::Vector2f> player_positions;
+    std::vector<std::string> player_names;
+    /*
+    std::vector<sf::Keyboard::Key> player1_buttons;
+    std::vector<sf::Keyboard::Key> player2_buttons;
+    std::vector<sf::Keyboard::Key> player3_buttons;
+    std::vector<sf::Keyboard::Key> player4_buttons;
+    */
+    std::vector<std::vector<sf::Keyboard::Key>> player_buttons;
+    std::vector<sf::Texture> player_textures;
 };
 
 class Menu_state: public State
 {
 public:
     Menu_state();
-    ~Menu_state() = default; 
+    ~Menu_state() = default;
 
   void update(sf::Mouse&, sf::Keyboard&,
 	      Game_state*, Menu_state*,
