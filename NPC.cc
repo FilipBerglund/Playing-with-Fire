@@ -21,10 +21,11 @@ Npc::Npc(sf::Vector2f pos, sf::Texture & texture, bool in_push,
 	rd{},
 	mt{rd()}
 {
-    direction = sf::Vector2f(0,0);
+    direction = sf::Vector2f(0,0);  //Initially the player is not moving.
     std::uniform_int_distribution<int> dist(0, 99);
 }
 
+//Assigns points to a position depending on what object occupies it.
 int Npc::local_score(std::string object) const
 {
     if (object == "box")
@@ -50,6 +51,7 @@ int Npc::local_score(std::string object) const
     return 0;
 }
 
+//Help function that goes through a list of bombs.
 void Npc::score_assigner(std::list<Bomb*>& objects, int& up_score, int& down_score, int& right_score,
 			 int& left_score, int& pos_score, sf::Vector2f up, sf::Vector2f right) const
 {
@@ -78,6 +80,7 @@ void Npc::score_assigner(std::list<Bomb*>& objects, int& up_score, int& down_sco
     }
 }
 
+//Help function that goes through a list of fires.
 void Npc::score_assigner(std::list<Fire*>& objects, int& up_score, int& down_score, int& right_score,
 			 int& left_score, int& pos_score, sf::Vector2f up, sf::Vector2f right) const
 {
@@ -106,6 +109,7 @@ void Npc::score_assigner(std::list<Fire*>& objects, int& up_score, int& down_sco
     }
 }
 
+//Help function that goes through a list of powerups.
 void Npc::score_assigner(std::list<Powerup*>& objects, int& up_score, int& down_score, int& right_score,
 			 int& left_score, int& pos_score, sf::Vector2f up, sf::Vector2f right) const
 {
@@ -134,6 +138,7 @@ void Npc::score_assigner(std::list<Powerup*>& objects, int& up_score, int& down_
     }
 }
 
+//Help function that goes through a list of wooden_boxes.
 void Npc::score_assigner(std::list<Wooden_box*>& objects, int& up_score, int& down_score, int& right_score,
 			 int& left_score, int& pos_score, sf::Vector2f up, sf::Vector2f right) 
 {
@@ -162,6 +167,7 @@ void Npc::score_assigner(std::list<Wooden_box*>& objects, int& up_score, int& do
     }
 }
 
+//Help function that goes through a list of solid_boxes.
 void Npc::score_assigner(std::list<Solid_box*>& objects, int& up_score, int& down_score, int& right_score,
 			 int& left_score, int& pos_score, sf::Vector2f up, sf::Vector2f right) const
 {
@@ -186,6 +192,7 @@ void Npc::score_assigner(std::list<Solid_box*>& objects, int& up_score, int& dow
     }
 }
 
+//Help function that goes through a list of players.
 void Npc::score_assigner(std::list<Player*>& players, int& up_score, int& down_score, int& right_score,
 			 int& left_score, int& pos_score, sf::Vector2f up, sf::Vector2f right) 
 {
@@ -225,6 +232,7 @@ void Npc::score_assigner(std::list<Player*>& players, int& up_score, int& down_s
     }
 }
 
+//In the function update the player decides where it wants to move and if it wants to drop a bomb.
 void Npc::update(std::list<Player*>& players, std::list<Bomb*>& bombs, std::list<Fire*>& fires,
 		 std::list<Powerup*>& powerups, std::list<Wooden_box*>& wooden_boxes, std::list<Solid_box*>& solid_boxes)
 {
@@ -238,11 +246,12 @@ void Npc::update(std::list<Player*>& players, std::list<Bomb*>& bombs, std::list
 	int down_score{0};
 	int right_score{0};
 	int left_score{0};
-	int pos_score{0};
+	int pos_score{0};  //Represents the current position of the player. 
 
 	sf::Vector2f right{hitbox().width, 0};
 	sf::Vector2f up{0, -hitbox().height};
 
+	//Below the player analyses its surrounding and assigns pointers to each position.
 	score_assigner(players,      up_score, down_score, right_score, left_score, pos_score, up, right);
 	score_assigner(bombs,        up_score, down_score, right_score, left_score, pos_score, up, right);
 	score_assigner(fires,        up_score, down_score, right_score, left_score, pos_score, up, right);
@@ -250,7 +259,9 @@ void Npc::update(std::list<Player*>& players, std::list<Bomb*>& bombs, std::list
 	score_assigner(wooden_boxes, up_score, down_score, right_score, left_score, pos_score, up, right);
 	score_assigner(solid_boxes,  up_score, down_score, right_score, left_score, pos_score, up, right);
 
-    
+
+	//Below we add some randomness to the movement of the player such that it does
+	//not always run in a straight line for too long. 
 	if (direction.x > 0)
 	{
 	    right_score += dist(rd) % 3;
@@ -276,14 +287,22 @@ void Npc::update(std::list<Player*>& players, std::list<Bomb*>& bombs, std::list
 	    right_score += dist(rd) % 2;
 	    left_score += dist(rd) % 2;
 	}
-    
-	pos_score -= 20;
 
+	pos_score -= 20;  //Disincentivizes the player to stand still. 
+
+	//We now put all scores in a vector. 
 	std::vector<std::reference_wrapper<int>> score_vec{up_score, down_score, right_score, left_score, pos_score};
+	
+	//Subsequently we find the largest number in the vector score_vec.
 	int max_score{*std::max_element(score_vec.begin(), score_vec.end())};
 	
+	//Then we find the amount of integers in score_vec which have the maximum value max_score.
 	int num_max = std::count(score_vec.begin(), score_vec.end(), max_score);
 
+
+	//Below we go through the vector score_vec and consider all the integers which have
+	//the value max_score. Out of the num_max integers which have the value max_score
+	//we randomly pick one. The one which is picked represents a position which we are to move in.
 	int rand_int = dist(rd) % num_max + 1;
 	int counter{1};
         for (int i = 0; i < 4; i++)
