@@ -586,8 +586,15 @@ bool Game_state::is_time_up() const
 
 Menu_state::Menu_state()
   : State("Menu_state"), pos_start{610,615}, start_texture{}, start_button{},
-    PC_button{}, NPC1_button{}, NPC2_button{}, NPC3_button{}
+    PC_button{}, NPC1_button{}, NPC2_button{}, NPC3_button{}, background{}
 {
+  //Menu background
+  bg_texture.loadFromFile("textures/background.png");
+  background.setTexture(bg_texture);
+  background.setPosition(sf::Vector2f(0,0));
+
+  
+  //start button
   start_texture.loadFromFile("textures/start.png");
   start_button = new Start_button(pos_start, start_texture);
   
@@ -647,6 +654,7 @@ void Menu_state::user_input_handler(sf::Mouse& mouse, sf::Keyboard&,
 void Menu_state::draw(sf::RenderWindow& window)
 {
     //window.setTitle("menu screen");
+     window.draw(background);
      start_button->draw(window);
      PC_button->draw(window);
      NPC1_button->draw(window);

@@ -116,6 +116,8 @@ private:
     sf::Vector2f pos_start{50, 20};
     sf::Texture start_texture;
     Start_button* start_button;
+    sf::Sprite background;
+    sf::Texture bg_texture;
     sf::Texture pc_menu;
     sf::Texture npc1_menu;
     sf::Texture npc2_menu;
