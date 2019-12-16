@@ -55,8 +55,10 @@ private:
 			    End_screen*, State**, sf::RenderWindow&) override;
  //   virtual void load_textures() override;
     void new_round();
-    void initialize_boxes();
+    void initialize_map();
     void end_game(State**, End_screen*);
+    int round_length;
+    int number_of_rounds;
     bool is_game_over() const; 
     bool is_round_over() const; 
     bool is_time_up() const;
@@ -64,9 +66,9 @@ private:
 
     sf::Texture& get_texture(sf::Texture&,sf::Texture&,sf::Texture&,sf::Texture&,int);
 
-    std::random_device rd;
-    std::mt19937 mt;
-    std::uniform_int_distribution<int> dist;
+    std::random_device rd{};
+    std::mt19937 mt{rd()};
+    std::uniform_int_distribution<int> dist{0,99};
 
 
     std::list<Player*> players;
@@ -80,8 +82,7 @@ private:
     int current_round;
     sf::Clock round_timer;
 
-    sf::Vector2f offset{250,50};
-
+    sf::Vector2f offset; 
     sf::Texture player1_texture;
     sf::Texture player2_texture;
     sf::Texture player3_texture;
@@ -97,6 +98,8 @@ private:
 
     //Player data.
     void load_player_data();
+    void load_game_data();
+    void load_textures();
     std::vector<sf::Vector2f> player_positions;
     std::vector<std::string> player_names;
     /*
@@ -115,18 +118,17 @@ public:
     Menu_state();
     ~Menu_state() = default;
 
-  void update(sf::Mouse&, sf::Keyboard&,
-	      Game_state*, Menu_state*,
-	      End_screen*, State**, sf::RenderWindow&) override;
-    void draw(sf::RenderWindow&) override;
+void update(sf::Mouse&, sf::Keyboard&,
+      Game_state*, Menu_state*,
+      End_screen*, State**, sf::RenderWindow&) override;
+void draw(sf::RenderWindow&) override;
 
 private:
     void user_input_handler(sf::Mouse&, sf::Keyboard&,
-			    Game_state*, Menu_state*,
-			    End_screen*, State**, sf::RenderWindow&) override;
+    Game_state*, Menu_state*,
+    End_screen*, State**, sf::RenderWindow&) override;
   //  void load_textures() override;
 
-    sf::Vector2f pos_start{50, 20};
     sf::Texture start_texture;
     Start_button* start_button;
     sf::Sprite background;
@@ -139,14 +141,12 @@ private:
     Int_button* NPC1_button;
     Int_button* NPC2_button;
     Int_button* NPC3_button;
-    
-       
 };
 
 class End_screen: public State
 {
  public:
-  
+
   End_screen();
   ~End_screen();
   void new_players(std::list<Player*>);
