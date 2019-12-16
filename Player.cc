@@ -26,14 +26,16 @@ Player::Player(sf::Vector2f pos, sf::Texture & texture,
 	want_to_drop_bomb{false},
 	name{in_name}
 
-{
-    
+{ 
     sf::Clock new_clock;
-    bomb_cds.push_back(std::make_pair(new_clock, true));  //Listan får storlek 1.   
+    bomb_cds.push_back(std::make_pair(new_clock, true));  //The list of bomb clocks gets size 1.
+    //The second entry of each pair is true to allow players to drop bombs immediately.
+    //When the first bomb has been dropped the bool in the second entry is set to false
+    //until the next round since it has served its purpose.
 }
 
 
-void Player::new_round()  //Variabler återställs vid ny runda.
+void Player::new_round()  //Resets certain parameters at the beginning of a new round.
 {
     push_powerup = initial_push_powerup;
     health = initial_health;
@@ -48,37 +50,23 @@ void Player::new_round()  //Variabler återställs vid ny runda.
 }
 
 
-/*Spelarens applyfunktion ansvarar för vad som händer vid
-  kollision med ett annat object om det är av typen Game_object.
-  Game_state tar själv bort powerups vid kollision med spelare
-  så spelare behöver endast hantera kollision med bomber.*/
-void Player::apply_on_hit_effect(Game_object* object)
+void Player::apply_on_hit_effect(Game_object* object)  //Handles collision.
 {
-    /*object kommer alltid vara en bombpekare men eftersom apply
-      är överlagrad från Game_object så måste vi använda
-      dyanmic_cast för att behandla object som en bombpekare.
-      Därmed behöver vi inte kolla om pekaren ptr nedanför
-      är lika med nullptr.*/
+    //In our implementation object will always be a pointer to an instans of
+    //bomb. But since we override this function from Game_object we use
+    //dynamic_cast to treat object as a bomb pointer, which it will always be.
     Bomb* ptr = dynamic_cast<Bomb*>(object);
 
-    //TODO: Tips! Om du skriver
-    //
-    //if (!push_powerup)
-    //  return
-    //
-    // ovanför denna kod skulle du kunna ta bort den första if satsen.
-    // Då skulle den vara minder nästlad vilket skulle göra det
-    // blir lite snyggare.
     if (abs(old_position.x - object->get_old_position().x) < 50 &&
         abs(old_position.y - object->get_old_position().y) < 50)
     {
-        return;
+	//If the player previously stood on the bomb then nothing happens. 
+        return;  
     }
+    //Else if the player just collided with the bomb and has a push_powerup
+    //the bomb will start to glide.
     else if (push_powerup)
     {
-        /*I de stora if-satsern nedanför kollar vi först  kollision i ett visst led
-          och sedan kollar vi spelarens and bombens ursprungliga positioner
-          för att bestämma i vilken riktning bomben ska skjutas iväg.*/
         if (sprite.getPosition().x + hitbox().width/2 >=
             ptr->get_position().x - ptr->hitbox().width/2 &&
             old_position.x < sprite.getPosition().x)
@@ -136,7 +124,7 @@ int Player::get_health() const
 }
 
 
-bool Player::is_dead() const //Kollar om spelaren är död.
+bool Player::is_dead() const 
 {
     return health == 0;
 }
@@ -195,14 +183,14 @@ void Player::make_immune()
 }
 
 
-bool Player::request_to_drop_bomb()  //Hjälpfunktion när bomber ska droppas.
+bool Player::request_to_drop_bomb()  //Returns true if the player can and wants to drop a bomb, else false is returned.
 {
     if (want_to_drop_bomb)
     {
-	want_to_drop_bomb = false;
-        for (unsigned int i = 0; i < bomb_cds.size(); i++)  //Går igenom hela listan av klockor.
+	want_to_drop_bomb = false;  
+        for (int i = 0; i < bomb_cds.size(); i++)  //Loops through the list of clocks..
         {
-            if (bomb_cds[i].first.getElapsedTime().asSeconds() >= cd || bomb_cds[i].second) //När detta uppfylls har spelaren möjligheten att droppa en bomb.
+            if (bomb_cds[i].first.getElapsedTime().asSeconds() >= cd || bomb_cds[i].second)  //If true the player can drop a bomb.
             {
 		bomb_cds[i].second = false;
                 bomb_cds[i].first.restart();
@@ -213,7 +201,7 @@ bool Player::request_to_drop_bomb()  //Hjälpfunktion när bomber ska droppas.
     return false;
 }
 
-Bomb* Player::create_bomb(sf::Texture& bomb_texture)
+Bomb* Player::create_bomb(sf::Texture& bomb_texture)  //Returns a pointer to a bomb which belongs to the player.
 {
     return new Bomb(sprite.getPosition(), bomb_texture, this, fire_size);
 }

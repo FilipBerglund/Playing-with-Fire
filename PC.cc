@@ -18,13 +18,19 @@ Pc::Pc(sf::Vector2f pos, sf::Texture & texture, bool in_push,
     bomb_button{bomb_arg}
 {}
 
-void Pc::update(sf::Keyboard keyboard)
+//update looks to see if a button which belongs to the player has been pressed.
+//If this is the case the player either moves or attempts to drop a bomb.
+void Pc::update(sf::Keyboard keyboard)  
 {
     old_position = sprite.getPosition();
     if (keyboard.isKeyPressed(bomb_button) && !previous_bomb_button)
     {
         want_to_drop_bomb = true;
         previous_bomb_button = true;
+	//previous_bomb_button is a help variable which simply makes sure
+	//that when the bomb_button is pressed the player does not drop 2 bombs
+	//almost at the same time. In order to drop a second bomb the player has to
+	//repress the bomb_button and not just hold it in. 
     }
     else if (!keyboard.isKeyPressed(bomb_button))
     {
@@ -49,21 +55,5 @@ void Pc::update(sf::Keyboard keyboard)
     {
         sprite.setRotation(0);
         sprite.move(0, -speed);
-    }
-    else if ((int)old_position.x % 50 < 15 && (int)old_position.x % 50 != 0) 
-    {
-    	sprite.move(-1,0);
-    }
-    else if ((int)old_position.y % 50 < 15 && (int)old_position.y % 50 != 0)
-    {
-    	sprite.move(0,-1);
-    }
-    else if ((int)old_position.y % 50 > 35 && (int)old_position.y % 50 != 0)
-    {
-    	sprite.move(0,1);
-    }
-    else if ((int)old_position.x % 50 > 35 && (int)old_position.x % 50 != 0)
-    {
-    	sprite.move(1,0);
     }
 }
