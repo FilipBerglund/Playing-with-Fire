@@ -4,7 +4,7 @@
 #include <iostream>
 
 Fire::Fire(sf::Vector2f pos, sf::Texture& texture, Player* player):
-    Game_object(pos, texture), 
+    Game_object(pos, texture),
     owner{player},
     aflame_timer{}
 {}
@@ -17,22 +17,21 @@ Fire::~Fire()
 
 void Fire::apply_on_hit_effect(Game_object* object)
 {
-    Player* ptr1 = dynamic_cast<Player*>(object);
-    if (ptr1 != nullptr && !(ptr1->is_immune()))
+    Player* player = dynamic_cast<Player*>(object);
+    if (player != nullptr && !(player->is_immune()))
     {
-	    ptr1->reduce_health(1);
-        ptr1->make_immune();
-        if (ptr1!=owner)
+        player->reduce_health(1);
+        player->make_immune();
+        if (player!=owner)
         {
             owner->increase_score(25);
-            std::cout << "Player " << owner->get_name() << " has " << owner->get_score() << " points" << std::endl; 
         }
-	    return;
+        return;
     }
-    Wooden_box* ptr2 = dynamic_cast<Wooden_box*>(object);
-    if (ptr2 != nullptr)
+    Wooden_box* wooden_box = dynamic_cast<Wooden_box*>(object);
+    if (wooden_box != nullptr)
     {
-        ptr2->reduce_health(1);
+        wooden_box->reduce_health(1);
     }
 }
 

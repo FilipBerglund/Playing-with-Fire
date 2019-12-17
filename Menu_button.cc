@@ -57,7 +57,7 @@ void Start_button::new_sprite(sf::Texture& s)
  */
 
 Int_button::Int_button(sf::Vector2f pos, sf::Texture& bar)
-  :value{0}, menu_bar{bar}, button_0{}, button_1{},
+  :menu_bar{bar}, value{0}, button_0{}, button_1{},
    button_2{}, button_3{}, button_4{}
  {
   //menu's position

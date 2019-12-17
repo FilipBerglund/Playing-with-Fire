@@ -27,7 +27,11 @@
 //TODO: is_playing should be initialised as false when state_handler is implemented fully.
 Game_state::Game_state():
     State("Game_state"),
+    round_timer{},
     current_round{0},
+    round_length{},
+    number_of_rounds{},
+    is_playing{true},
     players{},
     alive_players{},
     bombs{},
@@ -35,11 +39,13 @@ Game_state::Game_state():
     powerups{},
     wooden_boxes{},
     solid_boxes{},
-    is_playing{true},
+    offset{},
+
     player1_texture{},
     player2_texture{},
     player3_texture{},
     player4_texture{},
+    player_textures{},
     fire_texture{},
     solid_box_texture{},
     wooden_box_texture{},
@@ -48,67 +54,79 @@ Game_state::Game_state():
     extra_bomb_texture{},
     bigger_blast_texture{},
     speed_texture{},
+    quit_button_texture{},
+    back_button_texture{},
+
+    quit_button{},
+    back_button{},
 
     player_positions{},
     player_names{},
     player_buttons{}
+
     {
         std::uniform_int_distribution<int> dist{0, 99};
-        load_player_data();
         load_game_data();
+        load_player_data();
         load_textures();
+        //
+        //quit button and return to menu button
+        float coordx{20};
+        float bdistant{60};
+        quit_button = new Start_button(sf::Vector2f(coordx,150 + 0*bdistant),quit_button_texture);
+        back_button = new Start_button(sf::Vector2f(coordx,150 + 1*bdistant),back_button_texture);
     }
 
 Game_state::~Game_state()
 {
     players.remove_if([this](Player* player)
         {
-	    delete player;
+            delete player;
             return true;
         });
 
     alive_players.remove_if([this](Player* player)
         {
-	    delete player;
+            delete player;
             return true;
         });
 
     bombs.remove_if([this](Bomb* bomb)
         {
-	    delete bomb;
+            delete bomb;
             return true;
         });
 
     fires.remove_if([this](Fire* fire)
         {
-	    delete fire;
+            delete fire;
             return true;
         });
 
     powerups.remove_if([this](Powerup* powerup)
         {
-	    delete powerup;
+            delete powerup;
             return true;
         });
 
     solid_boxes.remove_if([this](Solid_box* solid_box)
         {
-	    delete solid_box;
+            delete solid_box;
             return true;
         });
 
     wooden_boxes.remove_if([this](Wooden_box* wooden_box)
         {
-	    delete wooden_box;
+            delete wooden_box;
             return true;
         });
 }
 
 void Game_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard,
-			Game_state* game_state, Menu_state* menu_state,
-			End_screen* end_screen, State** current_state, sf::RenderWindow& window)
+    Game_state* game_state, Menu_state* menu_state,
+    End_screen* end_screen, State** current_state, sf::RenderWindow& window)
 {
-  user_input_handler(mouse, keyboard, game_state, menu_state, end_screen, current_state, window);
+    user_input_handler(mouse, keyboard, game_state, menu_state, end_screen, current_state, window);
     check_collisions();
 
     fires.remove_if([this](Fire* fire)
@@ -146,64 +164,65 @@ void Game_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard,
         {
             bombs.push_back(player->create_bomb(bomb_texture));
         }
-	Pc* ptr1 = dynamic_cast<Pc*>(player);
-	Npc* ptr2 = dynamic_cast<Npc*>(player);
-	if (ptr1 != nullptr)
-	{
-	    ptr1->update(keyboard);
-	}
-	else
-	{
-	    ptr2->update(alive_players, bombs, fires, powerups, wooden_boxes, solid_boxes);
-	}
+        Pc* ptr1 = dynamic_cast<Pc*>(player);
+        Npc* ptr2 = dynamic_cast<Npc*>(player);
+        if (ptr1 != nullptr)
+        {
+            ptr1->update(keyboard);
+        }
+        else
+        {
+            ptr2->update(alive_players, bombs, fires, powerups, wooden_boxes, solid_boxes);
+        }
     }
 
     for (Bomb* bomb : bombs)
     {
-    	bomb->update();
+        bomb->update();
     }
-
 
     check_collisions();
 
     wooden_boxes.remove_if(
-	[this](Wooden_box* wooden_box)
+    [this](Wooden_box* wooden_box)
         {
-	    if (!wooden_box->is_dead())
-	    {
-	        return false;
-	    }
-	    int rand_int2 = dist(rd) % 2 + 1;
-	    if (rand_int2 == 2)
-	    {
-		int rand_int = dist(rd) % 4 + 1;
-	        if (rand_int == 1)
-	        {
-		    powerups.push_back(new Speed(wooden_box->get_position(), speed_texture));
-		}
-	        else if (rand_int == 2)
-	        {
-		    powerups.push_back(new Bigger_blast(wooden_box->get_position(), bigger_blast_texture));
-		}
-	        else if (rand_int == 3)
-	        {
-		    powerups.push_back(new Extra_bomb(wooden_box->get_position(), extra_bomb_texture));
-		}
-	        else  //rand_int == 4.
-	        {
-		    powerups.push_back(new Push(wooden_box->get_position(), push_texture));
-		}
-		delete wooden_box;
-	        return true;
-	    }
-	});
-
+        if (!wooden_box->is_dead())
+        {
+            return false;
+        }
+        int rand_int2 = dist(rd) % 2 + 1;
+        if (rand_int2 == 2)
+        {
+            int rand_int = dist(rd) % 4 + 1;
+            if (rand_int == 1)
+            {
+                powerups.push_back(new Speed(wooden_box->get_position(),
+                                             speed_texture));
+            }
+            else if (rand_int == 2)
+            {
+                powerups.push_back(new Bigger_blast(wooden_box->get_position(),
+                                                    bigger_blast_texture));
+            }
+            else if (rand_int == 3)
+            {
+                powerups.push_back(new Extra_bomb(wooden_box->get_position(),
+                                                  extra_bomb_texture));
+            }
+            else  //rand_int == 4.
+            {
+                powerups.push_back(new Push(wooden_box->get_position(),
+                                            push_texture));
+            }
+            delete wooden_box;
+        }
+        return true;
+    });
 
     alive_players.remove_if([this](Player* player)
         {
             return player->is_dead();
         });
-
 
     if (is_round_over())
     {
@@ -331,16 +350,9 @@ void Game_state::draw(sf::RenderWindow& window)
     for (Powerup* powerup : powerups)
         window.draw(powerup->get_drawable());
 
-    //for (Menu_button* menu_button : menu_buttons)
-    //    window.draw(menu_button->get_drawable());
-
-    //quit button and return to menu button
-    float coordx{20};
-    float bdistant{60};
-    quit_button = new Start_button(sf::Vector2f(coordx,150 + 0*bdistant),quit_button_texture);
-    back_button = new Start_button(sf::Vector2f(coordx,150 + 1*bdistant),back_button_texture);
     quit_button->draw(window);
     back_button->draw(window);
+
     //Round counter
     sf::Font font;
     font.loadFromFile("arial.ttf");
@@ -348,17 +360,18 @@ void Game_state::draw(sf::RenderWindow& window)
     info << "ROUND: " << current_round + 1;
     sf::Text text0(info.str(), font, 40);
     text0.setPosition(10,10);
-    text0.setColor(sf::Color::White);
+    text0.setFillColor(sf::Color::White);
     window.draw(text0);
+
     //Timer
     std::ostringstream roundtimerinfo;
     roundtimerinfo << "Time remaining: "
-		   << (int)(round_length - round_timer.getElapsedTime().asSeconds());
+        << (int)(round_length - round_timer.getElapsedTime().asSeconds());
     sf::Text text1(roundtimerinfo.str(), font, 20);
     text1.setPosition(10,window.getSize().y - 30);
-    text1.setColor(sf::Color::White);
+    text1.setFillColor(sf::Color::White);
     window.draw(text1);
-    
+
     int number{1};
     int ycorrd{100};
 
@@ -367,11 +380,11 @@ void Game_state::draw(sf::RenderWindow& window)
         std::ostringstream name_info;
         name_info << player->get_name();
         sf::Text text0(name_info.str(), font, 20);
-	
-	std::ostringstream score_info;
+
+        std::ostringstream score_info;
         score_info << "Points: " << player->get_score();
         sf::Text text1(score_info.str(), font, 20);
-	
+
         std::ostringstream health_info;
         health_info << "Hp: " << player->get_health();
         sf::Text text2(health_info.str(), font, 20);
@@ -380,12 +393,12 @@ void Game_state::draw(sf::RenderWindow& window)
         text0.setColor(sf::Color::Yellow);
         text1.setPosition(130, ycorrd);
         text1.setColor(sf::Color::White);
-	text2.setPosition(250, ycorrd);
+        text2.setPosition(250, ycorrd);
         text2.setColor(sf::Color::Green);
 
         window.draw(text0);
         window.draw(text1);
-	window.draw(text2);
+        window.draw(text2);
 
         ycorrd = ycorrd + 30;
         number = number + 1;
@@ -393,27 +406,27 @@ void Game_state::draw(sf::RenderWindow& window)
 }
 
 
-void Game_state::user_input_handler(sf::Mouse& mouse, sf::Keyboard& keyboard,
-				    Game_state* game_state, Menu_state* menu_state,
-				    End_screen* end_screen, State** current_state,
-				    sf::RenderWindow& window)
+void Game_state::user_input_handler(sf::Mouse& mouse, sf::Keyboard&,
+                                    Game_state*, Menu_state* menu_state,
+                                    End_screen*, State** current_state,
+                                    sf::RenderWindow& window)
 {
-  if (mouse.isButtonPressed(sf::Mouse::Left))
+    if (mouse.isButtonPressed(sf::Mouse::Left))
     {
-      if (back_button->click(mouse,window))
+        if (quit_button->click(mouse,window))
         {
-	  *current_state = menu_state;
+            window.close();
         }
-      if (quit_button->click(mouse,window))
-	{
-	  window.close();
-	}
-	/*
-       if (pause_button->click(mouse))
+        if (back_button->click(mouse,window))
         {
-          is_playing = !is_playing;
+            *current_state = menu_state;
         }
-	*/
+        /*
+        if (pause_button->click(mouse))
+        {
+            is_playing = !is_playing;
+        }
+        */
     }
 }
 
@@ -431,31 +444,31 @@ void Game_state::new_round()
 
     bombs.remove_if([this](Bomb* bomb)
         {
-	    delete bomb;
+            delete bomb;
             return true;
         });
 
     fires.remove_if([this](Fire* fire)
         {
-	    delete fire;
+            delete fire;
             return true;
         });
 
     powerups.remove_if([this](Powerup* powerup)
         {
-	    delete powerup;
+            delete powerup;
             return true;
         });
 
     solid_boxes.remove_if([this](Solid_box* solid_box)
         {
-	    delete solid_box;
+            delete solid_box;
             return true;
         });
 
     wooden_boxes.remove_if([this](Wooden_box* wooden_box)
         {
-	    delete wooden_box;
+            delete wooden_box;
             return true;
         });
 
@@ -469,10 +482,10 @@ sf::Texture& Game_state::get_texture(sf::Texture& t1, sf::Texture& t2, sf::Textu
 {
     switch (idx)
     {
-        case 0: return t1;
-        case 1: return t2;
-        case 2: return t3;
-        case 3: return t4;
+        case 0:  return t1;
+        case 1:  return t2;
+        case 2:  return t3;
+        default: return t4; //case 3
     }
 }
 
@@ -565,10 +578,10 @@ void Game_state::initialize_map()
     std::vector<std::vector<int>> mat;
     std::vector<int> row;
     int val;
-    for(uint i{0}; i < rows; ++i)
+    for(int i{0}; i < rows; ++i)
     {
         row.clear();
-        for(uint j{0}; j < cols; ++j)
+        for(int j{0}; j < cols; ++j)
         {
             maptext >> val;
             row.push_back(val);
@@ -622,12 +635,9 @@ bool Game_state::is_round_over() const
         return true;
     }
 
-    int alive_players_count = std::count_if(players.begin(), players.end(),
-            [] (Player* p) {return !p->is_dead();});
-
     //This works even if only one player is playing the game. In english,
     //if someone is dead and no more than one player is alive return true.
-    if (players.size() > alive_players_count && alive_players_count <= 1)
+    if (players.size() > alive_players.size() && alive_players.size() <= 1)
     {
         return true;
     }
@@ -716,8 +726,20 @@ void Game_state::load_player_data()
 */
 
 Menu_state::Menu_state(): State("Menu_state"),
-    start_texture{}, start_button{},
-    PC_button{}, NPC1_button{}, NPC2_button{}, NPC3_button{}, background{}
+    bg_texture{},
+    background{},
+
+    start_texture{},
+    start_button{},
+
+    pc_menu{},
+    npc1_menu{},
+    npc2_menu{},
+    npc3_menu{},
+    PC_button{},
+    NPC1_button{},
+    NPC2_button{},
+    NPC3_button{}
 {
     //Menu background
     bg_texture.loadFromFile("textures/background.png");
@@ -745,8 +767,8 @@ Menu_state::Menu_state(): State("Menu_state"),
 }
 
 void Menu_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard,
-Game_state* game_state, Menu_state* menu_state,
-End_screen* end_screen, State** current_state ,sf::RenderWindow& window)
+                        Game_state* game_state, Menu_state* menu_state,
+                        End_screen* end_screen, State** current_state ,sf::RenderWindow& window)
 {
   user_input_handler(mouse, keyboard, game_state,
           menu_state, end_screen,
@@ -754,8 +776,8 @@ End_screen* end_screen, State** current_state ,sf::RenderWindow& window)
 }
 
 void Menu_state::user_input_handler(sf::Mouse& mouse, sf::Keyboard&,
-    Game_state* game_state, Menu_state* menu_state,
-    End_screen* end_screen, State** current_state, sf::RenderWindow& window)
+    Game_state* game_state, Menu_state*,
+    End_screen*, State** current_state, sf::RenderWindow& window)
 {
     //check the collisions with menu_buttons
     if (mouse.isButtonPressed(sf::Mouse::Left))
@@ -839,8 +861,8 @@ void End_screen::update(sf::Mouse& mouse, sf::Keyboard& keyboard,
 }
 
 void End_screen::user_input_handler(sf::Mouse& mouse, sf::Keyboard&,
-    Game_state* game_state, Menu_state* menu_state,
-    End_screen* end_screen, State** current_state, sf::RenderWindow& window)
+    Game_state*, Menu_state* menu_state,
+    End_screen*, State** current_state, sf::RenderWindow& window)
 {
     if (mouse.isButtonPressed(sf::Mouse::Left))
     {
@@ -874,9 +896,9 @@ void End_screen::draw(sf::RenderWindow& window)
         sf::Text text1(score_info.str(), font, 50);
 
         text0.setPosition(250,ycorrd);
-        text0.setColor(sf::Color::Yellow);
+        text0.setFillColor(sf::Color::Yellow);
         text1.setPosition(window.getSize().x - 450, ycorrd);
-        text1.setColor(sf::Color::Green);
+        text1.setFillColor(sf::Color::Blue);
 
         window.draw(text0);
         window.draw(text1);
