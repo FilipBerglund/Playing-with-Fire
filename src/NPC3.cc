@@ -170,7 +170,7 @@ void Npc3::score_assigner(std::list<Player*>& players,
 {
     sf::Vector2f min_dir{1000,1000};
     int scale{1};
-    Player* ptr{nullptr};
+    Player* nearest_player{nullptr};
     for (Player * player : players)
     {
         if (player != this)
@@ -181,21 +181,28 @@ void Npc3::score_assigner(std::list<Player*>& players,
             {
                 min_dir.x = player->get_position().x - get_position().x;
                 min_dir.y = player->get_position().y - get_position().y;
-                ptr = player;
+                nearest_player = player;
             }
         }
     }
-    if (ptr->hitbox().contains(sprite.getPosition() + up) ||
-        ptr->hitbox().contains(sprite.getPosition() + up + up) ||
-        ptr->hitbox().contains(sprite.getPosition() + up + right) ||
-        ptr->hitbox().contains(sprite.getPosition() + up - right) ||
-        ptr->hitbox().contains(sprite.getPosition() - up) ||
-        ptr->hitbox().contains(sprite.getPosition() - up - up) ||
-        ptr->hitbox().contains(sprite.getPosition() - up + right) ||
-        ptr->hitbox().contains(sprite.getPosition() - up - right) ||
-        ptr->hitbox().contains(sprite.getPosition() + right) ||
-        ptr->hitbox().contains(sprite.getPosition() - right) ||
-        ptr->hitbox().contains(sprite.getPosition()))
+
+    //The case where there is only one player.
+    if (nearest_player == nullptr)
+    {
+        return;
+    }
+
+    if (nearest_player->hitbox().contains(sprite.getPosition() + up) ||
+        nearest_player->hitbox().contains(sprite.getPosition() + up + up) ||
+        nearest_player->hitbox().contains(sprite.getPosition() + up + right) ||
+        nearest_player->hitbox().contains(sprite.getPosition() + up - right) ||
+        nearest_player->hitbox().contains(sprite.getPosition() - up) ||
+        nearest_player->hitbox().contains(sprite.getPosition() - up - up) ||
+        nearest_player->hitbox().contains(sprite.getPosition() - up + right) ||
+        nearest_player->hitbox().contains(sprite.getPosition() - up - right) ||
+        nearest_player->hitbox().contains(sprite.getPosition() + right) ||
+        nearest_player->hitbox().contains(sprite.getPosition() - right) ||
+        nearest_player->hitbox().contains(sprite.getPosition()))
    {
         scale = 3;
         want_to_drop_bomb = true;

@@ -69,12 +69,11 @@ Game_state::Game_state():
         load_game_data();
         load_player_data();
         load_textures();
-        //
-        //quit button and return to menu button
-        float coordx{20};
-        float bdistant{60};
-        quit_button = new Start_button(sf::Vector2f(coordx,150 + 0*bdistant),quit_button_texture);
-        back_button = new Start_button(sf::Vector2f(coordx,150 + 1*bdistant),back_button_texture);
+
+        float coordx{10};
+        float d{quit_button_texture.getSize().x + 5};
+        quit_button = new Start_button(sf::Vector2f(coordx+0*d,630), quit_button_texture);
+        back_button = new Start_button(sf::Vector2f(coordx+1*d,630), back_button_texture);
     }
 
 Game_state::~Game_state()
@@ -164,15 +163,15 @@ void Game_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard,
         {
             bombs.push_back(player->create_bomb(bomb_texture));
         }
-        Pc* ptr1 = dynamic_cast<Pc*>(player);
-        Npc* ptr2 = dynamic_cast<Npc*>(player);
-        if (ptr1 != nullptr)
+        Pc* pc = dynamic_cast<Pc*>(player);
+        Npc* npc = dynamic_cast<Npc*>(player);
+        if (pc != nullptr)
         {
-            ptr1->update(keyboard);
+            pc->update(keyboard);
         }
         else
         {
-            ptr2->update(alive_players, bombs, fires, powerups, wooden_boxes, solid_boxes);
+            npc->update(alive_players, bombs, fires, powerups, wooden_boxes, solid_boxes);
         }
     }
 
@@ -421,12 +420,6 @@ void Game_state::user_input_handler(sf::Mouse& mouse, sf::Keyboard&,
         {
             *current_state = menu_state;
         }
-        /*
-        if (pause_button->click(mouse))
-        {
-            is_playing = !is_playing;
-        }
-        */
     }
 }
 
@@ -485,7 +478,7 @@ sf::Texture& Game_state::get_texture(sf::Texture& t1, sf::Texture& t2, sf::Textu
         case 0:  return t1;
         case 1:  return t2;
         case 2:  return t3;
-        default: return t4; //case 3
+        default: return t4;
     }
 }
 
@@ -597,18 +590,26 @@ void Game_state::initialize_map()
             {
                 case 0 :
                     break;
+
                 case 1 :
-                    solid_boxes.push_back(new Solid_box(sf::Vector2f(c*50, r*50) + offset, solid_box_texture));
+                    solid_boxes.push_back(new Solid_box(
+                                sf::Vector2f(c*50, r*50) + offset,
+                                solid_box_texture));
                     break;
+
                 case 2 :
                     if (dist(rd) % 100 < 80)
                     {
-                        wooden_boxes.push_back(new Wooden_box(sf::Vector2f(c*50, r*50) + offset, wooden_box_texture));
+                        wooden_boxes.push_back(new Wooden_box(
+                                    sf::Vector2f(c*50, r*50) + offset,
+                                    wooden_box_texture));
                     }
                     break;
+
                 case 3 :
                     player_positions.push_back(sf::Vector2f(50*c,50*r)+offset);
                     break;
+
                 default :
                     break;
             }
