@@ -358,6 +358,38 @@ void Game_state::draw(sf::RenderWindow& window)
     text1.setPosition(10,window.getSize().y - 30);
     text1.setColor(sf::Color::White);
     window.draw(text1);
+    
+    int number{1};
+    int ycorrd{100};
+
+    for (Player* player :  players)
+    {
+        std::ostringstream name_info;
+        name_info << player->get_name();
+        sf::Text text0(name_info.str(), font, 20);
+	
+	std::ostringstream score_info;
+        score_info << "Points: " << player->get_score();
+        sf::Text text1(score_info.str(), font, 20);
+	
+        std::ostringstream health_info;
+        health_info << "Hp: " << player->get_health();
+        sf::Text text2(health_info.str(), font, 20);
+
+        text0.setPosition(10, ycorrd);
+        text0.setColor(sf::Color::Yellow);
+        text1.setPosition(130, ycorrd);
+        text1.setColor(sf::Color::White);
+	text2.setPosition(250, ycorrd);
+        text2.setColor(sf::Color::Green);
+
+        window.draw(text0);
+        window.draw(text1);
+	window.draw(text2);
+
+        ycorrd = ycorrd + 30;
+        number = number + 1;
+    }
 }
 
 
@@ -677,6 +709,7 @@ void Game_state::load_player_data()
 }
 
 
+
 /*
  * MENU_STATE
  *
@@ -843,7 +876,7 @@ void End_screen::draw(sf::RenderWindow& window)
         text0.setPosition(250,ycorrd);
         text0.setColor(sf::Color::Yellow);
         text1.setPosition(window.getSize().x - 450, ycorrd);
-        text1.setColor(sf::Color::Blue);
+        text1.setColor(sf::Color::Green);
 
         window.draw(text0);
         window.draw(text1);

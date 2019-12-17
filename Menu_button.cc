@@ -23,8 +23,7 @@ Start_button::Start_button(sf::Vector2f pos, sf::Texture& texture):
 //Kollar om musen är på bool button
 bool Start_button::click(sf::Mouse& mouse, sf::RenderWindow& window)
 {
-  //std::cout << "mouse pos: " << mouse.getPosition(window).x << " " << mouse.getPosition(window).y << std::endl;
-  //std::cout << "sprite pos" << sprite.getPosition().x << " " << sprite.getPosition().y << std::endl;
+
   if (sprite.getGlobalBounds().contains(mouse.getPosition(window).x , mouse.getPosition(window).y))
     {
       return true;
@@ -38,8 +37,7 @@ bool Start_button::click(sf::Mouse& mouse, sf::RenderWindow& window)
 void Start_button::draw(sf::RenderWindow& window)
 {
   window.draw(sprite);
-  //std::cout << "inside Start_button draw" << sprite.getPosition().x << "  "<<
-    //sprite.getPosition().y << std::endl;
+
 }
 
 void Start_button::new_pos(sf::Vector2f newpos)
