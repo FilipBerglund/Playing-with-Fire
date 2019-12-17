@@ -63,6 +63,8 @@ private:
     bool is_round_over() const; 
     bool is_time_up() const;
     bool is_playing;
+    Start_button* quit_button;
+    Start_button* back_button;
 
     sf::Texture& get_texture(sf::Texture&,sf::Texture&,sf::Texture&,sf::Texture&,int);
     std::random_device rd{};
@@ -94,6 +96,8 @@ private:
     sf::Texture extra_bomb_texture;
     sf::Texture bigger_blast_texture;
     sf::Texture speed_texture;
+    sf::Texture quit_button_texture;
+    sf::Texture back_button_texture;
 
     //Player data.
     void load_player_data();

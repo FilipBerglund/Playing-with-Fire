@@ -333,7 +333,15 @@ void Game_state::draw(sf::RenderWindow& window)
 
     //for (Menu_button* menu_button : menu_buttons)
     //    window.draw(menu_button->get_drawable());
-
+    
+    //quit button and return to menu button
+    float coordx{20};
+    float bdistant{60};
+    quit_button = new Start_button(sf::Vector2f(coordx,150 + 0*bdistant),quit_button_texture);
+    back_button = new Start_button(sf::Vector2f(coordx,150 + 1*bdistant),back_button_texture);
+    quit_button->draw(window);
+    back_button->draw(window);
+    //Round counter
     sf::Font font;
     font.loadFromFile("arial.ttf");
     std::ostringstream info;
@@ -342,8 +350,10 @@ void Game_state::draw(sf::RenderWindow& window)
     text0.setPosition(10,10);
     text0.setColor(sf::Color::White);
     window.draw(text0);
+    //Timer
     std::ostringstream roundtimerinfo;
-    roundtimerinfo << "Time remaining: " << (int)(round_length - round_timer.getElapsedTime().asSeconds());
+    roundtimerinfo << "Time remaining: "
+		   << (int)(round_length - round_timer.getElapsedTime().asSeconds());
     sf::Text text1(roundtimerinfo.str(), font, 20);
     text1.setPosition(10,window.getSize().y - 30);
     text1.setColor(sf::Color::White);
@@ -353,22 +363,26 @@ void Game_state::draw(sf::RenderWindow& window)
 
 void Game_state::user_input_handler(sf::Mouse& mouse, sf::Keyboard& keyboard,
 				    Game_state* game_state, Menu_state* menu_state,
-				    End_screen* end_screen, State** current_state, sf::RenderWindow&)
+				    End_screen* end_screen, State** current_state,
+				    sf::RenderWindow& window)
 {
-    /*
-    if (mouse.isButtonPressed(sf::Mouse::Left)
+  if (mouse.isButtonPressed(sf::Mouse::Left))
     {
-        if (quit_button->click(mouse))
-        {
-            current_state_string = "menu_state";
-            end_game();
+      if (back_button->click(mouse,window))
+        { 
+	  *current_state = menu_state;
         }
-        if (pause_button->click(mouse))
+      if (quit_button->click(mouse,window))
+	{
+	  window.close();
+	}
+	/*
+       if (pause_button->click(mouse))
         {
-            is_playing = !is_playing
+          is_playing = !is_playing;
         }
+	*/
     }
-    */
 }
 
 void Game_state::new_round()
@@ -612,7 +626,9 @@ void Game_state::load_textures()
     extra_bomb_texture.loadFromFile("textures/extra_bomb_texture.png");
     speed_texture.loadFromFile("textures/speed_texture.png");
     bigger_blast_texture.loadFromFile("textures/bigger_blast_texture.png");
-};
+    quit_button_texture.loadFromFile("textures/wooden_texture.png");
+    back_button_texture.loadFromFile("textures/solid_texture.png");
+}
 
 void Game_state::load_game_data()
 {
@@ -621,7 +637,7 @@ void Game_state::load_game_data()
     in_stream >> number_of_rounds;
     in_stream >> round_length;
     in_stream.close();
-};
+}
 
 void Game_state::load_player_data()
 {
