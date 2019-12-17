@@ -39,8 +39,8 @@ Game_state::Game_state():
     powerups{},
     wooden_boxes{},
     solid_boxes{},
-    quit_button{},
-    back_button{},
+    offset{},
+
     player1_texture{},
     player2_texture{},
     player3_texture{},
@@ -54,18 +54,27 @@ Game_state::Game_state():
     extra_bomb_texture{},
     bigger_blast_texture{},
     speed_texture{},
+    quit_button_texture{},
+    back_button_texture{},
+
+    quit_button{},
+    back_button{},
 
     player_positions{},
     player_names{},
-    player_buttons{},
+    player_buttons{}
 
-    back_button_texture{},
-    quit_button_texture{}
     {
         std::uniform_int_distribution<int> dist{0, 99};
-        load_player_data();
         load_game_data();
+        load_player_data();
         load_textures();
+        //
+        //quit button and return to menu button
+        float coordx{20};
+        float bdistant{60};
+        quit_button = new Start_button(sf::Vector2f(coordx,150 + 0*bdistant),quit_button_texture);
+        back_button = new Start_button(sf::Vector2f(coordx,150 + 1*bdistant),back_button_texture);
     }
 
 Game_state::~Game_state()
@@ -341,16 +350,9 @@ void Game_state::draw(sf::RenderWindow& window)
     for (Powerup* powerup : powerups)
         window.draw(powerup->get_drawable());
 
-    //for (Menu_button* menu_button : menu_buttons)
-    //    window.draw(menu_button->get_drawable());
-    
-    //quit button and return to menu button
-    float coordx{20};
-    float bdistant{60};
-    quit_button = new Start_button(sf::Vector2f(coordx,150 + 0*bdistant),quit_button_texture);
-    back_button = new Start_button(sf::Vector2f(coordx,150 + 1*bdistant),back_button_texture);
     quit_button->draw(window);
     back_button->draw(window);
+
     //Round counter
     sf::Font font;
     font.loadFromFile("arial.ttf");
@@ -358,15 +360,16 @@ void Game_state::draw(sf::RenderWindow& window)
     info << "ROUND: " << current_round + 1;
     sf::Text text0(info.str(), font, 40);
     text0.setPosition(10,10);
-    text0.setColor(sf::Color::White);
+    text0.setFillColor(sf::Color::White);
     window.draw(text0);
+
     //Timer
     std::ostringstream roundtimerinfo;
     roundtimerinfo << "Time remaining: "
-		   << (int)(round_length - round_timer.getElapsedTime().asSeconds());
+        << (int)(round_length - round_timer.getElapsedTime().asSeconds());
     sf::Text text1(roundtimerinfo.str(), font, 20);
     text1.setPosition(10,window.getSize().y - 30);
-    text1.setColor(sf::Color::White);
+    text1.setFillColor(sf::Color::White);
     window.draw(text1);
 }
 
@@ -378,13 +381,13 @@ void Game_state::user_input_handler(sf::Mouse& mouse, sf::Keyboard&,
 {
     if (mouse.isButtonPressed(sf::Mouse::Left))
     {
-        if (back_button->click(mouse,window))
-        {
-            *current_state = menu_state;
-        }
         if (quit_button->click(mouse,window))
         {
             window.close();
+        }
+        if (back_button->click(mouse,window))
+        {
+            *current_state = menu_state;
         }
         /*
         if (pause_button->click(mouse))
@@ -690,9 +693,20 @@ void Game_state::load_player_data()
 */
 
 Menu_state::Menu_state(): State("Menu_state"),
-    start_texture{}, start_button{},
-    PC_button{}, NPC1_button{}, NPC2_button{}, NPC3_button{}, background{},
-    npc1_menu{}, npc2_menu{}, npc3_menu{}
+    bg_texture{},
+    background{},
+
+    start_texture{},
+    start_button{},
+
+    pc_menu{},
+    npc1_menu{},
+    npc2_menu{},
+    npc3_menu{},
+    PC_button{},
+    NPC1_button{},
+    NPC2_button{},
+    NPC3_button{}
 {
     //Menu background
     bg_texture.loadFromFile("textures/background.png");
@@ -849,9 +863,9 @@ void End_screen::draw(sf::RenderWindow& window)
         sf::Text text1(score_info.str(), font, 50);
 
         text0.setPosition(250,ycorrd);
-        text0.setColor(sf::Color::Yellow);
+        text0.setFillColor(sf::Color::Yellow);
         text1.setPosition(window.getSize().x - 450, ycorrd);
-        text1.setColor(sf::Color::Blue);
+        text1.setFillColor(sf::Color::Blue);
 
         window.draw(text0);
         window.draw(text1);
