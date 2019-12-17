@@ -59,8 +59,8 @@ private:
     void end_game(State**, End_screen*);
     int round_length;
     int number_of_rounds;
-    bool is_game_over() const; 
-    bool is_round_over() const; 
+    bool is_game_over() const;
+    bool is_round_over() const;
     bool is_time_up() const;
     bool is_playing;
     Start_button* quit_button;
@@ -83,7 +83,7 @@ private:
     int current_round;
     sf::Clock round_timer;
 
-    sf::Vector2f offset; 
+    sf::Vector2f offset;
     sf::Texture player1_texture;
     sf::Texture player2_texture;
     sf::Texture player3_texture;

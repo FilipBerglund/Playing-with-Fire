@@ -10,7 +10,7 @@
 #include "Menu_button.h"
 #include "NPC1.h"
 #include "NPC2.h"
-#include "NPC3.h"   
+#include "NPC3.h"
 #include <iostream>
 #include <sstream>
 #include <string>
@@ -77,8 +77,8 @@ Game_state::~Game_state()
         {
 	    delete bomb;
             return true;
-        }); 
-    
+        });
+
     fires.remove_if([this](Fire* fire)
         {
 	    delete fire;
@@ -131,7 +131,7 @@ void Game_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard,
             }
             return false;
         });
-       
+
     if (!is_playing)
     {
         // TODO: All clocks still run (both here and in player) so pausing will
@@ -165,7 +165,7 @@ void Game_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard,
 
 
     check_collisions();
-    
+
     wooden_boxes.remove_if(
 	[this](Wooden_box* wooden_box)
         {
@@ -176,7 +176,7 @@ void Game_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard,
 	    int rand_int2 = dist(rd) % 2 + 1;
 	    if (rand_int2 == 2)
 	    {
-		int rand_int = dist(rd) % 4 + 1; 
+		int rand_int = dist(rd) % 4 + 1;
 	        if (rand_int == 1)
 	        {
 		    powerups.push_back(new Speed(wooden_box->get_position(), speed_texture));
@@ -198,12 +198,12 @@ void Game_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard,
 	    }
 	});
 
-    
+
     alive_players.remove_if([this](Player* player)
         {
-            return player->is_dead();  
+            return player->is_dead();
         });
-    
+
 
     if (is_round_over())
     {
@@ -216,7 +216,7 @@ void Game_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard,
 }
 
 void Game_state::check_collisions()
-{   
+{
     for (Player* player : alive_players)
     {
         for (Bomb* bomb : bombs)
@@ -290,7 +290,7 @@ void Game_state::check_collisions()
     {
         for (Wooden_box* wooden_box : wooden_boxes)
         {
-            if (fire->hitbox().intersects(wooden_box->hitbox()))      
+            if (fire->hitbox().intersects(wooden_box->hitbox()))
             {
                 fire->apply_on_hit_effect(wooden_box);
                 wooden_box->apply_on_hit_effect(fire);
@@ -306,8 +306,8 @@ void Game_state::check_collisions()
             }
             return false;
         });
-	
-    }   
+
+    }
 }
 
 
@@ -333,7 +333,7 @@ void Game_state::draw(sf::RenderWindow& window)
 
     //for (Menu_button* menu_button : menu_buttons)
     //    window.draw(menu_button->get_drawable());
-    
+
     //quit button and return to menu button
     float coordx{20};
     float bdistant{60};
@@ -369,7 +369,7 @@ void Game_state::user_input_handler(sf::Mouse& mouse, sf::Keyboard& keyboard,
   if (mouse.isButtonPressed(sf::Mouse::Left))
     {
       if (back_button->click(mouse,window))
-        { 
+        {
 	  *current_state = menu_state;
         }
       if (quit_button->click(mouse,window))
@@ -401,8 +401,8 @@ void Game_state::new_round()
         {
 	    delete bomb;
             return true;
-        }); 
-    
+        });
+
     fires.remove_if([this](Fire* fire)
         {
 	    delete fire;
@@ -433,7 +433,7 @@ void Game_state::new_round()
     round_timer.restart();
 }
 
-sf::Texture& Game_state::get_texture(sf::Texture& t1, sf::Texture& t2, sf::Texture& t3, sf::Texture& t4, int idx) 
+sf::Texture& Game_state::get_texture(sf::Texture& t1, sf::Texture& t2, sf::Texture& t3, sf::Texture& t4, int idx)
 {
     switch (idx)
     {
@@ -626,8 +626,8 @@ void Game_state::load_textures()
     extra_bomb_texture.loadFromFile("textures/extra_bomb_texture.png");
     speed_texture.loadFromFile("textures/speed_texture.png");
     bigger_blast_texture.loadFromFile("textures/bigger_blast_texture.png");
-    quit_button_texture.loadFromFile("textures/wooden_texture.png");
-    back_button_texture.loadFromFile("textures/solid_texture.png");
+    quit_button_texture.loadFromFile("textures/quit.png");
+    back_button_texture.loadFromFile("textures/backbutton.png");
 }
 
 void Game_state::load_game_data()
