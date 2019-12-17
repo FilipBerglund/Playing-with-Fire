@@ -433,7 +433,6 @@ void Game_state::new_round()
         }
         player->new_round();
     }
-    current_round += 1;
 
     bombs.remove_if([this](Bomb* bomb)
         {
@@ -469,6 +468,7 @@ void Game_state::new_round()
     bombs.clear();
     initialize_map();
     round_timer.restart();
+    current_round += 1;
 }
 
 sf::Texture& Game_state::get_texture(sf::Texture& t1, sf::Texture& t2, sf::Texture& t3, sf::Texture& t4, int idx)
@@ -484,6 +484,7 @@ sf::Texture& Game_state::get_texture(sf::Texture& t1, sf::Texture& t2, sf::Textu
 
 void Game_state::new_game(int PC, int NPC1, int NPC2, int NPC3)
 {
+    new_round();
     initialize_map();
     is_playing = true;
     round_timer.restart();
