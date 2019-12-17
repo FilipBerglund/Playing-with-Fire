@@ -355,7 +355,7 @@ void Game_state::draw(sf::RenderWindow& window)
 
     //Round counter
     sf::Font font;
-    font.loadFromFile("src/arial.ttf");
+    font.loadFromFile("res/arial.ttf");
     std::ostringstream info;
     info << "ROUND: " << current_round + 1;
     sf::Text text0(info.str(), font, 40);
@@ -562,7 +562,7 @@ void Game_state::new_game(int PC, int NPC1, int NPC2, int NPC3)
 void Game_state::initialize_map()
 {
     std::ifstream maptext;
-    maptext.open("src/initmatrix.txt");
+    maptext.open("res/initmatrix.txt");
 
     int xpos;
     int ypos;
@@ -675,7 +675,7 @@ void Game_state::load_textures()
 void Game_state::load_game_data()
 {
     std::ifstream in_stream;
-    in_stream.open("src/game_data.txt");
+    in_stream.open("res/game_data.txt");
     in_stream >> number_of_rounds;
     in_stream >> round_length;
     in_stream.close();
@@ -684,7 +684,7 @@ void Game_state::load_game_data()
 void Game_state::load_player_data()
 {
     std::ifstream in_stream;
-    in_stream.open("src/player_data.txt");
+    in_stream.open("res/player_data.txt");
     std::string name;
     while(std::getline(in_stream, name))
     {
@@ -884,7 +884,7 @@ void End_screen::draw(sf::RenderWindow& window)
     int ycorrd{100};
 
     sf::Font font;
-    font.loadFromFile("src/arial.ttf");
+    font.loadFromFile("res/arial.ttf");
 
     for (Player* player : list_of_Player)
     {
