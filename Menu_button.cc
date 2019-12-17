@@ -2,8 +2,6 @@
 #include <list>
 #include <SFML/Graphics.hpp>
 #include "Menu_button.h"
-
-
 #include <iostream>
 
 //Menu_button::Menu_button()
@@ -59,32 +57,30 @@ void Start_button::new_sprite(sf::Texture& s)
  */
 
 Int_button::Int_button(sf::Vector2f pos, sf::Texture& bar)
-  :menu_bar{bar}, value{0}
+  :menu_bar{bar},value{0}, button_0{}, button_1{},
+   button_2{}, button_3{}, button_4{}
  {
   //menu's position
    menu_bar.setPosition(pos);
 
   //buttons' positions
-   //float pc_selection = pos.y + 14;
-   //float npc_selection = pos.y + 88;
-
-   button_0.setSize(sf::Vector2f(50,50));
+   button_0.setSize(bsize);
    button_0.setPosition(pos.x + 64, pos.y + 13);
    button_0.setFillColor(sf::Color(2, 255, 2, 80));
 
-   button_1.setSize(sf::Vector2f(50,50));
+   button_1.setSize(bsize);
    button_1.setPosition(pos.x + 121, pos.y + 13);
    button_1.setFillColor(sf::Color(2, 255, 2, 80));
 
-   button_2.setSize(sf::Vector2f(50,50));
+   button_2.setSize(bsize);
    button_2.setPosition(pos.x + 177, pos.y + 13);
    button_2.setFillColor(sf::Color(2, 255, 2, 80));
 
-   button_3.setSize(sf::Vector2f(50,50));
+   button_3.setSize(bsize);
    button_3.setPosition(pos.x + 233, pos.y + 13);
    button_3.setFillColor(sf::Color(2, 255, 2, 80));
 
-   button_4.setSize(sf::Vector2f(50,50));
+   button_4.setSize(bsize);
    button_4.setPosition(pos.x + 289, pos.y + 13);
    button_4.setFillColor(sf::Color(2, 255, 2, 80));
  }

@@ -2,18 +2,15 @@
 #include <SFML/Graphics.hpp>
 #include <algorithm>
 #include <list>
-
 #include "Powerup.h"
 #include "Box.h"
 #include "Bomb.h"
 #include "Fire.h"
-#include "Player.h"
 #include "PC.h"
 #include "Menu_button.h"
-#include "NPC.h"
-#include <stdlib.h>     
-#include <time.h>       
-
+#include "NPC1.h"
+#include "NPC2.h"
+#include "NPC3.h"   
 #include <iostream>
 #include <sstream>
 #include <string>
@@ -51,25 +48,15 @@ Game_state::Game_state():
     extra_bomb_texture{},
     bigger_blast_texture{},
     speed_texture{},
-    rd{},
-    mt{rd()}
 
-    
+    player_positions{},
+    player_names{},
+    player_buttons{}
     {
-        fire_texture.loadFromFile("textures/fire_texture.png");
-        player1_texture.loadFromFile("textures/player1_texture.png");
-        player2_texture.loadFromFile("textures/player2_texture.png");
-        player3_texture.loadFromFile("textures/player3_texture.png");
-        player4_texture.loadFromFile("textures/player4_texture.png");
-        solid_box_texture.loadFromFile("textures/solid_texture.png");
-        wooden_box_texture.loadFromFile("textures/wooden_texture.png");
-        bomb_texture.loadFromFile("textures/bomb_texture.png");
-        push_texture.loadFromFile("textures/push_texture.png");
-        extra_bomb_texture.loadFromFile("textures/extra_bomb_texture.png");
-        speed_texture.loadFromFile("textures/speed_texture.png");
-    	bigger_blast_texture.loadFromFile("textures/bigger_blast_texture.png");
-    	std::uniform_int_distribution<int> dist(0, 99);
-
+        std::uniform_int_distribution<int> dist{0, 99};
+        load_player_data();
+        load_game_data();
+        load_textures();
     }
 
 Game_state::~Game_state()
@@ -186,29 +173,28 @@ void Game_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard,
 	    {
 	        return false;
 	    }
-	    if (dist(rd) % 2 + 1 == 2)
+	    int rand_int2 = dist(rd) % 2 + 1;
+	    if (rand_int2 == 2)
 	    {
 		int rand_int = dist(rd) % 4 + 1; 
 	        if (rand_int == 1)
 	        {
 		    powerups.push_back(new Speed(wooden_box->get_position(), speed_texture));
-		    return true;
 		}
 	        else if (rand_int == 2)
 	        {
 		    powerups.push_back(new Bigger_blast(wooden_box->get_position(), bigger_blast_texture));
-		    return true;
 		}
 	        else if (rand_int == 3)
 	        {
 		    powerups.push_back(new Extra_bomb(wooden_box->get_position(), extra_bomb_texture));
-		    return true;
 		}
 	        else  //rand_int == 4.
 	        {
 		    powerups.push_back(new Push(wooden_box->get_position(), push_texture));
-		    return true;
 		}
+		delete wooden_box;
+	        return true;
 	    }
 	});
 
@@ -347,7 +333,15 @@ void Game_state::draw(sf::RenderWindow& window)
 
     //for (Menu_button* menu_button : menu_buttons)
     //    window.draw(menu_button->get_drawable());
-
+    
+    //quit button and return to menu button
+    float coordx{20};
+    float bdistant{60};
+    quit_button = new Start_button(sf::Vector2f(coordx,150 + 0*bdistant),quit_button_texture);
+    back_button = new Start_button(sf::Vector2f(coordx,150 + 1*bdistant),back_button_texture);
+    quit_button->draw(window);
+    back_button->draw(window);
+    //Round counter
     sf::Font font;
     font.loadFromFile("arial.ttf");
     std::ostringstream info;
@@ -356,10 +350,12 @@ void Game_state::draw(sf::RenderWindow& window)
     text0.setPosition(10,10);
     text0.setColor(sf::Color::White);
     window.draw(text0);
+    //Timer
     std::ostringstream roundtimerinfo;
-    roundtimerinfo << "Time remaining: " << (int)(180 - round_timer.getElapsedTime().asSeconds());
+    roundtimerinfo << "Time remaining: "
+		   << (int)(round_length - round_timer.getElapsedTime().asSeconds());
     sf::Text text1(roundtimerinfo.str(), font, 20);
-    text1.setPosition(10,690);
+    text1.setPosition(10,window.getSize().y - 30);
     text1.setColor(sf::Color::White);
     window.draw(text1);
 }
@@ -367,22 +363,26 @@ void Game_state::draw(sf::RenderWindow& window)
 
 void Game_state::user_input_handler(sf::Mouse& mouse, sf::Keyboard& keyboard,
 				    Game_state* game_state, Menu_state* menu_state,
-				    End_screen* end_screen, State** current_state, sf::RenderWindow&)
+				    End_screen* end_screen, State** current_state,
+				    sf::RenderWindow& window)
 {
-    /*
-    if (mouse.isButtonPressed(sf::Mouse::Left)
+  if (mouse.isButtonPressed(sf::Mouse::Left))
     {
-        if (quit_button->click(mouse))
-        {
-            current_state_string = "menu_state";
-            end_game();
+      if (back_button->click(mouse,window))
+        { 
+	  *current_state = menu_state;
         }
-        if (pause_button->click(mouse))
+      if (quit_button->click(mouse,window))
+	{
+	  window.close();
+	}
+	/*
+       if (pause_button->click(mouse))
         {
-            is_playing = !is_playing
+          is_playing = !is_playing;
         }
+	*/
     }
-    */
 }
 
 void Game_state::new_round()
@@ -425,11 +425,11 @@ void Game_state::new_round()
         {
 	    delete wooden_box;
             return true;
-        }); 
-    
+        });
+
     alive_players = players;
     bombs.clear();
-    initialize_boxes();
+    initialize_map();
     round_timer.restart();
 }
 
@@ -446,69 +446,97 @@ sf::Texture& Game_state::get_texture(sf::Texture& t1, sf::Texture& t2, sf::Textu
 
 void Game_state::new_game(int PC, int NPC1, int NPC2, int NPC3)
 {
-     players.remove_if([this](Player* player)
-        {
-            delete player;
-            return true;
-        });
-
-    sf::Vector2f offset{250,50};
-
-    std::vector<sf::Vector2f> positions{sf::Vector2f(50,50), sf::Vector2f(650,50), sf::Vector2f(650,550), sf::Vector2f(50,550)}; //Start_pos.
-    std::vector<std::string> names{"Red player", "Green player", "Blue player", "Yellow player"};
-    std::vector<sf::Keyboard::Key> player1_buttons{sf::Keyboard::A, sf::Keyboard::D,
-        sf::Keyboard::S, sf::Keyboard::W, sf::Keyboard::Q};
-    std::vector<sf::Keyboard::Key> player2_buttons{sf::Keyboard::Numpad1, sf::Keyboard::Numpad3, sf::Keyboard::Numpad2, sf::Keyboard::Numpad5, sf::Keyboard::Numpad4};
-    std::vector<sf::Keyboard::Key> player3_buttons{sf::Keyboard::Left, sf::Keyboard::Right, sf::Keyboard::Down, sf::Keyboard::Up, sf::Keyboard::RControl};
-    std::vector<sf::Keyboard::Key> player4_buttons{sf::Keyboard::J, sf::Keyboard::L, sf::Keyboard::K, sf::Keyboard::I, sf::Keyboard::U};
-    std::vector<std::vector<sf::Keyboard::Key>> buttons{player1_buttons, player2_buttons, player3_buttons, player4_buttons};
-    std::vector<sf::Texture> textures{player1_texture, player2_texture, player3_texture, player4_texture};
+    initialize_map();
+    is_playing = true;
+    round_timer.restart();
+    current_round = 0;
+    players.remove_if([this](Player* player)
+       {
+           delete player;
+           return true;
+       });
 
     int initilized{0};
     for (int i{0}; i < PC; i++)
     {
-	sf::Texture& tet = get_texture(player1_texture, player2_texture, player3_texture, player4_texture, initilized);
-        players.push_back(new Pc(positions[initilized] + offset, tet, false, 3, 1, 2, 3, names[initilized],
-				 buttons[initilized][0], buttons[initilized][1], buttons[initilized][2], buttons[initilized][3], buttons[initilized][4]));
+        sf::Texture& tet = get_texture(
+                player1_texture,
+                player2_texture,
+                player3_texture,
+                player4_texture,
+                initilized);
+        players.push_back(new Pc(player_positions[initilized], tet, false,
+            3, 1, 2, 3, player_names[initilized],
+            player_buttons[initilized][0],
+            player_buttons[initilized][1],
+            player_buttons[initilized][2],
+            player_buttons[initilized][3],
+            player_buttons[initilized][4]));
         initilized++;
     }
     for (int i{0}; i < NPC1; i++)
     {
-	sf::Texture& tet = get_texture(player1_texture, player2_texture, player3_texture, player4_texture, initilized);
-        players.push_back(new Npc(positions[initilized] + offset, tet, false, 3, 1, 2, 3, names[initilized]));
+        sf::Texture& tet = get_texture(
+                player1_texture,
+                player2_texture,
+                player3_texture,
+                player4_texture,
+                initilized);
+        players.push_back(new Npc1(player_positions[initilized], tet,
+                   player_names[initilized]));
         initilized++;
     }
     for (int i{0}; i < NPC2; i++)
     {
-	sf::Texture& tet = get_texture(player1_texture, player2_texture, player3_texture, player4_texture, initilized);
-        players.push_back(new Npc(positions[initilized] + offset, tet, false, 3, 2, 2, 3, names[initilized]));
+        sf::Texture& tet = get_texture(
+                player1_texture,
+                player2_texture,
+                player3_texture,
+                player4_texture,
+                initilized);
+        players.push_back(new Npc2(player_positions[initilized], tet,
+                   player_names[initilized]));
         initilized++;
     }
     for (int i{0}; i < NPC3; i++)
     {
-	sf::Texture& tet = get_texture(player1_texture, player2_texture, player3_texture, player4_texture, initilized);
-        players.push_back(new Npc(positions[initilized] + offset, tet, false, 3, 2, 2, 3, names[initilized]));
+        sf::Texture& tet = get_texture(
+                player1_texture,
+                player2_texture,
+                player3_texture,
+                player4_texture,
+                initilized);
+        players.push_back(new Npc3(player_positions[initilized], tet,
+                   player_names[initilized]));
         initilized++;
     }
-    
+
     alive_players = players;
-    is_playing = true;
-    initialize_boxes();
-    round_timer.restart();
-    current_round = 0;
 }
 
-void Game_state::initialize_boxes()
+void Game_state::initialize_map()
 {
     std::ifstream maptext;
     maptext.open("initmatrix.txt");
+
+    int xpos;
+    int ypos;
+    maptext >> xpos;
+    maptext >> ypos;
+    offset = sf::Vector2f(xpos,ypos);
+
+    int rows;
+    int cols;
+    maptext >> rows;
+    maptext >> cols;
+
     std::vector<std::vector<int>> mat;
     std::vector<int> row;
     int val;
-    for(uint i{0}; i < 13; ++i)
+    for(uint i{0}; i < rows; ++i)
     {
         row.clear();
-        for(uint j{0}; j < 15; ++j)
+        for(uint j{0}; j < cols; ++j)
         {
             maptext >> val;
             row.push_back(val);
@@ -516,9 +544,9 @@ void Game_state::initialize_boxes()
         mat.push_back(row);
     }
 
-    for(int r{0}; r < 13; r++)
+    for(int r{0}; r < rows; r++)
     {
-        for(int c{0}; c < 15; c++)
+        for(int c{0}; c < cols; c++)
         {
             switch(mat[r][c])
             {
@@ -528,7 +556,14 @@ void Game_state::initialize_boxes()
                     solid_boxes.push_back(new Solid_box(sf::Vector2f(c*50, r*50) + offset, solid_box_texture));
                     break;
                 case 2 :
-                    wooden_boxes.push_back(new Wooden_box(sf::Vector2f(c*50, r*50) + offset, wooden_box_texture));
+                    if (dist(rd) % 100 < 80)
+                    {
+                        wooden_boxes.push_back(new Wooden_box(sf::Vector2f(c*50, r*50) + offset, wooden_box_texture));
+                    }
+                    break;
+                case 3 :
+                    player_positions.push_back(sf::Vector2f(50*c,50*r)+offset);
+                    break;
                 default :
                     break;
             }
@@ -569,12 +604,76 @@ bool Game_state::is_round_over() const
 
 bool Game_state::is_game_over() const
 {
-    return current_round > 2;
+    return current_round > number_of_rounds - 1;
 }
 
 bool Game_state::is_time_up() const
 {
-    return round_timer.getElapsedTime().asSeconds() > 180;
+    return round_timer.getElapsedTime().asSeconds() > round_length;
+}
+
+void Game_state::load_textures()
+{
+    fire_texture.loadFromFile("textures/fire_texture.png");
+    player1_texture.loadFromFile("textures/player1_texture.png");
+    player2_texture.loadFromFile("textures/player2_texture.png");
+    player3_texture.loadFromFile("textures/player3_texture.png");
+    player4_texture.loadFromFile("textures/player4_texture.png");
+    solid_box_texture.loadFromFile("textures/solid_texture.png");
+    wooden_box_texture.loadFromFile("textures/wooden_texture.png");
+    bomb_texture.loadFromFile("textures/bomb_texture.png");
+    push_texture.loadFromFile("textures/push_texture.png");
+    extra_bomb_texture.loadFromFile("textures/extra_bomb_texture.png");
+    speed_texture.loadFromFile("textures/speed_texture.png");
+    bigger_blast_texture.loadFromFile("textures/bigger_blast_texture.png");
+    quit_button_texture.loadFromFile("textures/wooden_texture.png");
+    back_button_texture.loadFromFile("textures/solid_texture.png");
+}
+
+void Game_state::load_game_data()
+{
+    std::ifstream in_stream;
+    in_stream.open("game_data.txt");
+    in_stream >> number_of_rounds;
+    in_stream >> round_length;
+    in_stream.close();
+}
+
+void Game_state::load_player_data()
+{
+    std::ifstream in_stream;
+    in_stream.open("player_data.txt");
+    std::string name;
+    while(std::getline(in_stream, name))
+    {
+        player_names.push_back(name);
+    }
+    in_stream.close();
+
+    player_buttons.push_back(std::vector<sf::Keyboard::Key>{
+        sf::Keyboard::A,
+        sf::Keyboard::D,
+        sf::Keyboard::S,
+        sf::Keyboard::W,
+        sf::Keyboard::Q});
+    player_buttons.push_back(std::vector<sf::Keyboard::Key>{
+        sf::Keyboard::Numpad1,
+        sf::Keyboard::Numpad3,
+        sf::Keyboard::Numpad2,
+        sf::Keyboard::Numpad5,
+        sf::Keyboard::Numpad4});
+    player_buttons.push_back(std::vector<sf::Keyboard::Key>{
+        sf::Keyboard::Left,
+        sf::Keyboard::Right,
+        sf::Keyboard::Down,
+        sf::Keyboard::Up,
+        sf::Keyboard::RControl});
+    player_buttons.push_back(std::vector<sf::Keyboard::Key>{
+        sf::Keyboard::J,
+        sf::Keyboard::L,
+        sf::Keyboard::K,
+        sf::Keyboard::I,
+        sf::Keyboard::U});
 }
 
 
@@ -583,30 +682,42 @@ bool Game_state::is_time_up() const
  *
 */
 
-
-Menu_state::Menu_state()
-  : State("Menu_state"), pos_start{610,615}, start_texture{}, start_button{},
-    PC_button{}, NPC1_button{}, NPC2_button{}, NPC3_button{}
+Menu_state::Menu_state(): State("Menu_state"),
+    start_texture{}, start_button{},
+    PC_button{}, NPC1_button{}, NPC2_button{}, NPC3_button{}, background{}
 {
-  start_texture.loadFromFile("textures/start.png");
-  start_button = new Start_button(pos_start, start_texture);
-  
-  //menu bar
-  pc_menu.loadFromFile("textures/Menu.png",sf::IntRect(0,0,350,73));
-  npc1_menu.loadFromFile("textures/Menu.png",sf::IntRect(0,74,350,75));
-  npc2_menu.loadFromFile("textures/Menu1.png",sf::IntRect(0,74,350,75));
-  npc3_menu.loadFromFile("textures/Menu2.png",sf::IntRect(0,74,350,75));
-  PC_button   = new Int_button(sf::Vector2f(475,300), pc_menu);
-  NPC1_button = new Int_button(sf::Vector2f(475,375), npc1_menu);
-  NPC2_button = new Int_button(sf::Vector2f(475,450), npc2_menu);
-  NPC3_button = new Int_button(sf::Vector2f(475,525), npc3_menu);
+    //Menu background
+    bg_texture.loadFromFile("textures/background.png");
+    background.setTexture(bg_texture);
+    background.setPosition(sf::Vector2f(0,0));
+
+    //Start button
+    sf::Vector2f pos_start{610, 615};
+    start_texture.loadFromFile("textures/start.png");
+    start_button = new Start_button(pos_start, start_texture);
+
+    //Menu bar. IntRect:s are hard coded because they
+    //are different sections of a png.
+    pc_menu.loadFromFile("textures/Menu.png",   sf::IntRect(0,0,350,73));
+    npc1_menu.loadFromFile("textures/Menu.png", sf::IntRect(0,74,350,75));
+    npc2_menu.loadFromFile("textures/Menu1.png",sf::IntRect(0,74,350,75));
+    npc3_menu.loadFromFile("textures/Menu2.png",sf::IntRect(0,74,350,75));
+
+    int diff{75};
+    int xpos{475};
+    PC_button   = new Int_button(sf::Vector2f(xpos, 300 + 0*diff), pc_menu);
+    NPC1_button = new Int_button(sf::Vector2f(xpos, 300 + 1*diff), npc1_menu);
+    NPC2_button = new Int_button(sf::Vector2f(xpos, 300 + 2*diff), npc2_menu);
+    NPC3_button = new Int_button(sf::Vector2f(xpos, 300 + 3*diff), npc3_menu);
 }
 
 void Menu_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard,
-			Game_state* game_state, Menu_state* menu_state,
-			End_screen* end_screen, State** current_state ,sf::RenderWindow& window)
+Game_state* game_state, Menu_state* menu_state,
+End_screen* end_screen, State** current_state ,sf::RenderWindow& window)
 {
-  user_input_handler(mouse, keyboard, game_state, menu_state, end_screen, current_state, window);
+  user_input_handler(mouse, keyboard, game_state,
+          menu_state, end_screen,
+          current_state, window);
 }
 
 void Menu_state::user_input_handler(sf::Mouse& mouse, sf::Keyboard&,
@@ -614,7 +725,6 @@ void Menu_state::user_input_handler(sf::Mouse& mouse, sf::Keyboard&,
     End_screen* end_screen, State** current_state, sf::RenderWindow& window)
 {
     //check the collisions with menu_buttons
-
     if (mouse.isButtonPressed(sf::Mouse::Left))
     {
         PC_button->click(mouse, window);
@@ -646,120 +756,100 @@ void Menu_state::user_input_handler(sf::Mouse& mouse, sf::Keyboard&,
 
 void Menu_state::draw(sf::RenderWindow& window)
 {
-    //window.setTitle("menu screen");
+     window.draw(background);
      start_button->draw(window);
      PC_button->draw(window);
      NPC1_button->draw(window);
      NPC2_button->draw(window);
      NPC3_button->draw(window);
-
-    /*
-    for (Menu_button* menu_button : menu_buttons)
-    {
-        window.draw(menu_button->get_drawable());
-    }
-    */
-    //we need to somewhere give the buttons a position. Maybe that can be done here based on the size of window. We might add a scaling too.
-    //And perhaps draw some fancy background
 }
+
 
 /*
  * END_SCREEN
  *
 */
 
-
-
 End_screen::~End_screen()
 {
     list_of_Player.remove_if([this](Player* player)
-        {
-	    delete player;
-            return true;
-        });
+    {
+        delete player;
+        return true;
+    });
     delete end_button;
 }
 
 End_screen::End_screen()
   :State("end_screen"), list_of_Player{}, pos{585,500}, button_texture{}, end_button{}
-{ 
-  button_texture.loadFromFile("textures/okay.png");
-  end_button = new Start_button(pos, button_texture);
-  //end_button->new_sprite(button_texture);
-  //end_button->new_pos(sf::Vector2f(50,50));
-  //list_of_Player.sort(PlayerComparator());
-  
+{
+    button_texture.loadFromFile("textures/okay.png");
+    end_button = new Start_button(pos, button_texture);
 }
 
 void End_screen::new_players(std::list<Player*> Players)
 {
-  
-  list_of_Player = Players;
-  list_of_Player.sort([](Player* player1, Player* player2)
-		  {
-		  	return player1->get_score() > player2->get_score();
-		  });
-  
+    list_of_Player = Players;
+    list_of_Player.sort([](Player* player1, Player* player2)
+    {
+        return player1->get_score() > player2->get_score();
+    });
 }
-  
+
 void End_screen::update(sf::Mouse& mouse, sf::Keyboard& keyboard,
-			Game_state* game_state, Menu_state* menu_state,
-			End_screen* end_screen, State** current_state, sf::RenderWindow& window)
+        Game_state* game_state, Menu_state* menu_state,
+        End_screen* end_screen, State** current_state,
+        sf::RenderWindow& window)
 {
-  user_input_handler(mouse, keyboard, game_state, menu_state, end_screen, current_state, window);
+    user_input_handler(mouse, keyboard, game_state, menu_state,
+            end_screen, current_state, window);
 }
 
 void End_screen::user_input_handler(sf::Mouse& mouse, sf::Keyboard&,
-				    Game_state* game_state, Menu_state* menu_state,
-				    End_screen* end_screen, State** current_state, sf::RenderWindow& window)
+    Game_state* game_state, Menu_state* menu_state,
+    End_screen* end_screen, State** current_state, sf::RenderWindow& window)
 {
-    //check the collisions with menu_buttons
-    
-  if (mouse.isButtonPressed(sf::Mouse::Left))
+    if (mouse.isButtonPressed(sf::Mouse::Left))
     {
-       if (end_button->click(mouse, window))
-	  {
-	    list_of_Player.clear();
-	  *current_state = menu_state;
-	  }
-            else
-	      {
-                //not valid game message
-	      }
-        
+        if (end_button->click(mouse, window))
+        {
+            list_of_Player.clear();
+            *current_state = menu_state;
+        }
+        else
+        {
+            //not valid game message
+        }
     }
-    
 }
 
 void End_screen::draw(sf::RenderWindow& window)
 {
-  //window.setTitle("End screen");
-  
-  int number{1};  
-  int ycorrd{70};
-        
-  sf::Font font;    
-  if (!font.loadFromFile("arial.ttf"));
+    int number{1};
+    int ycorrd{100};
 
- for (Player* player : list_of_Player)
+    sf::Font font;
+    font.loadFromFile("arial.ttf");
+
+    for (Player* player : list_of_Player)
     {
-      
-      std::ostringstream info;
-      info << number << ".  " << player->get_name() << "  Points: " << player->get_score();
-    
-      sf::Text text(info.str(), font, 50);
+        std::ostringstream name_info;
+        name_info << number << ".  " << player->get_name();
+        sf::Text text0(name_info.str(), font, 50);
+        std::ostringstream score_info;
+        score_info << "Points: " << player->get_score();
+        sf::Text text1(score_info.str(), font, 50);
 
-      text.setPosition(200,ycorrd);
-      text.setColor(sf::Color::Red);
-    
-      window.draw(text);
-    
-      ycorrd= ycorrd + 70;    
-      number= number + 1;
+        text0.setPosition(250,ycorrd);
+        text0.setColor(sf::Color::Yellow);
+        text1.setPosition(window.getSize().x - 450, ycorrd);
+        text1.setColor(sf::Color::Blue);
 
+        window.draw(text0);
+        window.draw(text1);
+
+        ycorrd = ycorrd + 70;
+        number = number + 1;
     }
-
- end_button->draw(window);
-
+    end_button->draw(window);
 }
-

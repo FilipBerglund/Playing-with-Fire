@@ -14,7 +14,7 @@
 class Npc: public Player
 {
 public:
-    Npc(sf::Vector2f, sf::Texture &, bool,
+    Npc(sf::Vector2f, sf::Texture&, bool,
 	int, int, int, int, std::string);
 
     ~Npc() = default;
@@ -23,24 +23,24 @@ public:
 	        std::list<Powerup*>&, std::list<Wooden_box*>&, std::list<Solid_box*>&);
     
 protected:
-    int local_score(std::string) const;
-    void score_assigner(std::list<Bomb*>& ,int&, int&, int&, int&, int&,
-			sf::Vector2f, sf::Vector2f) const;
-    void score_assigner(std::list<Fire*>& ,int&, int&, int&, int&, int&,
-			sf::Vector2f, sf::Vector2f) const;
-    void score_assigner(std::list<Powerup*>& ,int&, int&, int&, int&, int&,
-			sf::Vector2f, sf::Vector2f) const;
-    void score_assigner(std::list<Wooden_box*>& ,int&, int&, int&, int&, int&,
+    virtual int local_score(std::string) const = 0;
+    virtual void score_assigner(std::list<Bomb*>& ,int&, int&, int&, int&, int&,
+			sf::Vector2f, sf::Vector2f) const = 0;
+    virtual void score_assigner(std::list<Fire*>& ,int&, int&, int&, int&, int&,
+			sf::Vector2f, sf::Vector2f) const = 0;
+    virtual void score_assigner(std::list<Powerup*>& ,int&, int&, int&, int&, int&,
+			sf::Vector2f, sf::Vector2f) const = 0;
+    void score_assigner(std::list<Wooden_box*>& ,int&, int&, int&, int&,
 			sf::Vector2f, sf::Vector2f);
-    void score_assigner(std::list<Solid_box*>& ,int&, int&, int&, int&, int&,
+    void score_assigner(std::list<Solid_box*>& ,int&, int&, int&, int&,
 			sf::Vector2f, sf::Vector2f) const;
-    void score_assigner(std::list<Player*>& ,int&, int&, int&, int&, int&,
-			sf::Vector2f, sf::Vector2f);
-    sf::Vector2f direction;
+    virtual void score_assigner(std::list<Player*>& ,int&, int&, int&, int&, int&,
+			sf::Vector2f, sf::Vector2f) = 0;
+    sf::Vector2f direction{0,0};
 
-    std::random_device rd;
-    std::mt19937 mt;
-    std::uniform_int_distribution<int> dist;
+    std::random_device rd{};
+    std::mt19937 mt{rd()};
+    std::uniform_int_distribution<int> dist{0,99};
 };
 
 #endif
