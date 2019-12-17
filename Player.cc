@@ -7,26 +7,29 @@
 #include <iostream>
 
 Player::Player(sf::Vector2f pos, sf::Texture & texture,
-	       bool in_push, int in_health, int in_speed, int in_fire, int in_cd, std::string in_name):
+        bool in_push, int in_health, int in_speed, int in_fire, int in_cd,
+        std::string in_name):
         Game_object(pos, texture),
+        score{0},
         push_powerup{in_push},
         health{in_health},
         speed{in_speed},
         fire_size{in_fire},
-        score{0},
         cd{in_cd},
-        immune_clock{},
-        bomb_cds{},
-        spawn_point{pos},
+        want_to_drop_bomb{false},
+
         initial_push_powerup{in_push},
         initial_health{in_health},
         initial_speed{in_speed},
         initial_fire_size{in_fire},
         initial_cd{in_cd},
-	want_to_drop_bomb{false},
-	name{in_name}
 
-{ 
+        name{in_name},
+
+        immune_clock{},
+        bomb_cds{},
+        spawn_point{pos}
+{
     sf::Clock new_clock;
     bomb_cds.push_back(std::make_pair(new_clock, true));  //The list of bomb clocks gets size 1.
     //The second entry of each pair is true to allow players to drop bombs immediately.
@@ -188,7 +191,7 @@ bool Player::request_to_drop_bomb()  //Returns true if the player can and wants 
     if (want_to_drop_bomb)
     {
 	want_to_drop_bomb = false;  
-        for (int i = 0; i < bomb_cds.size(); i++)  //Loops through the list of clocks..
+        for (uint i = 0; i < bomb_cds.size(); i++)  //Loops through the list of clocks..
         {
             if (bomb_cds[i].first.getElapsedTime().asSeconds() >= cd || bomb_cds[i].second)  //If true the player can drop a bomb.
             {

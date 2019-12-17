@@ -8,10 +8,11 @@
 Bomb::Bomb(sf::Vector2f pos, sf::Texture& texture, Player* player, int fire_radius):
     Game_object(pos, texture),
     owner{player},
-    speed{3},
     fuse_timer{},
+    speed{3},
+    radius{fire_radius},
     is_gliding{false},
-    radius{fire_radius}
+    move_direction{}
 {}
 
 Bomb::~Bomb()

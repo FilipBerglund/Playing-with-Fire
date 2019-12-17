@@ -16,7 +16,7 @@ public:
 
     ~Player() = default;
 
-    void new_round(); 
+    void new_round();
     void apply_on_hit_effect(Game_object* object) override;
 
     void set_push_powerup(bool var);
@@ -40,24 +40,25 @@ public:
     void make_immune();
     bool request_to_drop_bomb();
     Bomb* create_bomb(sf::Texture&);
-    
+
     void set_name(std::string);
     std::string get_name() const;
 
 protected:
+    int score;
+    bool push_powerup;
+    int health;
+    int speed;
+    int fire_size;
+    int cd;
+    bool want_to_drop_bomb;
+
     bool initial_push_powerup;
     int initial_health;
     int initial_speed;
     int initial_fire_size;
     int initial_cd;
 
-    bool push_powerup;
-    int health;
-    int speed;
-    int fire_size;
-    int score;
-    int cd;
-    bool want_to_drop_bomb;
 
     std::string name;
 
