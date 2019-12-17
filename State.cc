@@ -390,11 +390,11 @@ void Game_state::draw(sf::RenderWindow& window)
         sf::Text text2(health_info.str(), font, 20);
 
         text0.setPosition(10, ycorrd);
-        text0.setColor(sf::Color::Yellow);
+        text0.setFillColor(sf::Color::Yellow);
         text1.setPosition(130, ycorrd);
-        text1.setColor(sf::Color::White);
+        text1.setFillColor(sf::Color::White);
         text2.setPosition(250, ycorrd);
-        text2.setColor(sf::Color::Green);
+        text2.setFillColor(sf::Color::Green);
 
         window.draw(text0);
         window.draw(text1);
