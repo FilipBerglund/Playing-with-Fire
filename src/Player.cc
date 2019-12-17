@@ -63,8 +63,8 @@ void Player::apply_on_hit_effect(Game_object* object)  //Handles collision.
     if (abs(old_position.x - object->get_old_position().x) < 50 &&
         abs(old_position.y - object->get_old_position().y) < 50)
     {
-	//If the player previously stood on the bomb then nothing happens. 
-        return;  
+        //If the player previously stood on the bomb then nothing happens.
+        return;
     }
     //Else if the player just collided with the bomb and has a push_powerup
     //the bomb will start to glide.
@@ -77,13 +77,13 @@ void Player::apply_on_hit_effect(Game_object* object)  //Handles collision.
             ptr->glide("right");
         }
         else if (sprite.getPosition().x - hitbox().width/2 <=
-		ptr->get_position().x + ptr->hitbox().width/2 &&
+                ptr->get_position().x + ptr->hitbox().width/2 &&
                 old_position.x > sprite.getPosition().x)
         {
             ptr->glide("left");
         }
         else if (sprite.getPosition().y - hitbox().height/2 <=
-		ptr->get_position().y + ptr->hitbox().height/2 &&
+                ptr->get_position().y + ptr->hitbox().height/2 &&
                 old_position.y > sprite.getPosition().y)
         {
             ptr->glide("up");
@@ -127,7 +127,7 @@ int Player::get_health() const
 }
 
 
-bool Player::is_dead() const 
+bool Player::is_dead() const
 {
     return health == 0;
 }
@@ -186,25 +186,29 @@ void Player::make_immune()
 }
 
 
-bool Player::request_to_drop_bomb()  //Returns true if the player can and wants to drop a bomb, else false is returned.
+//Returns true if the player can and wants to drop a bomb, else false is returned.
+bool Player::request_to_drop_bomb()
 {
     if (want_to_drop_bomb)
     {
-	want_to_drop_bomb = false;  
-        for (uint i = 0; i < bomb_cds.size(); i++)  //Loops through the list of clocks..
+        want_to_drop_bomb = false;
+        //Loops through the list of clocks..
+        for (uint i = 0; i < bomb_cds.size(); i++)
         {
-            if (bomb_cds[i].first.getElapsedTime().asSeconds() >= cd || bomb_cds[i].second)  //If true the player can drop a bomb.
+            //If true the player can drop a bomb.
+            if (bomb_cds[i].first.getElapsedTime().asSeconds() >= cd || bomb_cds[i].second)
             {
-		bomb_cds[i].second = false;
+                bomb_cds[i].second = false;
                 bomb_cds[i].first.restart();
-	        return true;
+                return true;
             }
-	}
+        }
     }
     return false;
 }
 
-Bomb* Player::create_bomb(sf::Texture& bomb_texture)  //Returns a pointer to a bomb which belongs to the player.
+//Returns a pointer to a bomb which belongs to the player.
+Bomb* Player::create_bomb(sf::Texture& bomb_texture)
 {
     return new Bomb(sprite.getPosition(), bomb_texture, this, fire_size);
 }

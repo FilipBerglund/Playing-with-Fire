@@ -8,15 +8,13 @@ class Pc: public Player
 {
 public:
     Pc(sf::Vector2f, sf::Texture &, bool,
-       int, int, int, int, std::string,
-       sf::Keyboard::Key,
-       sf::Keyboard::Key,
-       sf::Keyboard::Key,
-       sf::Keyboard::Key,
-       sf::Keyboard::Key);
-
+        int, int, int, int, std::string,
+        sf::Keyboard::Key,
+        sf::Keyboard::Key,
+        sf::Keyboard::Key,
+        sf::Keyboard::Key,
+        sf::Keyboard::Key);
     ~Pc() = default;
-
     void update(sf::Keyboard);
 
 protected:

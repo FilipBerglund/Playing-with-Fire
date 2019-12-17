@@ -1,7 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include "Player.h"
 #include "Fire.h"
-#include <iostream>
 
 Fire::Fire(sf::Vector2f pos, sf::Texture& texture, Player* player):
     Game_object(pos, texture),

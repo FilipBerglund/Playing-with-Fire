@@ -1,5 +1,5 @@
-#ifndef STATE
-#define STATE
+#ifndef STATE_H
+#define STATE_H
 
 #include <SFML/Graphics.hpp>
 #include "Player.h"

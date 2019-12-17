@@ -1,8 +1,8 @@
 #ifndef MENU_BUTTON_H
 #define MENU_BUTTON_H
-#include <string>
-#include <list>
 #include <SFML/Graphics.hpp>
+
+
 class Menu_button
 {
 public:

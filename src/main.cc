@@ -1,5 +1,4 @@
 #include <SFML/Graphics.hpp>
-//#include <SFML/RenderWindow.hpp>
 #include <string>
 #include "State.h"
 #include <random>
@@ -10,7 +9,7 @@ int main()
     std::random_device rd;
     std::mt19937 mt{rd()};
     std::uniform_int_distribution<int> dist(0, 99);
-    //srand(time(NULL));
+
     int const width{1280};
     int const height{720};
 
@@ -31,16 +30,16 @@ int main()
         while (window.pollEvent(event))
         {
             if (event.type == sf::Event::Closed)
-                {
-                    window.close();
-                }
+            {
+                window.close();
+            }
         }
         window.clear();
         state_handler.update(mouse, keyboard, window);
         state_handler.draw(window);
         window.display();
-	
-	sf::sleep (target - fps_clock.getElapsedTime());
+
+        sf::sleep (target - fps_clock.getElapsedTime());
     }
 
     return 0;

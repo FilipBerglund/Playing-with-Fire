@@ -1,5 +1,5 @@
-#ifndef BOX
-#define BOX
+#ifndef BOX_H
+#define BOX_H
 
 #include <SFML/Graphics.hpp>
 #include "Game_object.h"
@@ -40,7 +40,7 @@ public:
         return health == 0;
     }
 
-    void reduce_health(int damage) 
+    void reduce_health(int damage)
     {
         if (health - damage <= 0)
         {

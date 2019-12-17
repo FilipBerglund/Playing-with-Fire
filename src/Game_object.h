@@ -1,5 +1,5 @@
-#ifndef GAME_OBJECT
-#define GAME_OBJECT
+#ifndef GAME_OBJECT_H
+#define GAME_OBJECT_H
 
 #include <SFML/Graphics.hpp>
 
@@ -12,8 +12,8 @@ public:
     Game_object(sf::Vector2f pos, sf::Texture & texture):
     sprite{}, old_position{pos}
     {
-	sprite.setTexture(texture);
-	sprite.setOrigin(hitbox().width/2, hitbox().height/2); 
+        sprite.setTexture(texture);
+        sprite.setOrigin(hitbox().width/2, hitbox().height/2);
         sprite.setPosition(pos);
     }
 
@@ -40,6 +40,7 @@ public:
     }
 
     virtual void apply_on_hit_effect(Game_object*) {};
+
     void undo_last_move()
     {
         int roundedx = (((int)get_position().x + 25) / 50 ) * 50;
