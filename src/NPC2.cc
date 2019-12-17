@@ -8,7 +8,7 @@
 #include <iostream>
 
 Npc2::Npc2(sf::Vector2f pos, sf::Texture& texture, std::string in_name):
-    Npc(pos, texture, false, 3, 2, 2, 3, in_name)
+    Npc(pos, texture, false, 4, 2, 2, 3, in_name)
 {}
 
 
