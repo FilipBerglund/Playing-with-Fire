@@ -9,7 +9,7 @@
 #include <stdlib.h> 
 
 Npc3::Npc3(sf::Vector2f pos, sf::Texture& texture, std::string in_name):
-    Npc(pos, texture, true, 3, 2, 2, 2, in_name)
+    Npc(pos, texture, true, 4, 2, 2, 2, in_name)
 {}
 
 
