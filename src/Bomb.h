@@ -30,6 +30,7 @@ public:
                     std::list<Solid_box*>& solid_boxes,
                     std::list<Fire*> & fires,
                     sf::Texture& fire_texture);
+    void draw(sf::RenderWindow&, sf::Font&);
 
 private:
     Player* owner;

@@ -4,6 +4,7 @@
 #include "Bomb.h"
 #include "Fire.h"
 #include <stdlib.h>
+#include <sstream>
 
 Bomb::Bomb(sf::Vector2f pos, sf::Texture& texture, Player* player, int fire_radius):
     Game_object(pos, texture),
@@ -172,4 +173,14 @@ Player* Bomb::get_owner() const
 sf::Vector2f Bomb::get_position() const
 {
     return sprite.getPosition();
+}
+
+void Bomb::draw(sf::RenderWindow& window, sf::Font& font)
+{
+    std::ostringstream info;
+    info << (int)(3 - fuse_timer.getElapsedTime().asSeconds());
+    sf::Text text0(info.str(), font, 15);
+    text0.setPosition(get_position().x - 4, get_position().y - 4);
+    text0.setFillColor(sf::Color::Red);
+    window.draw(text0);
 }
