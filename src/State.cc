@@ -57,6 +57,9 @@ Game_state::Game_state():
     quit_button_texture{},
     back_button_texture{},
 
+    state_bg{},
+    state_bg_texture{},
+    
     quit_button{},
     back_button{},
 
@@ -70,8 +73,11 @@ Game_state::Game_state():
         load_player_data();
         load_textures();
 
+        state_bg.setTexture(state_bg_texture);
+        state_bg.setPosition(sf::Vector2f(0,0));
+
         float coordx{10};
-        float d{quit_button_texture.getSize().x + 5};
+        float d{quit_button_texture.getSize().x + 5.f};
         quit_button = new Bool_button(sf::Vector2f(coordx+0*d,630), quit_button_texture);
         back_button = new Bool_button(sf::Vector2f(coordx+1*d,630), back_button_texture);
     }
@@ -331,6 +337,8 @@ void Game_state::check_collisions()
 
 void Game_state::draw(sf::RenderWindow& window)
 {
+    window.draw(state_bg);
+
     for (Player* player : alive_players)
     {
         if (!player->is_dead())
@@ -368,7 +376,7 @@ void Game_state::draw(sf::RenderWindow& window)
         << (int)(round_length - round_timer.getElapsedTime().asSeconds());
     sf::Text text1(roundtimerinfo.str(), font, 20);
     text1.setPosition(10,window.getSize().y - 30);
-    text1.setFillColor(sf::Color::White);
+    text1.setFillColor(sf::Color::Black);
     window.draw(text1);
 
     int number{1};
@@ -391,9 +399,9 @@ void Game_state::draw(sf::RenderWindow& window)
         text0.setPosition(10, ycorrd);
         text0.setFillColor(sf::Color::Yellow);
         text1.setPosition(130, ycorrd);
-        text1.setFillColor(sf::Color::White);
+        text1.setFillColor(sf::Color::Black);
         text2.setPosition(250, ycorrd);
-        text2.setFillColor(sf::Color::Green);
+        text2.setFillColor(sf::Color::Red);
 
         window.draw(text0);
         window.draw(text1);
@@ -672,6 +680,7 @@ void Game_state::load_textures()
     bigger_blast_texture.loadFromFile("textures/bigger_blast_texture.png");
     quit_button_texture.loadFromFile("textures/quit.png");
     back_button_texture.loadFromFile("textures/backbutton.png");
+    state_bg_texture.loadFromFile("textures/statetexture.png");
 }
 
 void Game_state::load_game_data()
@@ -837,9 +846,18 @@ End_screen::~End_screen()
     delete end_button;
 }
 
-End_screen::End_screen()
-  :State("end_screen"), list_of_Player{}, pos{585,500}, button_texture{}, end_button{}
+End_screen::End_screen() : State("end_screen"),
+    list_of_Player{},
+    pos{585,500},
+    button_texture{},
+    end_button{},
+    end_background{},
+    end_texture{}
 {
+    end_texture.loadFromFile("textures/endtexture.png");
+    end_background.setTexture(end_texture);
+    end_background.setPosition(sf::Vector2f(0,0));
+
     button_texture.loadFromFile("textures/okay.png");
     end_button = new Bool_button(pos, button_texture);
 }
@@ -882,8 +900,9 @@ void End_screen::user_input_handler(sf::Mouse& mouse, sf::Keyboard&,
 
 void End_screen::draw(sf::RenderWindow& window)
 {
+    window.draw(end_background);
     int number{1};
-    int ycorrd{100};
+    int ycorrd{175};
 
     sf::Font font;
     font.loadFromFile("res/arial.ttf");

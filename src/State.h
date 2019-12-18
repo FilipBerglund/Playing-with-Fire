@@ -103,6 +103,9 @@ private:
     sf::Texture quit_button_texture;
     sf::Texture back_button_texture;
 
+    sf::Sprite state_bg;
+    sf::Texture state_bg_texture;
+
     Bool_button* quit_button;
     Bool_button* back_button;
 
@@ -172,6 +175,11 @@ private:
     void user_input_handler(sf::Mouse& , sf::Keyboard&,
                             Game_state*, Menu_state*,
                             End_screen*, State**, sf::RenderWindow&) override;
+
+    sf::Sprite end_background;
+    sf::Texture end_texture;
+    
+
 };
 
 

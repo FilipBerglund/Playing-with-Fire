@@ -56,19 +56,19 @@ Int_button::Int_button(sf::Vector2f pos, sf::Texture& bar):
 
     button_1.setSize(bsize);
     button_1.setPosition(pos.x + 121, pos.y + 13);
-    button_1.setFillColor(sf::Color(255, 213, 0, 80));
+    button_1.setFillColor(sf::Color(255, 255, 255, 50));
 
     button_2.setSize(bsize);
     button_2.setPosition(pos.x + 177, pos.y + 13);
-    button_2.setFillColor(sf::Color(255, 191, 2, 80));
+    button_2.setFillColor(sf::Color(255, 255, 255, 50));
 
     button_3.setSize(bsize);
     button_3.setPosition(pos.x + 233, pos.y + 13);
-    button_3.setFillColor(sf::Color(255, 183, 0, 80));
+    button_3.setFillColor(sf::Color(255, 255, 255, 50));
 
     button_4.setSize(bsize);
     button_4.setPosition(pos.x + 289, pos.y + 13);
-    button_4.setFillColor(sf::Color(255, 154, 0, 80));
+    button_4.setFillColor(sf::Color(255, 255, 255, 50));
 }
 
 // Kollar vilken låda musen är över och anger rätt value
