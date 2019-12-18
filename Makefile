@@ -28,6 +28,9 @@ game: $(BIN_NECESSARY)
 $(BIN)/%.o: $(SRC)/%.cc
 	$(CCC) $(CFLAGS) -c $< -o $@
 
+test: $(filter-out Main.cc, $(BIN_NECESSARY)) $(BIN_TEST)
+	$(CCC) $(CFLAGS) $(filter-out $(BIN)/Main.o, $(BIN_NECESSARY)) $(BIN_TEST) $(SFMLFLAGS)
+
 clean:
 	rm -rf $(BIN_NECESSARY) $(BIN)/test_gameobj.o PlayingWithFire
 
