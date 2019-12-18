@@ -18,7 +18,8 @@ Npc::Npc(sf::Vector2f pos, sf::Texture & texture, bool in_push,
     Player(pos, texture, in_push, in_health, in_speed, in_fire, in_cd, in_name)
 {}
 
-//Help function that goes through a list of wooden_boxes.
+//An NPC looks at its current position and one step up, down, left and right for wooden boxes
+//and assigns a score to a position if a wooden box is there.
 void Npc::score_assigner(std::list<Wooden_box*>& objects,
     int& up_score, int& down_score, int& right_score,
     int& left_score, sf::Vector2f up, sf::Vector2f right)
@@ -47,7 +48,8 @@ void Npc::score_assigner(std::list<Wooden_box*>& objects,
     }
 }
 
-//Help function that goes through a list of solid_boxes.
+//An NPC looks at its current position and one step up, down, left and right for solid boxes
+//and assigns a score to a position if a solid box is there.
 void Npc::score_assigner(std::list<Solid_box*>& objects,
     int& up_score, int& down_score, int& right_score,
     int& left_score, sf::Vector2f up, sf::Vector2f right) const

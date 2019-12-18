@@ -38,7 +38,8 @@ int Npc1::local_score(std::string object) const
     return 0;
 }
 
-//Help function that goes through a list of bombs.
+//NPC1 looks at its current position and one step up, down, left and right for bombs
+//and assigns a score to a position if a bomb is there.
 void Npc1::score_assigner(std::list<Bomb*>& objects,
         int& up_score, int& down_score, int& right_score,
         int& left_score, int& pos_score,
@@ -69,7 +70,8 @@ void Npc1::score_assigner(std::list<Bomb*>& objects,
     }
 }
 
-//Help function that goes through a list of fires.
+//NPC1 looks at its current position and one step up, down, left and right for fires
+//and assigns a score to a position if a fire is there.
 void Npc1::score_assigner(std::list<Fire*>& objects,
         int& up_score, int& down_score, int& right_score,
         int& left_score, int& pos_score,
@@ -100,7 +102,8 @@ void Npc1::score_assigner(std::list<Fire*>& objects,
     }
 }
 
-//Help function that goes through a list of powerups.
+//NPC1 looks at its current position and one step up, down, left and right for powerups
+//and assigns a score to a position if a powerup is there.
 void Npc1::score_assigner(std::list<Powerup*>& objects,
         int& up_score, int& down_score, int& right_score,
         int& left_score, int& pos_score,
@@ -132,7 +135,8 @@ void Npc1::score_assigner(std::list<Powerup*>& objects,
 }
 
 
-//Help function that goes through a list of players.
+//NPC1 looks at its current position and one step up, down, left and right for players
+//and assigns a score to a position if a player is there and attempts to drop a bomb. 
 void Npc1::score_assigner(std::list<Player*>& players,
         int& up_score, int& down_score, int& right_score,
         int& left_score, int& pos_score,
