@@ -23,7 +23,7 @@ TEST_CASE("Powerup")
     CHECK(player.get_push_powerup()==false);
 
     speed.apply_on_hit_effect(playerptr);
-    biger_blast.apply_on_hit_effect(playerptr);
+    bigger_blast.apply_on_hit_effect(playerptr);
     extra_bomb.apply_on_hit_effect(playerptr);
     push.apply_on_hit_effect(playerptr);
 
