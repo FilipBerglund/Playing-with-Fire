@@ -163,7 +163,6 @@ void Game_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard,
             }
             return false;
         });
-    
 
     for (Player* player : alive_players)
     {
