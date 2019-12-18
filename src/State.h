@@ -68,6 +68,8 @@ private:
     bool is_round_over() const;
     bool is_time_up() const;
     void end_game(State**, End_screen*);
+    void destroy_nonplayer_objects();
+    void destroy_players();
 
     sf::Clock round_timer;
     int current_round;

@@ -86,26 +86,13 @@ Game_state::Game_state():
         back_button = new Bool_button(sf::Vector2f(coordx+1*d,630), back_button_texture);
     }
 
-Game_state::~Game_state()
-{
-    players.remove_if([this](Player* player)
-        {
-            delete player;
-            return true;
-        });
-
-    alive_players.remove_if([this](Player* player)
-        {
-            delete player;
-            return true;
-        });
-
+void Game_state::destroy_nonplayer_objects()
+{   
     bombs.remove_if([this](Bomb* bomb)
-        {
-            delete bomb;
-            return true;
-        });
-
+    {
+        delete bomb;
+        return true;
+    });
     fires.remove_if([this](Fire* fire)
         {
             delete fire;
@@ -129,6 +116,28 @@ Game_state::~Game_state()
             delete wooden_box;
             return true;
         });
+}
+
+void Game_state::destroy_players()
+{
+    players.remove_if([this](Player* player)
+        {
+            delete player;
+            return true;
+        });
+
+    alive_players.remove_if([this](Player* player)
+        {
+            delete player;
+            return true;
+        }); 
+}
+
+
+Game_state::~Game_state()
+{
+    destroy_nonplayer_objects();
+    destroy_players();
 }
 
 void Game_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard,
@@ -256,7 +265,8 @@ void Game_state::check_collisions()
             }
         for (Fire* fire : fires)
         {
-            if (player->hitbox().intersects(fire->hitbox()))
+            if (abs(fire->get_position().x - player->get_position().x) < 40 &&
+		abs(fire->get_position().y - player->get_position().y) < 40)
             {
                 fire->apply_on_hit_effect(player);
             }
@@ -378,7 +388,7 @@ void Game_state::draw(sf::RenderWindow& window)
 
     //Timer
     std::ostringstream roundtimerinfo;
-    roundtimerinfo << "Time remaining: "
+     roundtimerinfo << "Time remaining: "
         << (int)(round_length - round_timer.getElapsedTime().asSeconds());
     sf::Text text1(roundtimerinfo.str(), font, 20);
     text1.setPosition(10,window.getSize().y - 30);
@@ -441,45 +451,17 @@ void Game_state::new_round()
 {
     for (Player* player : players)
     {
-        if (!player->is_dead())
+	int shareholders{(int)alive_players.size()};
+	int share{120/shareholders};
+	if (!player->is_dead())
         {
-            player->increase_score(100);
+            player->increase_score(share);
         }
         player->new_round();
     }
-
-    bombs.remove_if([this](Bomb* bomb)
-        {
-            delete bomb;
-            return true;
-        });
-
-    fires.remove_if([this](Fire* fire)
-        {
-            delete fire;
-            return true;
-        });
-
-    powerups.remove_if([this](Powerup* powerup)
-        {
-            delete powerup;
-            return true;
-        });
-
-    solid_boxes.remove_if([this](Solid_box* solid_box)
-        {
-            delete solid_box;
-            return true;
-        });
-
-    wooden_boxes.remove_if([this](Wooden_box* wooden_box)
-        {
-            delete wooden_box;
-            return true;
-        });
-
+    
+    destroy_nonplayer_objects();
     alive_players = players;
-    bombs.clear();
     initialize_map();
     round_timer.restart();
     current_round += 1;
@@ -498,16 +480,10 @@ sf::Texture& Game_state::get_texture(sf::Texture& t1, sf::Texture& t2, sf::Textu
 
 void Game_state::new_game(int PC, int NPC1, int NPC2, int NPC3)
 {
+    destroy_players();  //Removes the players from the previous game.
     new_round();
-    initialize_map();
     is_playing = true;
-    round_timer.restart();
     current_round = 0;
-    players.remove_if([this](Player* player)
-       {
-           delete player;
-           return true;
-       });
 
     int initilized{0};
     for (int i{0}; i < PC; i++)
@@ -634,12 +610,7 @@ void Game_state::initialize_map()
 
 void Game_state::end_game(State** current_state, End_screen* end_screen)
 {
-    /*
-     * TODO: delete relevant objects
-     * run the function that passes players to End_screen
-     * Change current state to End_screen
-     * set is_playing to false.
-    */
+    destroy_nonplayer_objects();
     end_screen->new_players(players);
     *current_state = end_screen;
 }
