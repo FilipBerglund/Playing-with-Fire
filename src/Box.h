@@ -12,10 +12,7 @@ public:
     Game_object(pos, texture) {}
     ~Box() = default;
 
-    void apply_on_hit_effect(Game_object* object) override
-    {
-        object->undo_last_move();
-    }
+    void apply_on_hit_effect(Game_object* object) override;
 };
 
 
@@ -35,22 +32,8 @@ public:
     Box(pos, texture), health{1} {}
     ~Wooden_box() = default;
 
-    bool is_dead() const
-    {
-        return health == 0;
-    }
-
-    void reduce_health(int damage)
-    {
-        if (health - damage <= 0)
-        {
-            health = 0;
-        }
-        else
-        {
-            health -= damage;
-        }
-    }
+    bool is_dead() const;
+    void reduce_health(int damage);
 
 private:
     int health;
