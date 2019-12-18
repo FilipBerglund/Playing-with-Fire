@@ -367,7 +367,7 @@ void Game_state::draw(sf::RenderWindow& window)
     info << "ROUND: " << current_round + 1;
     sf::Text text0(info.str(), font, 40);
     text0.setPosition(10,10);
-    text0.setFillColor(sf::Color::White);
+    text0.setFillColor(sf::Color::Black);
     window.draw(text0);
 
     //Timer
@@ -397,7 +397,7 @@ void Game_state::draw(sf::RenderWindow& window)
         sf::Text text2(health_info.str(), font, 20);
 
         text0.setPosition(10, ycorrd);
-        text0.setFillColor(sf::Color::Yellow);
+        text0.setFillColor(sf::Color::Black);
         text1.setPosition(130, ycorrd);
         text1.setFillColor(sf::Color::Black);
         text2.setPosition(250, ycorrd);
@@ -916,9 +916,9 @@ void End_screen::draw(sf::RenderWindow& window)
         score_info << "Points: " << player->get_score();
         sf::Text text1(score_info.str(), font, 50);
 
-        text0.setPosition(250,ycorrd);
+        text0.setPosition((window.getSize().x / 2) - 400, ycorrd);
         text0.setFillColor(sf::Color::Yellow);
-        text1.setPosition(window.getSize().x - 450, ycorrd);
+        text1.setPosition((window.getSize().x / 2) + 200, ycorrd);
         text1.setFillColor(sf::Color::Blue);
 
         window.draw(text0);
