@@ -4,6 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include "State.h"
+#include <string>
 
 class State_handler
 {
@@ -23,6 +24,7 @@ private:
     Game_state* game_state;
     End_screen* end_screen;
     State* current_state;
+    std::string current_state_string;
     uint width;
     uint height;
     sf::RenderWindow window;

@@ -859,7 +859,7 @@ End_screen::~End_screen()
     delete end_button;
 }
 
-End_screen::End_screen() : State("end_screen"),
+End_screen::End_screen() : State("End_screen"),
     list_of_Player{},
     pos{585,500},
     button_texture{},
