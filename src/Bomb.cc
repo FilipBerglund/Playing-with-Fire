@@ -178,7 +178,7 @@ sf::Vector2f Bomb::get_position() const
 void Bomb::draw(sf::RenderWindow& window, sf::Font& font)
 {
     std::ostringstream info;
-    info << (int)(3 - fuse_timer.getElapsedTime().asSeconds());
+    info << (int)(4 - fuse_timer.getElapsedTime().asSeconds());
     sf::Text text0(info.str(), font, 15);
     text0.setPosition(get_position().x - 4, get_position().y - 4);
     text0.setFillColor(sf::Color::Red);
