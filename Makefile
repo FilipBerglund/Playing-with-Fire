@@ -1,6 +1,6 @@
-CCC = g++
-CFLAGS = -std=c++17 -Wall -Wextra -Weffc++ -Wpedantic -Weffc++ -g -fno-elide-constructors
-SFMLFLAGS = -lsfml-graphics -lsfml-window -lsfml-system
+CCC := g++
+CFLAGS := -std=c++17 -Wall -Wextra -Weffc++ -Wpedantic -Weffc++ -g -fno-elide-constructors
+SFMLFLAGS := -lsfml-graphics -lsfml-window -lsfml-audio -lsfml-system
 
 SRC := src#Source directory
 BIN := bin#Output directory
@@ -22,7 +22,7 @@ BIN_NECESSARY := $(addprefix $(BIN)/,$(NECESSARY_IN_FILES:.cc=.o))
 all: game
 
 game: $(BIN_NECESSARY)
-	$(CCC) $(CFLAGS) $(BIN_NECESSARY) $(SFMLFLAGS) -o PlayingWithFire
+	$(CCC) $(CFLAGS) $(BIN_NECESSARY) -o PlayingWithFire $(SFMLFLAGS)
 
 #Create the compiled binary files and put them in bin/
 $(BIN)/%.o: $(SRC)/%.cc
@@ -54,3 +54,4 @@ leak_run:
 #     we want to make.
 #
 # OBS!!: The comments on lines 5-6 have to be directly after the directories.
+

@@ -7,7 +7,6 @@ Fire::Fire(sf::Vector2f pos, sf::Texture& texture, Player* player):
     owner{player},
     aflame_timer{}
 {}
-
 Fire::~Fire()
 {
     owner = nullptr;

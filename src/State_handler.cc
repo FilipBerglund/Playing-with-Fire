@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include "State_handler.h"
 #include "State.h"
+#include <string>
 #include <fstream>
 
 State_handler::State_handler():
@@ -16,21 +17,13 @@ State_handler::State_handler():
         fps_clock{},
         fps{},
         target{},
-        event{}
+        event{},
+        menu_music{}
     {
         load_window_settings();
+        menu_music.openFromFile("res/menu_music.oog");
+        play_music();
     }
-
-void State_handler::update()
-{
-    current_state->update(mouse, keyboard, game_state, menu_state,
-                            end_screen, &current_state, window);
-}
-
-void State_handler::draw()
-{
-    current_state->draw(window);
-}
 
 void State_handler::run()
 {
@@ -50,6 +43,22 @@ void State_handler::run()
         window.display();
         sf::sleep (target - fps_clock.getElapsedTime());
     }
+}
+
+void State_handler::update()
+{
+    current_state->update(mouse, keyboard, game_state, menu_state,
+                            end_screen, &current_state, window);
+}
+
+void State_handler::draw()
+{
+    current_state->draw(window);
+}
+
+void State_handler::play_music()
+{
+    menu_music.play();
 }
 
 void State_handler::load_window_settings()
