@@ -1,5 +1,6 @@
 #include "State.h"
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <algorithm>
 #include <list>
 #include "Powerup.h"
@@ -59,19 +60,22 @@ Game_state::Game_state():
 
     state_bg{},
     state_bg_texture{},
-    
+
+    explosion_buffer{},
+    explosion_sound{},
+
     quit_button{},
     back_button{},
 
     player_positions{},
     player_names{},
     player_buttons{}
-
     {
         std::uniform_int_distribution<int> dist{0, 99};
         load_game_data();
         load_player_data();
         load_textures();
+        load_sounds();
 
         state_bg.setTexture(state_bg_texture);
         state_bg.setPosition(sf::Vector2f(0,0));
@@ -148,6 +152,7 @@ void Game_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard,
         {
             if (bomb->is_blasted())
             {
+                explosion_sound.play();
                 bomb->spawn_fire(wooden_boxes, solid_boxes, fires, fire_texture);
                 delete bomb;
                 return true;
@@ -270,16 +275,16 @@ void Game_state::check_collisions()
                 solid_box->apply_on_hit_effect(player);
             }
         }
-	powerups.remove_if([player](Powerup* powerup)
-	    {
-		if (player->hitbox().intersects(powerup->hitbox()))
-		{
-		    powerup->apply_on_hit_effect(player);
-		    delete powerup;
-		    return true;
-		}
-		return false;
-	    });
+        powerups.remove_if([player](Powerup* powerup)
+            {
+                if (player->hitbox().intersects(powerup->hitbox()))
+                {
+                    powerup->apply_on_hit_effect(player);
+                    delete powerup;
+                    return true;
+                }
+                return false;
+            });
     }
     for (Bomb* bomb : bombs)
     {
@@ -324,6 +329,7 @@ void Game_state::check_collisions()
         {
             if (bomb->hitbox().intersects(fire->hitbox()))
             {
+                explosion_sound.play();
                 bomb->spawn_fire(wooden_boxes, solid_boxes, fires, fire_texture);
                 delete bomb;
                 return true;
@@ -729,6 +735,13 @@ void Game_state::load_player_data()
         sf::Keyboard::U});
 }
 
+void Game_state::load_sounds()
+{
+    explosion_buffer.loadFromFile("res/explosion.wav");
+    explosion_sound.setBuffer(explosion_buffer);
+    explosion_sound.setPitch(0.2f);
+    explosion_sound.setVolume(50.f);
+}
 
 
 /*

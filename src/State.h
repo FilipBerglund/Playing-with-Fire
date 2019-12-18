@@ -2,6 +2,7 @@
 #define STATE_H
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include "Player.h"
 #include "Powerup.h"
 #include "Box.h"
@@ -106,6 +107,9 @@ private:
     sf::Sprite state_bg;
     sf::Texture state_bg_texture;
 
+    sf::SoundBuffer explosion_buffer;
+    sf::Sound explosion_sound;
+
     Bool_button* quit_button;
     Bool_button* back_button;
 
@@ -113,6 +117,7 @@ private:
     void load_game_data();
     void load_textures();
     void load_player_data();
+    void load_sounds();
     std::vector<sf::Vector2f> player_positions;
     std::vector<std::string> player_names;
     std::vector<std::vector<sf::Keyboard::Key>> player_buttons;
