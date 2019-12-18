@@ -103,8 +103,8 @@ private:
     sf::Texture quit_button_texture;
     sf::Texture back_button_texture;
 
-    Start_button* quit_button;
-    Start_button* back_button;
+    Bool_button* quit_button;
+    Bool_button* back_button;
 
     //Player data.
     void load_game_data();
@@ -137,7 +137,7 @@ private:
     sf::Sprite background;
 
     sf::Texture start_texture;
-    Start_button* start_button;
+    Bool_button* start_button;
 
     sf::Texture pc_menu;
     sf::Texture npc1_menu;
@@ -168,7 +168,7 @@ private:
     std::list<Player*> list_of_Player;
     sf::Vector2f pos{50,50};
     sf::Texture button_texture;
-    Start_button* end_button;
+    Bool_button* end_button;
     void user_input_handler(sf::Mouse& , sf::Keyboard&,
                             Game_state*, Menu_state*,
                             End_screen*, State**, sf::RenderWindow&) override;

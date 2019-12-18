@@ -72,8 +72,8 @@ Game_state::Game_state():
 
         float coordx{10};
         float d{quit_button_texture.getSize().x + 5};
-        quit_button = new Start_button(sf::Vector2f(coordx+0*d,630), quit_button_texture);
-        back_button = new Start_button(sf::Vector2f(coordx+1*d,630), back_button_texture);
+        quit_button = new Bool_button(sf::Vector2f(coordx+0*d,630), quit_button_texture);
+        back_button = new Bool_button(sf::Vector2f(coordx+1*d,630), back_button_texture);
     }
 
 Game_state::~Game_state()
@@ -751,7 +751,7 @@ Menu_state::Menu_state(): State("Menu_state"),
     //Start button
     sf::Vector2f pos_start{610, 615};
     start_texture.loadFromFile("textures/start.png");
-    start_button = new Start_button(pos_start, start_texture);
+    start_button = new Bool_button(pos_start, start_texture);
 
     //Menu bar. IntRect:s are hard coded because they
     //are different sections of a png.
@@ -841,7 +841,7 @@ End_screen::End_screen()
   :State("end_screen"), list_of_Player{}, pos{585,500}, button_texture{}, end_button{}
 {
     button_texture.loadFromFile("textures/okay.png");
-    end_button = new Start_button(pos, button_texture);
+    end_button = new Bool_button(pos, button_texture);
 }
 
 void End_screen::new_players(std::list<Player*> Players)

@@ -11,10 +11,10 @@ public:
     virtual void draw(sf::RenderWindow&)=0;
 };
 
-class Start_button : public Menu_button
+class Bool_button : public Menu_button
 {
 public:
-    Start_button(sf::Vector2f, sf::Texture&);
+    Bool_button(sf::Vector2f, sf::Texture&);
     bool click(sf::Mouse&, sf::RenderWindow&) override;
     void draw(sf::RenderWindow&) override;
     void new_pos(sf::Vector2f);

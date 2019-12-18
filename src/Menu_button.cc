@@ -2,7 +2,7 @@
 #include "Menu_button.h"
 
 
-Start_button::Start_button(sf::Vector2f pos, sf::Texture& texture):
+Bool_button::Bool_button(sf::Vector2f pos, sf::Texture& texture):
     sprite{}
 {
     sprite.setTexture(texture);
@@ -10,24 +10,24 @@ Start_button::Start_button(sf::Vector2f pos, sf::Texture& texture):
 }
 
 //Kollar om musen är på bool button
-bool Start_button::click(sf::Mouse& mouse, sf::RenderWindow& window)
+bool Bool_button::click(sf::Mouse& mouse, sf::RenderWindow& window)
 {
     return sprite.getGlobalBounds().contains(
              mouse.getPosition(window).x,
              mouse.getPosition(window).y);
 }
 
-void Start_button::draw(sf::RenderWindow& window)
+void Bool_button::draw(sf::RenderWindow& window)
 {
     window.draw(sprite);
 }
 
-void Start_button::new_pos(sf::Vector2f newpos)
+void Bool_button::new_pos(sf::Vector2f newpos)
 {
     sprite.setPosition(newpos);
 }
 
-void Start_button::new_sprite(sf::Texture& s)
+void Bool_button::new_sprite(sf::Texture& s)
 {
     sprite.setTexture(s);
 }
