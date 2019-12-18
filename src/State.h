@@ -75,7 +75,6 @@ private:
     int current_round;
     int round_length;
     int number_of_rounds;
-    bool is_playing;
 
     std::random_device rd{};
     std::mt19937 mt{rd()};

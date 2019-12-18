@@ -32,7 +32,6 @@ Game_state::Game_state():
     current_round{0},
     round_length{},
     number_of_rounds{},
-    is_playing{true},
     players{},
     alive_players{},
     bombs{},
@@ -126,11 +125,7 @@ void Game_state::destroy_players()
             return true;
         });
 
-    alive_players.remove_if([this](Player* player)
-        {
-            delete player;
-            return true;
-        }); 
+    alive_players.clear();
 }
 
 
@@ -168,14 +163,7 @@ void Game_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard,
             }
             return false;
         });
-
-    if (!is_playing)
-    {
-        // TODO: All clocks still run (both here and in player) so pausing will
-        // have unintended consequenses - exidental features. This problem has
-        // no trivaial solutions since sf::Clock has no pause function.
-        return;
-    }
+    
 
     for (Player* player : alive_players)
     {
@@ -483,9 +471,9 @@ sf::Texture& Game_state::get_texture(sf::Texture& t1, sf::Texture& t2, sf::Textu
 
 void Game_state::new_game(int PC, int NPC1, int NPC2, int NPC3)
 {
+    destroy_nonplayer_objects();  //Removes objects from the previous game.
     destroy_players();  //Removes the players from the previous game.
     new_round();
-    is_playing = true;
     current_round = 0;
 
     int initilized{0};
@@ -690,12 +678,6 @@ void Game_state::load_player_data()
         sf::Keyboard::W,
         sf::Keyboard::Q});
     player_buttons.push_back(std::vector<sf::Keyboard::Key>{
-        sf::Keyboard::Numpad1,
-        sf::Keyboard::Numpad3,
-        sf::Keyboard::Numpad2,
-        sf::Keyboard::Numpad5,
-        sf::Keyboard::Numpad4});
-    player_buttons.push_back(std::vector<sf::Keyboard::Key>{
         sf::Keyboard::Left,
         sf::Keyboard::Right,
         sf::Keyboard::Down,
@@ -707,6 +689,12 @@ void Game_state::load_player_data()
         sf::Keyboard::K,
         sf::Keyboard::I,
         sf::Keyboard::U});
+    player_buttons.push_back(std::vector<sf::Keyboard::Key>{
+        sf::Keyboard::Numpad1,
+        sf::Keyboard::Numpad3,
+        sf::Keyboard::Numpad2,
+        sf::Keyboard::Numpad5,
+        sf::Keyboard::Numpad4});
 }
 
 void Game_state::load_sounds()
@@ -877,10 +865,6 @@ void End_screen::user_input_handler(sf::Mouse& mouse, sf::Keyboard&,
         {
             list_of_Player.clear();
             *current_state = menu_state;
-        }
-        else
-        {
-            //not valid game message
         }
     }
 }
