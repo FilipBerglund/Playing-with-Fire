@@ -345,27 +345,6 @@ void Game_state::draw(sf::RenderWindow& window)
 {
     window.draw(state_bg);
 
-    for (Player* player : alive_players)
-    {
-        if (!player->is_dead())
-        {
-            window.draw(player->get_drawable());
-        }
-    }
-    for (Wooden_box* wooden_box : wooden_boxes)
-        window.draw(wooden_box->get_drawable());
-    for (Solid_box* solid_box : solid_boxes)
-        window.draw(solid_box->get_drawable());
-    for (Fire* fire : fires)
-        window.draw(fire->get_drawable());
-    for (Bomb* bomb : bombs)
-        window.draw(bomb->get_drawable());
-    for (Powerup* powerup : powerups)
-        window.draw(powerup->get_drawable());
-
-    quit_button->draw(window);
-    back_button->draw(window);
-
     //Round counter
     sf::Font font;
     font.loadFromFile("res/arial.ttf");
@@ -416,6 +395,30 @@ void Game_state::draw(sf::RenderWindow& window)
         ycorrd = ycorrd + 30;
         number = number + 1;
     }
+
+    for (Player* player : alive_players)
+    {
+        if (!player->is_dead())
+        {
+            window.draw(player->get_drawable());
+        }
+    }
+    for (Wooden_box* wooden_box : wooden_boxes)
+        window.draw(wooden_box->get_drawable());
+    for (Solid_box* solid_box : solid_boxes)
+        window.draw(solid_box->get_drawable());
+    for (Fire* fire : fires)
+        window.draw(fire->get_drawable());
+    for (Bomb* bomb : bombs)
+    {
+        window.draw(bomb->get_drawable());
+        bomb->draw(window, font);
+    }
+    for (Powerup* powerup : powerups)
+        window.draw(powerup->get_drawable());
+
+    quit_button->draw(window);
+    back_button->draw(window);
 }
 
 
