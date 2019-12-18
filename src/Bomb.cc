@@ -69,6 +69,7 @@ void Bomb::update()
     }
 }
 
+// Bomb::apply_on_hit_effect stops gliding bomb upon collision
 void Bomb::apply_on_hit_effect(Game_object* object)
 {
     if (dynamic_cast<Player*>(object) != nullptr)
@@ -98,9 +99,9 @@ void Bomb::spawn_fire(std::list<Wooden_box*>& wooden_boxes,
     sprite.setPosition(roundedx, roundedy);
 
     sf::Vector2f pos{get_position()};
-    fires.push_back(new Fire {pos, fire_texture, owner});
-    for (int i=0; i < radius && !solidbox_at_pos(solid_boxes, pos.x+50*i, pos.y);i++)
-    {
+	fires.push_back(new Fire {pos, fire_texture, owner});
+	for (int i=1; i < radius && !solidbox_at_pos(solid_boxes, pos.x+50*i, pos.y);i++)
+	{
         sf::Vector2f newPos{pos.x + 50*i, pos.y};
         fires.push_back(new Fire {newPos, fire_texture, owner});
         if (woodenbox_at_pos(wooden_boxes, pos.x+50*i, pos.y))
@@ -108,17 +109,17 @@ void Bomb::spawn_fire(std::list<Wooden_box*>& wooden_boxes,
             break;
         }
     }
-    for (int i=0; i < radius && !solidbox_at_pos(solid_boxes, pos.x-50*i,pos.y);i++)
-    {
+	for (int i=1; i < radius && !solidbox_at_pos(solid_boxes, pos.x-50*i,pos.y);i++)
+	{
         sf::Vector2f newPos{pos.x - 50*i, pos.y};
-        fires.push_back(new Fire {newPos, fire_texture, owner});
-        if (woodenbox_at_pos(wooden_boxes, pos.x-50*i, pos.y))
-        {
-            break;
-        }
-    }
-    for (int i=0; i < radius && !solidbox_at_pos(solid_boxes, pos.x,pos.y+50*i);i++)
-    {
+		fires.push_back(new Fire {newPos, fire_texture, owner}); 
+		if (woodenbox_at_pos(wooden_boxes, pos.x-50*i, pos.y))
+		{
+			break;
+		}
+	}
+	for (int i=1; i < radius && !solidbox_at_pos(solid_boxes, pos.x,pos.y+50*i);i++)
+	{
         sf::Vector2f newPos{pos.x, pos.y + 50*i};
         fires.push_back(new Fire {newPos, fire_texture, owner});
         fires.back()->set_rotation(90);
@@ -127,8 +128,8 @@ void Bomb::spawn_fire(std::list<Wooden_box*>& wooden_boxes,
             break;
         }
     }
-    for (int i=0; i < radius && !solidbox_at_pos(solid_boxes, pos.x,pos.y-50*i);i++)
-    {
+	for (int i=1; i < radius && !solidbox_at_pos(solid_boxes, pos.x,pos.y-50*i);i++)
+	{
         sf::Vector2f newPos{pos.x, pos.y - 50*i};
         fires.push_back(new Fire {newPos, fire_texture, owner});
         fires.back()->set_rotation(90);
