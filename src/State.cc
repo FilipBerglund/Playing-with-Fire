@@ -1,5 +1,6 @@
 #include "State.h"
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <algorithm>
 #include <list>
 #include "Powerup.h"
@@ -31,7 +32,6 @@ Game_state::Game_state():
     current_round{0},
     round_length{},
     number_of_rounds{},
-    is_playing{true},
     players{},
     alive_players{},
     bombs{},
@@ -59,19 +59,26 @@ Game_state::Game_state():
 
     state_bg{},
     state_bg_texture{},
-    
+
+    explosion_buffer{},
+    explosion_sound{},
+    chime_buffer{},
+    chime_sound{},
+    killed_buffer{},
+    killed_sound{},
+
     quit_button{},
     back_button{},
 
     player_positions{},
     player_names{},
     player_buttons{}
-
     {
         std::uniform_int_distribution<int> dist{0, 99};
         load_game_data();
         load_player_data();
         load_textures();
+        load_sounds();
 
         state_bg.setTexture(state_bg_texture);
         state_bg.setPosition(sf::Vector2f(0,0));
@@ -82,26 +89,13 @@ Game_state::Game_state():
         back_button = new Bool_button(sf::Vector2f(coordx+1*d,630), back_button_texture);
     }
 
-Game_state::~Game_state()
+void Game_state::destroy_nonplayer_objects()
 {
-    players.remove_if([this](Player* player)
-        {
-            delete player;
-            return true;
-        });
-
-    alive_players.remove_if([this](Player* player)
-        {
-            delete player;
-            return true;
-        });
-
     bombs.remove_if([this](Bomb* bomb)
-        {
-            delete bomb;
-            return true;
-        });
-
+    {
+        delete bomb;
+        return true;
+    });
     fires.remove_if([this](Fire* fire)
         {
             delete fire;
@@ -127,11 +121,36 @@ Game_state::~Game_state()
         });
 }
 
+void Game_state::destroy_players()
+{
+    players.remove_if([this](Player* player)
+        {
+            delete player;
+            return true;
+        });
+
+    alive_players.clear();
+}
+
+
+Game_state::~Game_state()
+{
+    destroy_nonplayer_objects();
+    destroy_players();
+}
+
 void Game_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard,
     Game_state* game_state, Menu_state* menu_state,
     End_screen* end_screen, State** current_state, sf::RenderWindow& window)
 {
     user_input_handler(mouse, keyboard, game_state, menu_state, end_screen, current_state, window);
+
+    if (round_timer.getElapsedTime().asSeconds() < 3)
+    {
+        return;
+    }
+
+
     check_collisions();
 
     fires.remove_if([this](Fire* fire)
@@ -148,20 +167,13 @@ void Game_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard,
         {
             if (bomb->is_blasted())
             {
+                explosion_sound.play();
                 bomb->spawn_fire(wooden_boxes, solid_boxes, fires, fire_texture);
                 delete bomb;
                 return true;
             }
             return false;
         });
-
-    if (!is_playing)
-    {
-        // TODO: All clocks still run (both here and in player) so pausing will
-        // have unintended consequenses - exidental features. This problem has
-        // no trivaial solutions since sf::Clock has no pause function.
-        return;
-    }
 
     for (Player* player : alive_players)
     {
@@ -226,7 +238,12 @@ void Game_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard,
 
     alive_players.remove_if([this](Player* player)
         {
-            return player->is_dead();
+            if (player->is_dead())
+            {
+                killed_sound.play();
+                return true;
+            }
+            return false;
         });
 
     if (is_round_over())
@@ -251,7 +268,8 @@ void Game_state::check_collisions()
             }
         for (Fire* fire : fires)
         {
-            if (player->hitbox().intersects(fire->hitbox()))
+            if (abs(fire->get_position().x - player->get_position().x) < 40 &&
+		abs(fire->get_position().y - player->get_position().y) < 40)
             {
                 fire->apply_on_hit_effect(player);
             }
@@ -270,16 +288,17 @@ void Game_state::check_collisions()
                 solid_box->apply_on_hit_effect(player);
             }
         }
-	powerups.remove_if([player](Powerup* powerup)
-	    {
-		if (player->hitbox().intersects(powerup->hitbox()))
-		{
-		    powerup->apply_on_hit_effect(player);
-		    delete powerup;
-		    return true;
-		}
-		return false;
-	    });
+        powerups.remove_if([player, this](Powerup* powerup)
+            {
+                if (player->hitbox().intersects(powerup->hitbox()))
+                {
+                    chime_sound.play();
+                    powerup->apply_on_hit_effect(player);
+                    delete powerup;
+                    return true;
+                }
+                return false;
+            });
     }
     for (Bomb* bomb : bombs)
     {
@@ -324,6 +343,7 @@ void Game_state::check_collisions()
         {
             if (bomb->hitbox().intersects(fire->hitbox()))
             {
+                explosion_sound.play();
                 bomb->spawn_fire(wooden_boxes, solid_boxes, fires, fire_texture);
                 delete bomb;
                 return true;
@@ -339,30 +359,10 @@ void Game_state::draw(sf::RenderWindow& window)
 {
     window.draw(state_bg);
 
-    for (Player* player : alive_players)
-    {
-        if (!player->is_dead())
-        {
-            window.draw(player->get_drawable());
-        }
-    }
-    for (Wooden_box* wooden_box : wooden_boxes)
-        window.draw(wooden_box->get_drawable());
-    for (Solid_box* solid_box : solid_boxes)
-        window.draw(solid_box->get_drawable());
-    for (Fire* fire : fires)
-        window.draw(fire->get_drawable());
-    for (Bomb* bomb : bombs)
-        window.draw(bomb->get_drawable());
-    for (Powerup* powerup : powerups)
-        window.draw(powerup->get_drawable());
-
-    quit_button->draw(window);
-    back_button->draw(window);
-
-    //Round counter
     sf::Font font;
     font.loadFromFile("res/arial.ttf");
+
+    //Round counter
     std::ostringstream info;
     info << "ROUND: " << current_round + 1;
     sf::Text text0(info.str(), font, 40);
@@ -370,14 +370,6 @@ void Game_state::draw(sf::RenderWindow& window)
     text0.setFillColor(sf::Color::Black);
     window.draw(text0);
 
-    //Timer
-    std::ostringstream roundtimerinfo;
-    roundtimerinfo << "Time remaining: "
-        << (int)(round_length - round_timer.getElapsedTime().asSeconds());
-    sf::Text text1(roundtimerinfo.str(), font, 20);
-    text1.setPosition(10,window.getSize().y - 30);
-    text1.setFillColor(sf::Color::Black);
-    window.draw(text1);
 
     int number{1};
     int ycorrd{100};
@@ -410,6 +402,48 @@ void Game_state::draw(sf::RenderWindow& window)
         ycorrd = ycorrd + 30;
         number = number + 1;
     }
+
+    for (Fire* fire : fires)
+        fire->draw(window);
+    for (Player* player : alive_players)
+    {
+        if (!player->is_dead())
+        {
+            player->draw(window);
+        }
+    }
+    for (Wooden_box* wooden_box : wooden_boxes)
+        wooden_box->draw(window);
+    for (Solid_box* solid_box : solid_boxes)
+        solid_box->draw(window);
+    for (Bomb* bomb : bombs)
+        bomb->draw(window, font);
+    for (Powerup* powerup : powerups)
+        powerup->draw(window);
+
+    std::ostringstream timer;
+    if (round_timer.getElapsedTime().asSeconds() < 3)
+    {
+        timer << (int)(4 - round_timer.getElapsedTime().asSeconds());
+        sf::Text text(timer.str(), font, 120);
+        text.setPosition(1280/2 + 27, 720/2 -120);
+        text.setFillColor(sf::Color::Black);
+        window.draw(text);
+    }
+    else
+    {
+        //Timer
+        std::ostringstream roundtimerinfo;
+         roundtimerinfo << "Time remaining: "
+            << (int)(round_length + 4 - round_timer.getElapsedTime().asSeconds());
+        sf::Text text1(roundtimerinfo.str(), font, 20);
+        text1.setPosition(10,window.getSize().y - 30);
+        text1.setFillColor(sf::Color::Black);
+        window.draw(text1);
+    }
+
+    quit_button->draw(window);
+    back_button->draw(window);
 }
 
 
@@ -435,45 +469,21 @@ void Game_state::new_round()
 {
     for (Player* player : players)
     {
+        int shareholders{(int)alive_players.size()};
+        int share{120};
+        if (shareholders != 0)
+        {
+            share /= shareholders;
+        }
         if (!player->is_dead())
         {
-            player->increase_score(100);
+            player->increase_score(share);
         }
         player->new_round();
     }
 
-    bombs.remove_if([this](Bomb* bomb)
-        {
-            delete bomb;
-            return true;
-        });
-
-    fires.remove_if([this](Fire* fire)
-        {
-            delete fire;
-            return true;
-        });
-
-    powerups.remove_if([this](Powerup* powerup)
-        {
-            delete powerup;
-            return true;
-        });
-
-    solid_boxes.remove_if([this](Solid_box* solid_box)
-        {
-            delete solid_box;
-            return true;
-        });
-
-    wooden_boxes.remove_if([this](Wooden_box* wooden_box)
-        {
-            delete wooden_box;
-            return true;
-        });
-
+    destroy_nonplayer_objects();
     alive_players = players;
-    bombs.clear();
     initialize_map();
     round_timer.restart();
     current_round += 1;
@@ -492,16 +502,10 @@ sf::Texture& Game_state::get_texture(sf::Texture& t1, sf::Texture& t2, sf::Textu
 
 void Game_state::new_game(int PC, int NPC1, int NPC2, int NPC3)
 {
+    destroy_nonplayer_objects();  //Removes objects from the previous game.
+    destroy_players();  //Removes the players from the previous game.
     new_round();
-    initialize_map();
-    is_playing = true;
-    round_timer.restart();
     current_round = 0;
-    players.remove_if([this](Player* player)
-       {
-           delete player;
-           return true;
-       });
 
     int initilized{0};
     for (int i{0}; i < PC; i++)
@@ -628,12 +632,7 @@ void Game_state::initialize_map()
 
 void Game_state::end_game(State** current_state, End_screen* end_screen)
 {
-    /*
-     * TODO: delete relevant objects
-     * run the function that passes players to End_screen
-     * Change current state to End_screen
-     * set is_playing to false.
-    */
+    destroy_nonplayer_objects();
     end_screen->new_players(players);
     *current_state = end_screen;
 }
@@ -710,12 +709,6 @@ void Game_state::load_player_data()
         sf::Keyboard::W,
         sf::Keyboard::Q});
     player_buttons.push_back(std::vector<sf::Keyboard::Key>{
-        sf::Keyboard::Numpad1,
-        sf::Keyboard::Numpad3,
-        sf::Keyboard::Numpad2,
-        sf::Keyboard::Numpad5,
-        sf::Keyboard::Numpad4});
-    player_buttons.push_back(std::vector<sf::Keyboard::Key>{
         sf::Keyboard::Left,
         sf::Keyboard::Right,
         sf::Keyboard::Down,
@@ -727,8 +720,31 @@ void Game_state::load_player_data()
         sf::Keyboard::K,
         sf::Keyboard::I,
         sf::Keyboard::U});
+    player_buttons.push_back(std::vector<sf::Keyboard::Key>{
+        sf::Keyboard::Numpad1,
+        sf::Keyboard::Numpad3,
+        sf::Keyboard::Numpad2,
+        sf::Keyboard::Numpad5,
+        sf::Keyboard::Numpad4});
 }
 
+void Game_state::load_sounds()
+{
+    explosion_buffer.loadFromFile("res/explosion.wav");
+    explosion_sound.setBuffer(explosion_buffer);
+    explosion_sound.setPitch(0.3f);
+    explosion_sound.setVolume(40.f);
+
+    chime_buffer.loadFromFile("res/chime.oog");
+    chime_sound.setBuffer(chime_buffer);
+    chime_sound.setPitch(1.4f);
+    chime_sound.setVolume(50.f);
+
+    killed_buffer.loadFromFile("res/gameover.wav");
+    killed_sound.setBuffer(killed_buffer);
+    killed_sound.setPitch(1.4f);
+    killed_sound.setVolume(50.f);
+}
 
 
 /*
@@ -846,9 +862,9 @@ End_screen::~End_screen()
     delete end_button;
 }
 
-End_screen::End_screen() : State("end_screen"),
+End_screen::End_screen() : State("End_screen"),
     list_of_Player{},
-    pos{585,500},
+    pos{580,500},
     button_texture{},
     end_button{},
     end_background{},
@@ -890,10 +906,6 @@ void End_screen::user_input_handler(sf::Mouse& mouse, sf::Keyboard&,
         {
             list_of_Player.clear();
             *current_state = menu_state;
-        }
-        else
-        {
-            //not valid game message
         }
     }
 }

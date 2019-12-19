@@ -1,4 +1,4 @@
-Anders
-David
-Dennis
-Linh
+Red
+Green
+Blue
+Yellow

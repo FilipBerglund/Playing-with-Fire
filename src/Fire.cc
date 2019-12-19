@@ -7,7 +7,6 @@ Fire::Fire(sf::Vector2f pos, sf::Texture& texture, Player* player):
     owner{player},
     aflame_timer{}
 {}
-
 Fire::~Fire()
 {
     owner = nullptr;
@@ -23,8 +22,12 @@ void Fire::apply_on_hit_effect(Game_object* object)
         player->make_immune();
         if (player!=owner)
         {
-            owner->increase_score(25);
-        }
+            owner->increase_score(35);
+	    if (player->is_dead())
+	    {
+		owner->increase_score(25);
+	    }
+	}
         return;
     }
     Wooden_box* wooden_box = dynamic_cast<Wooden_box*>(object);
@@ -36,5 +39,5 @@ void Fire::apply_on_hit_effect(Game_object* object)
 
 bool Fire::is_extinguished() const
 {
-    return aflame_timer.getElapsedTime().asSeconds() > 3;
+    return aflame_timer.getElapsedTime().asSeconds() > 2;
 }

@@ -44,6 +44,8 @@ public:
     void set_name(std::string);
     std::string get_name() const;
 
+    void draw(sf::RenderWindow&) override;
+
 protected:
     int score;
     bool push_powerup;

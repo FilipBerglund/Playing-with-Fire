@@ -4,6 +4,7 @@
 #include "Bomb.h"
 #include "Fire.h"
 #include <stdlib.h>
+#include <sstream>
 
 Bomb::Bomb(sf::Vector2f pos, sf::Texture& texture, Player* player, int fire_radius):
     Game_object(pos, texture),
@@ -99,42 +100,46 @@ void Bomb::spawn_fire(std::list<Wooden_box*>& wooden_boxes,
     sprite.setPosition(roundedx, roundedy);
 
     sf::Vector2f pos{get_position()};
-	fires.push_back(new Fire {pos, fire_texture, owner});
-	for (int i=1; i < radius && !solidbox_at_pos(solid_boxes, pos.x+50*i, pos.y);i++)
-	{
+    fires.push_back(new Fire {pos, fire_texture, owner});
+    for (int i=1; i < radius && !solidbox_at_pos(solid_boxes, pos.x+50*i, pos.y);i++)
+    {
         sf::Vector2f newPos{pos.x + 50*i, pos.y};
         fires.push_back(new Fire {newPos, fire_texture, owner});
         if (woodenbox_at_pos(wooden_boxes, pos.x+50*i, pos.y))
         {
+            owner->increase_score(1);
             break;
         }
     }
-	for (int i=1; i < radius && !solidbox_at_pos(solid_boxes, pos.x-50*i,pos.y);i++)
-	{
+    for (int i=1; i < radius && !solidbox_at_pos(solid_boxes, pos.x-50*i,pos.y);i++)
+    {
         sf::Vector2f newPos{pos.x - 50*i, pos.y};
-		fires.push_back(new Fire {newPos, fire_texture, owner}); 
-		if (woodenbox_at_pos(wooden_boxes, pos.x-50*i, pos.y))
-		{
-			break;
-		}
-	}
-	for (int i=1; i < radius && !solidbox_at_pos(solid_boxes, pos.x,pos.y+50*i);i++)
-	{
+        fires.push_back(new Fire {newPos, fire_texture, owner});
+        if (woodenbox_at_pos(wooden_boxes, pos.x-50*i, pos.y))
+        {
+            owner->increase_score(1);
+            break;
+        }
+    }
+    for (int i=1; i < radius && !solidbox_at_pos(solid_boxes, pos.x,pos.y+50*i);i++)
+    {
         sf::Vector2f newPos{pos.x, pos.y + 50*i};
         fires.push_back(new Fire {newPos, fire_texture, owner});
         fires.back()->set_rotation(90);
         if (woodenbox_at_pos(wooden_boxes, pos.x, pos.y+50*i))
         {
+            owner->increase_score(1);
             break;
         }
     }
-	for (int i=1; i < radius && !solidbox_at_pos(solid_boxes, pos.x,pos.y-50*i);i++)
-	{
+    for (int i=1; i < radius && !solidbox_at_pos(solid_boxes, pos.x,pos.y-50*i);i++)
+    {
         sf::Vector2f newPos{pos.x, pos.y - 50*i};
         fires.push_back(new Fire {newPos, fire_texture, owner});
         fires.back()->set_rotation(90);
         if (woodenbox_at_pos(wooden_boxes, pos.x, pos.y-50*i))
         {
+            owner->increase_score(1);
             break;
         }
     }
@@ -172,4 +177,15 @@ Player* Bomb::get_owner() const
 sf::Vector2f Bomb::get_position() const
 {
     return sprite.getPosition();
+}
+
+void Bomb::draw(sf::RenderWindow& window, sf::Font& font)
+{
+    std::ostringstream info;
+    info << (int)(4 - fuse_timer.getElapsedTime().asSeconds());
+    sf::Text text0(info.str(), font, 15);
+    text0.setPosition(get_position().x - 4, get_position().y - 4);
+    text0.setFillColor(sf::Color::Red);
+    window.draw(sprite);
+    window.draw(text0);
 }

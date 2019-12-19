@@ -2,6 +2,7 @@
 #define STATE_H
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include "Player.h"
 #include "Powerup.h"
 #include "Box.h"
@@ -67,12 +68,13 @@ private:
     bool is_round_over() const;
     bool is_time_up() const;
     void end_game(State**, End_screen*);
+    void destroy_nonplayer_objects();
+    void destroy_players();
 
     sf::Clock round_timer;
     int current_round;
     int round_length;
     int number_of_rounds;
-    bool is_playing;
 
     std::random_device rd{};
     std::mt19937 mt{rd()};
@@ -106,6 +108,13 @@ private:
     sf::Sprite state_bg;
     sf::Texture state_bg_texture;
 
+    sf::SoundBuffer explosion_buffer;
+    sf::Sound explosion_sound;
+    sf::SoundBuffer chime_buffer;
+    sf::Sound chime_sound;
+    sf::SoundBuffer killed_buffer;
+    sf::Sound killed_sound;
+
     Bool_button* quit_button;
     Bool_button* back_button;
 
@@ -113,6 +122,7 @@ private:
     void load_game_data();
     void load_textures();
     void load_player_data();
+    void load_sounds();
     std::vector<sf::Vector2f> player_positions;
     std::vector<std::string> player_names;
     std::vector<std::vector<sf::Keyboard::Key>> player_buttons;
