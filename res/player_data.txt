@@ -1,4 +1,4 @@
-Red
-Green
-Blue
-Yellow
+Red player
+Green player
+Blue player
+Yellow player

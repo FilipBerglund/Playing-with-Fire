@@ -13,26 +13,26 @@ SRC_TEST := $(addprefix $(SRC)/,$(IN_TEST_FILES))
 BIN_TEST := $(addprefix $(BIN)/,$(IN_TEST_FILES:.cc=.o))
 
 #The files that are necessary for the game
-NECESSARY_IN_FILES := $(filter-out $(IN_TEST_FILES), $(notdir $(wildcard $(SRC)/*.cc)))
+IN_GAME_FILES := $(filter-out $(IN_TEST_FILES), $(notdir $(wildcard $(SRC)/*.cc)))
 
 #Gives the files the correct format
-SRC_NECESSARY := $(addprefix $(SRC)/,$(NECESSARY_IN_FILES))
-BIN_NECESSARY := $(addprefix $(BIN)/,$(NECESSARY_IN_FILES:.cc=.o))
+SRC_GAME := $(addprefix $(SRC)/,$(IN_GAME_FILES))
+BIN_GAME := $(addprefix $(BIN)/,$(IN_GAME_FILES:.cc=.o))
 
 all: game
 
-game: $(BIN_NECESSARY)
-	$(CCC) $(CFLAGS) $(BIN_NECESSARY) -o PlayingWithFire $(SFMLFLAGS)
+game: $(BIN_GAME)
+	$(CCC) $(CFLAGS) $(BIN_GAME) -o PlayingWithFire $(SFMLFLAGS)
 
 #Create the compiled binary files and put them in bin/
 $(BIN)/%.o: $(SRC)/%.cc
 	$(CCC) $(CFLAGS) -c $< -o $@
 
-test: $(filter-out Main.cc, $(BIN_NECESSARY)) $(BIN_TEST)
-	$(CCC) $(CFLAGS) $(filter-out $(BIN)/Main.o, $(BIN_NECESSARY)) $(BIN_TEST) $(SFMLFLAGS)
+test: $(filter-out main.cc, $(BIN_GAME)) $(BIN_TEST)
+	$(CCC) $(CFLAGS) $(filter-out $(BIN)/main.o, $(BIN_GAME)) $(BIN_TEST) -o Test $(SFMLFLAGS)
 
 clean:
-	rm -rf $(BIN_NECESSARY) $(BIN)/test_gameobj.o PlayingWithFire
+	rm -rf $(BIN_GAME) $(BIN_TEST) PlayingWithFire Test
 
 .PHONY:
 clearscreen:
@@ -43,8 +43,12 @@ run:
 	./PlayingWithFire
 
 .PHONY:
-leak_run:
-	valgrind --tool=memcheck --leak-check=yes ./PlayingWithFire
+run_test:
+	./Test
+
+.PHONY:
+run_leak:
+	valgrind --tool=memcheck --leak-check=yes ./Test
 
 # -o  is a g++ flag for setting the name of the output file.
 #

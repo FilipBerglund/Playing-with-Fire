@@ -12,7 +12,7 @@ TEST_CASE("Powerup")
     texture.loadFromFile("textures/player1_texture.png");
     Player player{pos, texture, false, 3, 1, 2, 3, "player 1"};
     Player * playerptr{&player};
-    
+
     Speed speed{pos,texture};
     Bigger_blast bigger_blast{pos,texture};
     Extra_bomb extra_bomb{pos,texture};
