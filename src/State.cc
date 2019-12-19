@@ -403,26 +403,23 @@ void Game_state::draw(sf::RenderWindow& window)
         number = number + 1;
     }
 
+    for (Wooden_box* wooden_box : wooden_boxes)
+        wooden_box->draw(window);
+    for (Solid_box* solid_box : solid_boxes)
+        solid_box->draw(window);
+    for (Fire* fire : fires)
+        fire->draw(window);
+    for (Bomb* bomb : bombs)
+        bomb->draw(window, font);
+    for (Powerup* powerup : powerups)
+        powerup->draw(window);
     for (Player* player : alive_players)
     {
         if (!player->is_dead())
         {
-            window.draw(player->get_drawable());
+            player->draw(window);
         }
     }
-    for (Wooden_box* wooden_box : wooden_boxes)
-        window.draw(wooden_box->get_drawable());
-    for (Solid_box* solid_box : solid_boxes)
-        window.draw(solid_box->get_drawable());
-    for (Fire* fire : fires)
-        window.draw(fire->get_drawable());
-    for (Bomb* bomb : bombs)
-    {
-        window.draw(bomb->get_drawable());
-        bomb->draw(window, font);
-    }
-    for (Powerup* powerup : powerups)
-        window.draw(powerup->get_drawable());
 
     std::ostringstream timer;
     if (round_timer.getElapsedTime().asSeconds() < 3)

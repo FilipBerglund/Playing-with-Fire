@@ -19,9 +19,9 @@ public:
 
     virtual ~Game_object() = default;
 
-    sf::Sprite get_drawable() const
+    void draw(sf::RenderWindow& window)
     {
-        return sprite;
+        window.draw(sprite);
     }
 
     sf::Vector2f get_position()

@@ -186,5 +186,6 @@ void Bomb::draw(sf::RenderWindow& window, sf::Font& font)
     sf::Text text0(info.str(), font, 15);
     text0.setPosition(get_position().x - 4, get_position().y - 4);
     text0.setFillColor(sf::Color::Red);
+    window.draw(sprite);
     window.draw(text0);
 }
