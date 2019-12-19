@@ -110,9 +110,10 @@ private:
 
     sf::SoundBuffer explosion_buffer;
     sf::Sound explosion_sound;
-
     sf::SoundBuffer chime_buffer;
     sf::Sound chime_sound;
+    sf::SoundBuffer killed_buffer;
+    sf::Sound killed_sound;
 
     Bool_button* quit_button;
     Bool_button* back_button;

@@ -64,6 +64,8 @@ Game_state::Game_state():
     explosion_sound{},
     chime_buffer{},
     chime_sound{},
+    killed_buffer{},
+    killed_sound{},
 
     quit_button{},
     back_button{},
@@ -88,7 +90,7 @@ Game_state::Game_state():
     }
 
 void Game_state::destroy_nonplayer_objects()
-{   
+{
     bombs.remove_if([this](Bomb* bomb)
     {
         delete bomb;
@@ -229,7 +231,12 @@ void Game_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard,
 
     alive_players.remove_if([this](Player* player)
         {
-            return player->is_dead();
+            if (player->is_dead())
+            {
+                killed_sound.play();
+                return true;
+            }
+            return false;
         });
 
     if (is_round_over())
@@ -274,7 +281,7 @@ void Game_state::check_collisions()
                 solid_box->apply_on_hit_effect(player);
             }
         }
-        powerups.remove_if([player](Powerup* powerup)
+        powerups.remove_if([player, this](Powerup* powerup)
             {
                 if (player->hitbox().intersects(powerup->hitbox()))
                 {
@@ -706,9 +713,15 @@ void Game_state::load_sounds()
     explosion_sound.setPitch(0.3f);
     explosion_sound.setVolume(40.f);
 
-    chime_buffer.loadFromFile("res/chime.wav");
-    chime_sound.setBuffer(explosion_buffer);
+    chime_buffer.loadFromFile("res/chime.oog");
+    chime_sound.setBuffer(chime_buffer);
+    chime_sound.setPitch(1.4f);
     chime_sound.setVolume(50.f);
+
+    killed_buffer.loadFromFile("res/gameover.wav");
+    killed_sound.setBuffer(killed_buffer);
+    killed_sound.setPitch(1.4f);
+    killed_sound.setVolume(50.f);
 }
 
 
@@ -829,7 +842,7 @@ End_screen::~End_screen()
 
 End_screen::End_screen() : State("End_screen"),
     list_of_Player{},
-    pos{585,500},
+    pos{580,500},
     button_texture{},
     end_button{},
     end_background{},
