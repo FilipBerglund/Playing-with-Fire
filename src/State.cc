@@ -144,6 +144,13 @@ void Game_state::update(sf::Mouse& mouse, sf::Keyboard& keyboard,
     End_screen* end_screen, State** current_state, sf::RenderWindow& window)
 {
     user_input_handler(mouse, keyboard, game_state, menu_state, end_screen, current_state, window);
+
+    if (round_timer.getElapsedTime().asSeconds() < 3)
+    {
+        return;
+    }
+
+
     check_collisions();
 
     fires.remove_if([this](Fire* fire)
@@ -352,9 +359,10 @@ void Game_state::draw(sf::RenderWindow& window)
 {
     window.draw(state_bg);
 
-    //Round counter
     sf::Font font;
     font.loadFromFile("res/arial.ttf");
+
+    //Round counter
     std::ostringstream info;
     info << "ROUND: " << current_round + 1;
     sf::Text text0(info.str(), font, 40);
@@ -362,14 +370,6 @@ void Game_state::draw(sf::RenderWindow& window)
     text0.setFillColor(sf::Color::Black);
     window.draw(text0);
 
-    //Timer
-    std::ostringstream roundtimerinfo;
-     roundtimerinfo << "Time remaining: "
-        << (int)(round_length - round_timer.getElapsedTime().asSeconds());
-    sf::Text text1(roundtimerinfo.str(), font, 20);
-    text1.setPosition(10,window.getSize().y - 30);
-    text1.setFillColor(sf::Color::Black);
-    window.draw(text1);
 
     int number{1};
     int ycorrd{100};
@@ -424,6 +424,27 @@ void Game_state::draw(sf::RenderWindow& window)
     for (Powerup* powerup : powerups)
         window.draw(powerup->get_drawable());
 
+    std::ostringstream timer;
+    if (round_timer.getElapsedTime().asSeconds() < 3)
+    {
+        timer << (int)(4 - round_timer.getElapsedTime().asSeconds());
+        sf::Text text(timer.str(), font, 120);
+        text.setPosition(1280/2 + 27, 720/2 -120);
+        text.setFillColor(sf::Color::Black);
+        window.draw(text);
+    }
+    else
+    {
+        //Timer
+        std::ostringstream roundtimerinfo;
+         roundtimerinfo << "Time remaining: "
+            << (int)(round_length + 4 - round_timer.getElapsedTime().asSeconds());
+        sf::Text text1(roundtimerinfo.str(), font, 20);
+        text1.setPosition(10,window.getSize().y - 30);
+        text1.setFillColor(sf::Color::Black);
+        window.draw(text1);
+    }
+
     quit_button->draw(window);
     back_button->draw(window);
 }
@@ -451,15 +472,19 @@ void Game_state::new_round()
 {
     for (Player* player : players)
     {
-	int shareholders{(int)alive_players.size()};
-	int share{120/shareholders};
-	if (!player->is_dead())
+        int shareholders{(int)alive_players.size()};
+        int share{120};
+        if (shareholders != 0)
+        {
+            share /= shareholders;
+        }
+        if (!player->is_dead())
         {
             player->increase_score(share);
         }
         player->new_round();
     }
-    
+
     destroy_nonplayer_objects();
     alive_players = players;
     initialize_map();
