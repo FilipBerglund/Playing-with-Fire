@@ -62,6 +62,8 @@ Game_state::Game_state():
 
     explosion_buffer{},
     explosion_sound{},
+    chime_buffer{},
+    chime_sound{},
 
     quit_button{},
     back_button{},
@@ -276,6 +278,7 @@ void Game_state::check_collisions()
             {
                 if (player->hitbox().intersects(powerup->hitbox()))
                 {
+                    chime_sound.play();
                     powerup->apply_on_hit_effect(player);
                     delete powerup;
                     return true;
@@ -700,8 +703,12 @@ void Game_state::load_sounds()
 {
     explosion_buffer.loadFromFile("res/explosion.wav");
     explosion_sound.setBuffer(explosion_buffer);
-    explosion_sound.setPitch(0.2f);
-    explosion_sound.setVolume(50.f);
+    explosion_sound.setPitch(0.3f);
+    explosion_sound.setVolume(40.f);
+
+    chime_buffer.loadFromFile("res/chime.wav");
+    chime_sound.setBuffer(explosion_buffer);
+    chime_sound.setVolume(50.f);
 }
 
 

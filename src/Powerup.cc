@@ -4,6 +4,7 @@
 
 void Speed::apply_on_hit_effect(Game_object* player)
 {
+    player.increase_score(2);
     Player* p = dynamic_cast<Player*>(player);
     if (p->get_speed() < 4)
     {
@@ -13,15 +14,18 @@ void Speed::apply_on_hit_effect(Game_object* player)
 
 void Bigger_blast::apply_on_hit_effect(Game_object* player)
 {
+    player.increase_score(2);
     dynamic_cast<Player*>(player)->increase_fire_size(1);
 }
 
 void Extra_bomb::apply_on_hit_effect(Game_object* player)
 {
+    player.increase_score(2);
     dynamic_cast<Player*>(player)->give_bomb();
 }
 
 void Push::apply_on_hit_effect(Game_object* player)
 {
+    player.increase_score(2);
     dynamic_cast<Player*>(player)->set_push_powerup(true);
 }
