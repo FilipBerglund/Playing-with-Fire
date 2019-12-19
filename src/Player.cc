@@ -50,8 +50,8 @@ void Player::new_round()  //Resets certain parameters at the beginning of a new 
     bomb_cds.resize(1);
     bomb_cds[0].first.restart();
     bomb_cds[0].second = true;
+    immune_clock.restart();
 }
-
 
 void Player::apply_on_hit_effect(Game_object* object)  //Handles collision.
 {
@@ -221,4 +221,18 @@ void Player::set_name(std::string new_name)
 std::string Player::get_name() const
 {
     return name;
+}
+
+void Player::draw(sf::RenderWindow& window)
+{
+    if (is_immune())
+    {
+        sprite.setColor(sf::Color{255,255,255,128});
+        window.draw(sprite);
+    }
+    else
+    {
+        sprite.setColor(sf::Color{255,255,255,255});
+        window.draw(sprite);
+    }
 }

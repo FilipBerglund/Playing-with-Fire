@@ -19,7 +19,7 @@ public:
 
     virtual ~Game_object() = default;
 
-    void draw(sf::RenderWindow& window)
+    virtual void draw(sf::RenderWindow& window)
     {
         window.draw(sprite);
     }
