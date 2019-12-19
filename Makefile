@@ -24,19 +24,15 @@ all: game
 game: $(BIN_GAME)
 	$(CCC) $(CFLAGS) $(BIN_GAME) -o PlayingWithFire $(SFMLFLAGS)
 
+test: $(filter-out main.cc, $(BIN_GAME)) $(BIN_TEST)
+	$(CCC) $(CFLAGS) $(filter-out $(BIN)/main.o, $(BIN_GAME)) $(BIN_TEST) -o Test $(SFMLFLAGS)
+
 #Create the compiled binary files and put them in bin/
 $(BIN)/%.o: $(SRC)/%.cc
 	$(CCC) $(CFLAGS) -c $< -o $@
 
-test: $(filter-out main.cc, $(BIN_GAME)) $(BIN_TEST)
-	$(CCC) $(CFLAGS) $(filter-out $(BIN)/main.o, $(BIN_GAME)) $(BIN_TEST) -o Test $(SFMLFLAGS)
-
 clean:
 	rm -rf $(BIN_GAME) $(BIN_TEST) PlayingWithFire Test
-
-.PHONY:
-clearscreen:
-	clear
 
 .PHONY:
 run:
