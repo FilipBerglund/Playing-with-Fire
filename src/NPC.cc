@@ -84,16 +84,14 @@ void Npc::update(
         std::list<Wooden_box*>& wooden_boxes,
         std::list<Solid_box*>& solid_boxes)
 {
-    old_position = sprite.getPosition();
-
-    bool at_mid{(((int)old_position.x) % 50 < speed &&
-                 ((int)old_position.y) % 50 < speed) ||
-                (((int)old_position.x) % 50 > 50 - speed &&
-                 ((int)old_position.y) % 50 > 50 - speed)};
+    bool at_mid{(((int)position.x) % 50 < speed      &&
+                 ((int)position.y) % 50 < speed)     ||
+                (((int)position.x) % 50 > 50 - speed &&
+                 ((int)position.y) % 50 > 50 - speed)};
 
     if (!at_mid)
     {
-        sprite.move(direction);
+        move(direction);
         return;
     }
 
@@ -107,7 +105,7 @@ void Npc::update(
             up_score, down_score, right_score, left_score, pos_score,
             players, bombs, fires, powerups, wooden_boxes, solid_boxes);
 
-    move(up_score, down_score, right_score, left_score, pos_score);
+    walk(up_score, down_score, right_score, left_score, pos_score);
 }
 
 void Npc::compute_scores(
@@ -171,7 +169,7 @@ void Npc::compute_scores(
 }
 
 
-void Npc::move(int up_score, int down_score, int right_score,
+void Npc::walk(int up_score, int down_score, int right_score,
         int left_score, int pos_score)
 {
     //We now put all scores in a vector.
@@ -199,29 +197,29 @@ void Npc::move(int up_score, int down_score, int right_score,
             }
             else if (i == 0)
             {
-                sprite.setRotation(0);
-                sprite.move(0, -speed);
+                set_rotation(0);
+                move(0, -speed);
                 direction = sf::Vector2f(0, -speed);
                 break;
             }
             else if (i == 1)
             {
-                sprite.setRotation(180);
-                sprite.move(0, speed);
+                set_rotation(180);
+                move(0, speed);
                 direction = sf::Vector2f(0, speed);
                 break;
             }
             else if (i == 2)
             {
-                sprite.setRotation(90);
-                sprite.move(speed, 0);
+                set_rotation(90);
+                move(speed, 0);
                 direction = sf::Vector2f(speed, 0);
                 break;
             }
             else if (i == 3)
             {
-                   sprite.setRotation(-90);
-                sprite.move(-speed, 0);
+                set_rotation(-90);
+                move(-speed, 0);
                 direction = sf::Vector2f(-speed, 0);
                 break;
             }

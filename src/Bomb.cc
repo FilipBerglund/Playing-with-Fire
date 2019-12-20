@@ -29,43 +29,42 @@ bool Bomb::is_blasted() const
 
 void Bomb::update()
 {
-    old_position = sprite.getPosition();
     if(is_gliding)
     {
         if (move_direction == "right")
         {
-            sprite.move(speed,0);
+            move(speed,0);
         }
         else if (move_direction == "left")
         {
-            sprite.move(-speed,0);
+            move(-speed,0);
         }
         else if (move_direction == "up")
         {
-            sprite.move(0,-speed);
+            move(0,-speed);
         }
         else if (move_direction == "down")
         {
-            sprite.move(0,speed);
+            move(0,speed);
         }
     }
     else
     {
         if ((int)old_position.x % 50 < 5 && (int)old_position.x % 50 != 0)
         {
-            sprite.move(-1,0);
+            move(-1,0);
         }
         else if ((int)old_position.y % 50 < 5 && (int)old_position.y % 50 != 0)
         {
-            sprite.move(0,-1);
+            move(0,-1);
         }
         else if ((int)old_position.y % 50 > 45 && (int)old_position.y % 50 != 0)
         {
-            sprite.move(0,1);
+            move(0,1);
         }
         else if ((int)old_position.x % 50 > 45 && (int)old_position.x % 50 != 0)
         {
-            sprite.move(1,0);
+            move(1,0);
         }
     }
 }
@@ -95,9 +94,7 @@ void Bomb::spawn_fire(std::list<Wooden_box*>& wooden_boxes,
     std::list<Fire*>& fires,
     sf::Texture& fire_texture)
 {
-    int roundedx = (((int)get_position().x + 25) / 50 ) * 50;
-    int roundedy = (((int)get_position().y + 25) / 50 ) * 50;
-    sprite.setPosition(roundedx, roundedy);
+    undo_last_move();
 
     sf::Vector2f pos{get_position()};
     fires.push_back(new Fire {pos, fire_texture, owner});
@@ -124,8 +121,7 @@ void Bomb::spawn_fire(std::list<Wooden_box*>& wooden_boxes,
     for (int i=1; i < radius && !solidbox_at_pos(solid_boxes, pos.x,pos.y+50*i);i++)
     {
         sf::Vector2f newPos{pos.x, pos.y + 50*i};
-        fires.push_back(new Fire {newPos, fire_texture, owner});
-        fires.back()->set_rotation(90);
+        fires.push_back(new Fire {newPos, fire_texture, owner}); fires.back()->set_rotation(90);
         if (woodenbox_at_pos(wooden_boxes, pos.x, pos.y+50*i))
         {
             owner->increase_score(1);
@@ -169,22 +165,12 @@ bool Bomb::woodenbox_at_pos(std::list<Wooden_box*> & lst, float x, float y) cons
     return false;
 }
 
-Player* Bomb::get_owner() const
-{
-    return owner;
-}
-
-sf::Vector2f Bomb::get_position() const
-{
-    return sprite.getPosition();
-}
-
 void Bomb::draw(sf::RenderWindow& window, sf::Font& font)
 {
     std::ostringstream info;
     info << (int)(4 - fuse_timer.getElapsedTime().asSeconds());
     sf::Text text0(info.str(), font, 15);
-    text0.setPosition(get_position().x - 4, get_position().y - 4);
+    text0.setPosition(position.x - 4, position.y - 4);
     text0.setFillColor(sf::Color::Red);
     window.draw(sprite);
     window.draw(text0);

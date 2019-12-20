@@ -10,7 +10,7 @@ class Game_object
 {
 public:
     Game_object(sf::Vector2f pos, sf::Texture & texture):
-    sprite{}, old_position{pos}
+    sprite{}, position{pos}, old_position{pos}
     {
         sprite.setTexture(texture);
         sprite.setOrigin(hitbox().width/2, hitbox().height/2);
@@ -24,12 +24,54 @@ public:
         window.draw(sprite);
     }
 
-    sf::Vector2f get_position()
+    void set_position(sf::Vector2f pos)
     {
-        return sprite.getPosition();
+        old_position = position;
+        position = pos;
+        sprite.setPosition(pos);
     }
 
-    sf::Vector2f get_old_position()
+    void move(sf::Vector2f direction)
+    {
+        old_position = position;
+        position += direction;
+        sprite.setPosition(position);
+    }
+
+    void move(float dx, float dy)
+    {
+        old_position = position;
+        position += sf::Vector2f(dx, dy);
+        sprite.setPosition(position);
+    }
+
+    void move(int dx, int dy)
+    {
+        old_position = position;
+        position += sf::Vector2f(dx, dy);
+        sprite.setPosition(position);
+    }
+
+    void move(int dx, float dy)
+    {
+        old_position = position;
+        position += sf::Vector2f(dx, dy);
+        sprite.setPosition(position);
+    }
+
+    void move(float dx, int dy)
+    {
+        old_position = position;
+        position += sf::Vector2f(dx, dy);
+        sprite.setPosition(position);
+    }
+
+    sf::Vector2f get_position() const
+    {
+        return position;
+    }
+
+    sf::Vector2f get_old_position() const
     {
         return old_position;
     }
@@ -45,6 +87,8 @@ public:
     {
         int roundedx = (((int)get_position().x + 25) / 50 ) * 50;
         int roundedy = (((int)get_position().y + 25) / 50 ) * 50;
+        old_position = position;
+        position = sf::Vector2f(roundedx, roundedy);
         sprite.setPosition(roundedx, roundedy);
     }
 
@@ -55,6 +99,7 @@ public:
 
 protected:
     sf::Sprite sprite;
+    sf::Vector2f position;
     sf::Vector2f old_position;
 };
 #endif

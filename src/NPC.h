@@ -48,7 +48,7 @@ protected:
             std::list<Player*>&, std::list<Bomb*>&,
             std::list<Fire*>&, std::list<Powerup*>&,
             std::list<Wooden_box*>&, std::list<Solid_box*>&);
-    void move(int,int,int,int,int);
+    void walk(int,int,int,int,int);
 
     sf::Vector2f direction{0,0};
 

@@ -24,7 +24,6 @@ Pc::Pc(sf::Vector2f pos, sf::Texture & texture, bool in_push,
 //If this is the case the player either moves or attempts to drop a bomb.
 void Pc::update(sf::Keyboard keyboard)
 {
-    old_position = sprite.getPosition();
     if (keyboard.isKeyPressed(bomb_button) && !previous_bomb_button)
     {
         want_to_drop_bomb = true;
@@ -40,22 +39,22 @@ void Pc::update(sf::Keyboard keyboard)
     }
     if (keyboard.isKeyPressed(left))
     {
-        sprite.setRotation(-90);
-        sprite.move(-speed, 0);
+        set_rotation(-90);
+        move(-speed, 0);
     }
     else if (keyboard.isKeyPressed(right))
     {
-        sprite.setRotation(90);
-        sprite.move(speed, 0);
+        set_rotation(90);
+        move(speed, 0);
     }
     else if (keyboard.isKeyPressed(down))
     {
-        sprite.setRotation(180);
-        sprite.move(0, speed);
+        set_rotation(180);
+        move(0, speed);
     }
     else if(keyboard.isKeyPressed(up))
     {
-        sprite.setRotation(0);
-        sprite.move(0, -speed);
+        set_rotation(0);
+        move(0, -speed);
     }
 }
