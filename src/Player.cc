@@ -46,7 +46,7 @@ void Player::new_round()  //Resets certain parameters at the beginning of a new 
     fire_size = initial_fire_size;
     cd = initial_cd;
     want_to_drop_bomb = false;
-    sprite.setPosition(spawn_point);
+    set_position(spawn_point);
     bomb_cds.resize(1);
     bomb_cds[0].first.restart();
     bomb_cds[0].second = true;
