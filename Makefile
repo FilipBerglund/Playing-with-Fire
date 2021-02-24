@@ -1,5 +1,5 @@
 CCC := g++
-CFLAGS := -std=c++17 -Wall -Wextra -Weffc++ -Wpedantic -Weffc++ -g -fno-elide-constructors
+CFLAGS := -std=c++17 -O3 -Wall -Wextra -Weffc++ -Wpedantic -Weffc++ -g -fno-elide-constructors
 SFMLFLAGS := -lsfml-graphics -lsfml-window -lsfml-audio -lsfml-system
 
 SRC := src#Source directory

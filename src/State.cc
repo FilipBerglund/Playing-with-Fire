@@ -707,7 +707,7 @@ void Game_state::load_player_data()
         sf::Keyboard::D,
         sf::Keyboard::S,
         sf::Keyboard::W,
-        sf::Keyboard::Q});
+        sf::Keyboard::F});
     player_buttons.push_back(std::vector<sf::Keyboard::Key>{
         sf::Keyboard::Left,
         sf::Keyboard::Right,
